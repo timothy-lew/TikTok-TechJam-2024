@@ -1,14 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { FaSearch, FaUser, FaBell, FaWallet } from 'react-icons/fa';
-import LoginPopup from './LoginPopup';
-import { LoginContext } from '@/app/page';
+import LoginPopup from '@/components/LoginPopup';
+import { LoginContext } from '@/app/layout';
+
 
 const Header: React.FC = () => {
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false);
-  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+  // const { loggedIn, setLoggedIn } = useContext(LoginContext);
 
 
   const handleOpenPopup = () => setLoginPopupOpen(true);
@@ -41,7 +42,7 @@ const Header: React.FC = () => {
 
         {/* Icons if logged in, if not log in button */}
         <div className="flex items-center space-x-6">
-          {!loggedIn && (
+          {/* {!loggedIn && (
             <button onClick={handleOpenPopup} className="p-2 bg-red-500 text-white rounded">
               Log In
             </button>
@@ -52,10 +53,10 @@ const Header: React.FC = () => {
               <FaWallet className="text-gray-800 w-6 h-6 cursor-pointer" />
               <FaBell className="text-gray-800 w-6 h-6 cursor-pointer" />
             </>
-          )}
+          )} */}
         </div>
       </div>
-      <LoginPopup isOpen={isLoginPopupOpen} onClose={handleClosePopup} />
+      {/* <LoginPopup isOpen={isLoginPopupOpen} onClose={handleClosePopup} /> */}
     </header>
   );
 };
