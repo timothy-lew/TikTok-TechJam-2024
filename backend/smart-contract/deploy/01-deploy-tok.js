@@ -22,4 +22,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   log(`TOKToken deployed at ${TOK.address}`);
 };
 
-module.exports.tags = ['all', 'apa'];
+module.exports.tags = ['all', 'tok'];

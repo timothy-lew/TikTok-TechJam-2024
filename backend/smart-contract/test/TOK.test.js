@@ -14,21 +14,21 @@ const { developmentChains } = require('../helper-hardhat-config');
         trader1 = accounts.trader1;
         await deployments.fixture(['all']);
         tok = await ethers.getContract('TOKToken', deployer);
-        apaTrader = await ethers.getContract('TOKToken', trader1);
+        tokTrader = await ethers.getContract('TOKToken', trader1);
       });
 
       describe('constructor', function () {
-        it('check TOK contract deployed correctly', async () => {
+        it('Check TOK contract deployed correctly', async () => {
           const response = await tok.symbol();
           assert.equal(response, 'TOK');
         });
 
-        it('get creator', async () => {
+        it('Get creator', async () => {
           const creatorAddress = await tok.getCreator();
           assert.equal(deployer, creatorAddress);
         });
 
-        it('send TOK tokens to another address', async () => {
+        it('Send TOK tokens to another address', async () => {
           const [deployer, secondAccount] = await ethers.getSigners();
           const amountToSend = ethers.utils.parseUnits('20', 18); // Send 20 TOK tokens
 
@@ -58,11 +58,11 @@ const { developmentChains } = require('../helper-hardhat-config');
         });
       });
 
-      it('should allow a user to request tokens from faucet', async function () {
+      it('Should allow a user to request tokens from faucet', async function () {
         const initialBalance = await tok.balanceOf(trader1);
         const amountToRequest = ethers.utils.parseEther('70');
 
-        await apaTrader.requestTokens(amountToRequest);
+        await tokTrader.requestTokens(amountToRequest);
         const finalBalance = await tok.balanceOf(trader1);
 
         const expectedFinalBalance = initialBalance.add(amountToRequest);
@@ -74,19 +74,19 @@ const { developmentChains } = require('../helper-hardhat-config');
         );
       });
 
-      it('request too much from faucet', async function () {
+      it('Request too much from faucet', async function () {
         const amountToRequest = ethers.utils.parseEther('200');
 
         await expect(
-          apaTrader.requestTokens(amountToRequest)
+          tokTrader.requestTokens(amountToRequest)
         ).to.be.revertedWith('Can only request less than 100');
       });
 
-      it('not enough balance', async function () {
+      it('Insufficient balance', async function () {
         const amountToRequest = ethers.utils.parseEther('20000');
 
         await expect(
-          apaTrader.requestTokens(amountToRequest)
+          tokTrader.requestTokens(amountToRequest)
         ).to.be.revertedWith('Insufficient balance for requested amount');
       });
     });
