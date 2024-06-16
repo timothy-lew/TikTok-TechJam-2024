@@ -9,7 +9,7 @@ import { LoginContext } from '@/app/layout';
 
 const Header: React.FC = () => {
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false);
-  // const { loggedIn, setLoggedIn } = useContext(LoginContext);
+  const { loggedIn, setLoggedIn } = useContext(LoginContext);
 
 
   const handleOpenPopup = () => setLoginPopupOpen(true);
@@ -42,7 +42,7 @@ const Header: React.FC = () => {
 
         {/* Icons if logged in, if not log in button */}
         <div className="flex items-center space-x-6">
-          {/* {!loggedIn && (
+          {!loggedIn && (
             <button onClick={handleOpenPopup} className="p-2 bg-red-500 text-white rounded">
               Log In
             </button>
@@ -53,10 +53,10 @@ const Header: React.FC = () => {
               <FaWallet className="text-gray-800 w-6 h-6 cursor-pointer" />
               <FaBell className="text-gray-800 w-6 h-6 cursor-pointer" />
             </>
-          )} */}
+          )}
         </div>
       </div>
-      {/* <LoginPopup isOpen={isLoginPopupOpen} onClose={handleClosePopup} /> */}
+      <LoginPopup isOpen={isLoginPopupOpen} onClose={handleClosePopup} />
     </header>
   );
 };

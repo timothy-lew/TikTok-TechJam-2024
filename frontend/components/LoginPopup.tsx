@@ -1,4 +1,4 @@
-import { LoginContext } from "@/app/page";
+import { LoginContext } from "@/app/layout";
 import Image from 'next/image';
 import React, { useContext, useState } from "react";
 import { FaTimes } from "react-icons/fa";
