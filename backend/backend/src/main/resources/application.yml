@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://mongo:P%40ssword123@cluster0.bfooric.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: shopping_platform
+
+security:
+  accessTokenExpirationInMs: 86400000 # 1 day
+  refreshTokenExpirationInMs: 7776000000 # 90 days
+  secret-key: FB3B63E6E94DFA04C3C10E2E2C2CCC001EF83C13F504F76A93CA874B701415E1
