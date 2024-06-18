@@ -1,4 +1,4 @@
-import { LoginContext } from "@/app/layout";
+import { useAuth } from '@/hooks/auth-provider';
 import Image from 'next/image';
 import React, { useContext, useState } from "react";
 import { FaTimes } from "react-icons/fa";
@@ -9,9 +9,12 @@ interface LoginPopupProps {
 }
 
 const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, isOpen }) => {
+
+  const auth = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+  // const { loggedIn, setLoggedIn } = useContext(LoginContext);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,7 +34,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, isOpen }) => {
 
     // For now any email and password combination is allowed
     // Change context to logged in, so that rest of the application knows
-    setLoggedIn(true);
+    // setLoggedIn(true);
 
     // Close the popup
     onClose();

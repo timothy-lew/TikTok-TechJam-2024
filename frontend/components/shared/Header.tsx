@@ -1,18 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, createContext } from "react";
 import { FaSearch, FaUser, FaBell, FaWallet } from "react-icons/fa";
-import LoginPopup from "@/components/LoginPopup";
-import { LoginContext } from "@/app/layout";
+import LoginPopup from "@/components/shared/LoginPopup";
+// import { LoginContext } from "@/app/layout";
 import Link from "next/link";
-import { link } from "fs";
-// import WalletPage from '@/components/WalletPage'; // Adjust the import based on your project structure
+
+import { useAuth } from "@/hooks/auth-provider";
+
+
 
 const Header: React.FC = () => {
+
+  const auth = useAuth();
+
+  const user = auth?.user || null;
+
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const { loggedIn } = useContext(LoginContext);
 
   const handleOpenLoginPopup = () => setLoginPopupOpen(true);
   const handleCloseLoginPopup = () => setLoginPopupOpen(false);
@@ -46,7 +52,7 @@ const Header: React.FC = () => {
 
           {/* Icons if logged in, if not log in button */}
           <div className="flex items-center space-x-6">
-            {!loggedIn && (
+            {!user && (
               <button
                 onClick={handleOpenLoginPopup}
                 className="p-2 bg-red-500 text-white rounded"
@@ -55,7 +61,7 @@ const Header: React.FC = () => {
               </button>
             )}
             {/* To add logic to get balance preview from API */}
-            {loggedIn && (
+            {user && (
               <>
                 <FaUser className="text-gray-800 w-6 h-6 cursor-pointer" />
                 <div className="relative">

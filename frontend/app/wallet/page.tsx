@@ -1,13 +1,17 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { LoginContext } from "../layout";
-import LoginPopup from "@/components/LoginPopup";
-import LoginRequired from "@/components/LoginRequired";
+import { useAuth } from '@/hooks/auth-provider'
+import LoginPopup from "@/components/shared/LoginPopup";
+import LoginRequired from "@/components/shared/LoginRequired";
 import Link from "next/link";
 
 const WalletPage: React.FC = () => {
-  const { loggedIn } = useContext(LoginContext);
+  // const { loggedIn } = useContext(LoginContext);
+  const auth = useAuth();
+
+  const loggedIn = auth!==null;
+
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(!loggedIn);
 
   const handleClosePopup = () => setLoginPopupOpen(false);

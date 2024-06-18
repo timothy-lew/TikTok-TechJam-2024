@@ -1,26 +1,18 @@
-"use client"
-
 import { Inter } from "next/font/google";
+import type { Metadata } from "next";
 import "./globals.css";
 
-import { createContext, useContext, useState } from 'react';
-import Header from '@/components/Header';
-import SideBar from '@/components/SideBar'
+import Header from '@/components/shared/Header';
+import SideBar from '@/components/shared/SideBar'
 
-interface LoginContextType {
-  loggedIn: boolean;
-  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const initialLoginContext: LoginContextType = {
-  loggedIn: false,
-  setLoggedIn: () => {},
-};
-
-export const LoginContext = createContext(initialLoginContext);
-
+import { AuthProvider } from "@/hooks/auth-provider";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Tiktok",
+};
+
 
 export default function RootLayout({
   children,
@@ -28,18 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const loginContextValue: LoginContextType = {
-    loggedIn,
-    setLoggedIn,
-  };
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <LoginContext.Provider value={loginContextValue}>
-          <main>
+        <AuthProvider>
             <section className="top-0 h-16 bg-black w-full absolute">
               <Header />
             </section>
@@ -52,9 +36,7 @@ export default function RootLayout({
                 {children}
               </div>
             </section>
-          </main>          
-        
-        </LoginContext.Provider>
+        </AuthProvider>
       </body>
     </html>
   );
