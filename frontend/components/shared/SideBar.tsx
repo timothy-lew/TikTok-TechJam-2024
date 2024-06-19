@@ -125,7 +125,10 @@ const SideBar = () => {
 
         <Link href="/wallet" className="flex justify-center items-center gap-2">
           <FaWallet className={`${pathname.startsWith('/wallet') ? "text-tiktok-red" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
-          <p className={`hidden md:flex_col_center ${pathname.startsWith('/wallet') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Wallet</p>
+          <div className="flex_center gap-1.5">
+            <p className={`hidden md:flex_col_center ${pathname.startsWith('/wallet') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Wallet</p>
+            <span className="text-xs px-1.5 py-0.5 bg-tiktok-red text-white font-bold rounded-xl">New</span>
+          </div>
         </Link>
         
         <Separator className="my-1 bg-slate-200"/>

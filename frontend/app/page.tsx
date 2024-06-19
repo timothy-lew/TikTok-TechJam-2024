@@ -13,7 +13,8 @@ const HomePage = () => {
   const userDetails = {
     email: "chuck@gmail.com",
     firstName: "Chuck",
-    lastName: "Lee"
+    lastName: "Lee",
+    profilePic:""
   }
   
   return (
