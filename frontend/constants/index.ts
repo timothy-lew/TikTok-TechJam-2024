@@ -20,3 +20,31 @@ export const displayAccounts : DisplayAccount[] = [
     verified: true
   },
 ]
+
+export const sidebarFooterCompany : string[] = [
+  "About",
+  "Newsroom",
+  "Contact",
+  "Careers"
+]
+
+export const sidebarFooterPrograms : string[] = [
+  "TikTok for Good",
+  "Advertise",
+  "TikTok LIVE Creator Networks",
+  "Developers",
+  "Transparency",
+  "TikTok Rewards",
+  "TikTok Embeds",
+  "TikTok Music",
+]
+
+export const sidebarFooterTermsPolicies : string[] = [
+  "Help",
+  "Safety",
+  "Terms",
+  "Privacy Policy",
+  "Privacy Center",
+  "Creator Academy",
+  "Community Guidelines"
+]

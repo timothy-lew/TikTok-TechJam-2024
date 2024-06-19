@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
  
-import { displayAccounts } from "@/constants";
+import { displayAccounts, sidebarFooterCompany, sidebarFooterPrograms, sidebarFooterTermsPolicies } from "@/constants";
 import FriendsAccount from '@/components/shared/FriendsAccount';
 
 const SideBar = () => {
@@ -140,11 +140,11 @@ const SideBar = () => {
         <Separator className="my-1 bg-slate-200"/>
 
         {user ?
-        <div className="hidden md:flex flex-col justify-center items-start gap-1">
+        <div className="flex flex-col justify-center items-start gap-1">
           <p className="font-medium text-slate-600 text-sm mb-2">Following accounts</p>
           {displayAccounts.map((acc)=>{
             return (
-              <FriendsAccount friendAccount={acc}/>
+              <FriendsAccount friendAccount={acc} key={`sidebar-${acc.username}`}/>
             )
           })}
         </div>
@@ -163,6 +163,33 @@ const SideBar = () => {
           <Image src="/images/sidebarbannerbg.png" alt="banner" height={100} width={200}/>
             <h4 className="absolute inset-0 flex items-center justify-center text-yellow-200 text-xs pl-[50px] px-2 font-semibold">Create TikTok effects, get a reward</h4>
         </div>
+        
+        <div className="flex flex-col justify-center items-start w-full">
+          <h2 className="text-sm font-medium text-gray-600 pb-2">Company</h2>
+          <div className="flex flex-wrap gap-2 text-xs">
+            {sidebarFooterCompany.map((item, index) => (
+              <span key={index} className="text-gray-600">{item}</span>
+              ))}
+          </div>
+        </div>
+        <div className="flex flex-col justify-center items-start w-full">
+          <h2 className="text-sm font-medium text-gray-600 pb-2">Program</h2>
+          <div className="flex flex-wrap gap-2 text-xs">
+            {sidebarFooterPrograms.map((item, index) => (
+              <span key={index} className="text-gray-600">{item}</span>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col justify-center items-start w-full">
+          <h2 className="text-sm font-medium text-gray-600 pb-2">Terms & Policies</h2>
+          <div className="flex flex-wrap gap-2 text-xs">
+            {sidebarFooterTermsPolicies.map((item, index) => (
+              <span key={index} className="text-gray-600">{item}</span>
+            ))}
+          </div>
+        </div>
+
+        <p className="text-left text-slate-400 text-sm">© 2024 TikTok</p>
 
 
     </nav>
