@@ -57,7 +57,7 @@ const Header: React.FC = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-1/3">
+          <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 w-1/3">
             <FaSearch className="text-gray-500" />
             <input
               type="text"

@@ -10,7 +10,12 @@ type Auth = {
 }
 
 const initialAuthContext = {
-  user: null,
+  user: {
+    email: "chuck@gmail.com",
+    firstName: "Chuck",
+    lastName: "Lee",
+    profilePic:""
+  },
   signIn: () => {},
   signOut: () => {},
 }

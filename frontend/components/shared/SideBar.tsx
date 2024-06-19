@@ -154,8 +154,8 @@ const SideBar = () => {
 
 
       <div className="hidden md:flex_col_center relative">
-        <Image src="/images/sidebarbannerbg.png" alt="banner" height={100} width={200}/>
-          <h4 className="absolute inset-0 flex items-center justify-center text-yellow-200 text-xs pl-[50px] px-2 font-semibold">Create TikTok effects, get a reward</h4>
+        <Image src="/images/sidebarbannerbg.png" alt="banner" height={200} width={200}/>
+          <h4 className="absolute inset-0 flex items-center justify-center text-yellow-200 text-xs pl-[50px] px-2 py-1 font-semibold">Create TikTok effects, get a reward</h4>
       </div>
       
       <div className="flex flex-col justify-center items-start w-full">

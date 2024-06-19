@@ -30,12 +30,7 @@ const HomePage = () => {
         Log In (Hardcode)
       </button>
       </div>
-      
       }
-
-
-
-
     </div>
   )
 }
