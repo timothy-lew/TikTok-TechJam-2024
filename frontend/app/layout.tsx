@@ -29,12 +29,12 @@ export default function RootLayout({
             </section>
             
             <section className="flex justify-start items-center pt-20">
-              <nav className="w-40 min-h-screen">
+              <nav className="min-h-screen">
                 <SideBar />
               </nav>
-              <div className="w-full min-h-screen">
+              <main className="w-full min-h-screen">
                 {children}
-              </div>
+              </main>
             </section>
         </AuthProvider>
       </body>
