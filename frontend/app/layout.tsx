@@ -28,10 +28,8 @@ export default function RootLayout({
               <Header />
             </section>
             
-            <section className="flex justify-start items-center pt-20">
-              <nav className="min-h-screen">
+            <section className="flex justify-start items-start pt-20">
                 <SideBar />
-              </nav>
               <main className="w-full min-h-screen">
                 {children}
               </main>

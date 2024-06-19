@@ -1,16 +1,23 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import { useState } from "react";
 import { useAuth } from '@/hooks/auth-provider'
 import LoginPopup from "@/components/shared/LoginPopup";
 import LoginRequired from "@/components/shared/LoginRequired";
 import Link from "next/link";
+
+import { Transaction, columns, transactionData } from "@/components/tables/transactions";
+import { DataTable } from "@/components/ui/data-table";
+
+
 
 const WalletPage: React.FC = () => {
   // const { loggedIn } = useContext(LoginContext);
   const auth = useAuth();
 
   const loggedIn = auth!==null;
+
+  const data : Transaction[] = transactionData;
 
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(!loggedIn);
 
@@ -106,6 +113,8 @@ const WalletPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        <DataTable columns={columns} data={data} />
       </section>
     </>
   );
