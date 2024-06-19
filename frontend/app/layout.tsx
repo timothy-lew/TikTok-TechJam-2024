@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-            <section className="top-0 h-16 bg-black w-full absolute">
+            <section className="top-0 h-16 w-full absolute">
               <Header />
             </section>
             

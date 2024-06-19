@@ -6,5 +6,6 @@ type LoginDetails = {
 type UserDetails = {
   email: string,
   firstName: string,
-  lastName: string
+  lastName: string,
+  profilePic: string,
 }

@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/auth-provider";
 
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
+import { FaWallet } from "react-icons/fa";
  
 import { displayAccounts, sidebarFooterCompany, sidebarFooterPrograms, sidebarFooterTermsPolicies } from "@/constants";
 import FriendsAccount from '@/components/shared/FriendsAccount';
@@ -123,17 +124,7 @@ const SideBar = () => {
         </Link>
 
         <Link href="/wallet" className="flex justify-center items-center gap-2">
-          <svg fill={`${pathname.startsWith('/wallet') ? "rgba(254, 44, 85, 1)" : "rgba(22, 24, 35, 1)"}`} width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-            {pathname.startsWith('/wallet') ? (
-              <>
-                <path d="M40 15H14a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h26a2 2 0 0 0 2-2V17a2 2 0 0 0-2-2Zm-16 10h-8v-2h8v2Zm4-4H14v-2h14v2Zm2-4H14v-2h16v2Zm8 14H14v-6h24v6Z"></path>
-              </>
-            ) : (
-              <>
-                <path d="M14 15H40a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V17a2 2 0 0 1 2-2ZM24 25h8v-2h-8v2ZM20 21h8v-2h-8v2ZM14 19h14v-2H14v2ZM38 33H14v-6h24v6Z"></path>
-              </>
-            )}
-          </svg>
+          <FaWallet className={`${pathname.startsWith('/wallet') ? "text-tiktok-red" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
           <p className={`hidden md:flex_col_center ${pathname.startsWith('/wallet') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Wallet</p>
         </Link>
         
@@ -150,8 +141,8 @@ const SideBar = () => {
         </div>
         :
         <div className="hidden md:flex_col_center">
-          <p className="text-left text-slate-400">Log in to follow creators, like videos, and view comments.</p>
-          <Button variant="outline" className="w-full my-4 border-red-600 hover:bg-red-50"><p className="font-semibold text-skin-red">Log In</p></Button>
+          <p className="text-left text-slate-400 text-sm">Log in to follow creators, like videos, and view comments.</p>
+          <Button variant="outline" className="w-full my-4 hover:bg-red-50"><p className="font-semibold text-skin-red">Log In</p></Button>
         </div>
 
         }

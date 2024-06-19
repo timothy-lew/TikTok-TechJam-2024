@@ -1,11 +1,18 @@
 import { DisplayAccount } from '@/constants/index';
-import Image from 'next/image';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
 
 const FriendsAccount= ({ friendAccount } : {friendAccount: DisplayAccount}) => {
 
   return (
     <div className="flex_center gap-2 mb-2">
-      <Image src={friendAccount.profilePic} alt="dp" height={35} width={35} className="rounded-full"/>
+      <Avatar>
+        <AvatarImage src={friendAccount.profilePic} alt="dp" />
+        <AvatarFallback>{friendAccount.username[0]}</AvatarFallback>
+      </Avatar>
       <div className="hidden md:flex flex-col justify-center items-start">
         <div className="flex_center gap-1">
           <p className="font-bold text-black">{friendAccount.username}</p>

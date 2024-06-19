@@ -28,7 +28,8 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
     userDetails = {
       email: "chuck@gmail.com",
       firstName: "Chuck",
-      lastName: "Lee"
+      lastName: "Lee",
+      profilePic:""
     }
 
 

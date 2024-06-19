@@ -36,9 +36,9 @@
     --destructive: 0 84.2% 60.2%; /* Red */
     --destructive-foreground: 0 0% 100%; /* White */
 
-    --border: 0 0% 80%; /* Gray */
-    --input: 0 0% 80%; /* Gray */
-    --ring: 357 100% 54%; /* TikTok Red */
+    --border: 348 99% 58%; /* TikTok Red */
+    --input: 348 99% 58%; /* TikTok Red */
+    --ring: 348 99% 58%; /* TikTok Red */
 
     --radius: 0.5rem;
   }
@@ -69,8 +69,8 @@
     --destructive: 0 84.2% 60.2%; /* Red */
     --destructive-foreground: 0 0% 100%; /* White */
 
-    --border: 0 0% 20%; /* Dark Gray */
-    --input: 0 0% 20%; /* Dark Gray */
+    --border: 348 99% 58%; /* TikTok Red */
+    --input: 348 99% 58%; /* TikTok Red */
     --ring: 348 99% 58%; /* TikTok Red */
   }
 }

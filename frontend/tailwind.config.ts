@@ -25,6 +25,8 @@ const config = {
         }
       },
       colors: {
+        'tiktok-red': 'rgba(254, 44, 85, 1)',
+        'tiktok-gray': 'rgba(22, 24, 35, 1)',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
