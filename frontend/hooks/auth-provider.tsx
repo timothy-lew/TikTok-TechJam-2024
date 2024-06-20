@@ -11,6 +11,7 @@ type Auth = {
 
 const initialAuthContext = {
   user: {
+    userId: "Test",
     email: "chuck@gmail.com",
     firstName: "Chuck",
     lastName: "Lee",
@@ -31,6 +32,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
 
     // HARDCODE
     userDetails = {
+      userId: "Test",
       email: "chuck@gmail.com",
       firstName: "Chuck",
       lastName: "Lee",

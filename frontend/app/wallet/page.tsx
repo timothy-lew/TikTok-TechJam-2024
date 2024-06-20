@@ -6,9 +6,9 @@ import LoginPopup from "@/components/shared/LoginPopup";
 import LoginRequired from "@/components/shared/LoginRequired";
 import Link from "next/link";
 import Image from "next/image";
-import { Transaction, columns, transactionData } from "@/components/tables/transactions";
+import { columns } from "@/components/tables/transactions";
 import { DataTable } from "@/components/ui/data-table";
-
+import { type Transaction, useFetchTransactions } from "@/hooks/useFetchTransactions";
 
 
 const WalletPage: React.FC = () => {
@@ -33,7 +33,7 @@ const WalletPage: React.FC = () => {
   const user = auth.user || null;
 
   // Process Transaction Data
-  const data : Transaction[] = transactionData;
+  const transactionData : Transaction[] = useFetchTransactions(user?.userId || "");
 
   let incoming : number = 0;
   let outgoing : number = 0;
@@ -149,7 +149,7 @@ const WalletPage: React.FC = () => {
         </div>
 
         <div className="w-full">
-          <DataTable columns={columns} data={data} />
+          <DataTable columns={columns} data={transactionData} />
         </div>
       </section>
   );

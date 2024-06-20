@@ -4,6 +4,7 @@ type LoginDetails = {
 }
 
 type UserDetails = {
+  userId: string,
   email: string,
   firstName: string,
   lastName: string,
