@@ -1,6 +1,6 @@
 import { useAuth } from '@/hooks/auth-provider';
 import Image from 'next/image';
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 
 interface LoginPopupProps {
@@ -9,12 +9,10 @@ interface LoginPopupProps {
 }
 
 const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, isOpen }) => {
-
   const auth = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { loggedIn, setLoggedIn } = useContext(LoginContext);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -25,16 +23,20 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, isOpen }) => {
       return;
     }
 
-    // Perform authentication logic here (e.g., API call, validation)
-    // For demonstration purposes, just setting a dummy token
-    const userToken = "dummyToken123"; // Replace with actual token logic
+    // Perform authentication logic here
+    // For now, we assume the user details are correct and sign them in
+    const userDetails = {
+      email: email,
+      firstName: "Chuck", // Replace with actual first name from your auth logic
+      lastName: "Lee", // Replace with actual last name from your auth logic
+      profilePic: "", // Replace with actual profile pic from your auth logic
+    };
+
+    auth?.signIn(userDetails);
 
     // Store token in localStorage
+    const userToken = "dummyToken123"; // Replace with actual token logic
     localStorage.setItem("usertoken", userToken);
-
-    // For now any email and password combination is allowed
-    // Change context to logged in, so that rest of the application knows
-    // setLoggedIn(true);
 
     // Close the popup
     onClose();
