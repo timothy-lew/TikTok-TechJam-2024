@@ -20,6 +20,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 
 import { useState } from "react"
 
@@ -50,9 +58,14 @@ export function DataTable<TData, TValue>({
     }
   });
 
+  // SELECTOR 
+  const CLEAR_FILTER_VALUE = "CLEAR_FILTER";
+  const [selectorFilter, setSelectorFilter] = useState<string>("");
+
+
   return (
     <div className="rounded-md border">
-      <div className="flex items-center py-4">
+      <div className="flex_center gap-4 py-4">
         <Input
           placeholder="Filter receiver..."
           value={(table.getColumn("receiver")?.getFilterValue() as string) ?? ""}
@@ -61,6 +74,33 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        <Select
+          onValueChange={(value) => {
+            if (value === CLEAR_FILTER_VALUE) {
+              table.getColumn('status')?.setFilterValue("");
+              setSelectorFilter("")
+            }
+            else {
+              table.getColumn('status')?.setFilterValue(value);
+              setSelectorFilter(value)
+            }
+          }}
+          value={selectorFilter} 
+        >
+          <SelectTrigger >
+            <SelectValue placeholder="Filter Status"/>
+          </SelectTrigger>
+
+          <SelectContent>
+            {["pending", "processing", "success", "failed"].map((option, index) =>
+              <SelectItem className="hover:cursor-pointer" value={option} key={`${option}_${index}`}>{option}</SelectItem>
+            )}
+
+            <SelectItem value={CLEAR_FILTER_VALUE} className="text-red-500 hover:cursor-pointer">Clear Filter</SelectItem>
+
+          </SelectContent>
+
+        </Select>
       </div>
       <Table>
         <TableHeader>

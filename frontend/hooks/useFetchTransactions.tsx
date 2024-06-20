@@ -9,6 +9,7 @@ export type Transaction = {
   receiver: string
   type: "incoming" | "outgoing"
   status: "pending" | "processing" | "success" | "failed"
+  date: Date
 }
 
 export function useFetchTransactions( userId: string){
@@ -22,7 +23,9 @@ export function useFetchTransactions( userId: string){
       try{
         // const response = await fetch('');
         // const data = await response.json();
-        const data : Transaction[] = [
+
+        // Mock Data
+        const data: Transaction[] = [
           {
             id: "728ed52f",
             amount: 100,
@@ -30,6 +33,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@tiktokshop1",
             transactionType: "shopping",
             status: "pending",
+            date: new Date("2024-06-19"),
           },
           {
             id: "a4f8b2d1",
@@ -38,6 +42,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@tiktokshop2",
             transactionType: "shopping",
             status: "success",
+            date: new Date("2024-06-18"),
           },
           {
             id: "c4d3a8b9",
@@ -46,6 +51,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@tiktokshop3",
             transactionType: "shopping",
             status: "success",
+            date: new Date("2024-06-17"),
           },
           {
             id: "d8f2a9c4",
@@ -54,6 +60,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@tiktokshop4",
             transactionType: "shopping",
             status: "failed",
+            date: new Date("2024-06-16"),
           },
           {
             id: "e9c2d4f3",
@@ -62,6 +69,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@tiktokshop5",
             transactionType: "shopping",
             status: "pending",
+            date: new Date("2024-06-15"),
           },
           {
             id: "f5b7e6a2",
@@ -70,6 +78,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@tiktokshop3",
             transactionType: "shopping",
             status: "success",
+            date: new Date("2024-06-14"),
           },
           {
             id: "g3d8f1b7",
@@ -78,6 +87,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@johnloh",
             transactionType: "transfer",
             status: "processing",
+            date: new Date("2024-06-13"),
           },
           {
             id: "h6e7c3a5",
@@ -86,6 +96,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@evelyngoh",
             transactionType: "transfer",
             status: "failed",
+            date: new Date("2024-06-12"),
           },
           {
             id: "i7b9f4c2",
@@ -94,6 +105,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@alex54",
             transactionType: "transfer",
             status: "success",
+            date: new Date("2024-06-11"),
           },
           {
             id: "j8a1d2e3",
@@ -102,6 +114,7 @@ export function useFetchTransactions( userId: string){
             receiver: "@harryCo",
             transactionType: "transfer",
             status: "pending",
+            date: new Date("2024-06-10"),
           },
         ];
 
