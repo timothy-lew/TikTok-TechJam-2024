@@ -8,8 +8,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { columns } from "@/components/tables/transactions";
 import { DataTable } from "@/components/ui/data-table";
-import { type Transaction, useFetchTransactions } from "@/hooks/useFetchTransactions";
 
+import { type Transaction, useFetchTransactions } from "@/hooks/useFetchTransactions";
+import TiktokCard from "@/components/shared/TiktokCard";
+import { type TiktokCardDetails, useFetchTiktokCard } from "@/hooks/useFetchTiktokCard";
+import { type Wallet, useFetchWallet } from "@/hooks/useFetchWallet";
 
 const WalletPage: React.FC = () => {
   const auth = useAuth();
@@ -43,27 +46,73 @@ const WalletPage: React.FC = () => {
     else outgoing += transaction.amount;
   })
 
+  const tiktokCardDetails = useFetchTiktokCard(user?.userId || "");
+  const [hideDetails, setHideDetails] = useState<boolean>(true);
+
+  const walletDetails = useFetchWallet(user?.userId || "");
+
   // Need to implement logic to get balance and recent transaction history from api
   return (
-      <section className="bg-white dark:bg-gray-900 flex flex-col w-full justify-start items-start gap-4 md:gap-6">
+      <section className="bg-white dark:bg-gray-900 flex flex-col w-full justify-start items-start gap-4 px-6">
 
-        <div className="bg-gray-50 p-4 rounded-md shadow-sm w-full">
+        <div className="bg-gray-50 rounded-xl p-4 shadow-sm w-full">
           <h1 className="font-bold text-2xl md:text-3xl">Hello! Good to see you <span className="capitalize">{user?.firstName || "NOT LOGGED IN"}</span></h1>
         </div>
 
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 col-span-1 md:col-span-2 shadow-sm">
-            
-            <div className="flex justify-center items-start">
-              <div className="flex-1">
-                <h2 className="text-gray-900 dark:text-white text-xl md:text-2xl font-bold mb-2">
-                  Wallet Balance
-                </h2>
-                <p className="text-3xl font-normal text-gray-500 dark:text-gray-400 mb-6">
-                  2000.03
-                </p>
-              </div>
+        <div className="w-full flex justify-start items-start gap-6 min-h-[360px]">
 
+          <div className="bg-gray-50 p-4 h-[360px] rounded-md shadow-sm flex flex-col justify-start items-start">
+            <h2 className="text-gray-900 dark:text-white text-center w-full text-xl md:text-2xl font-bold mb-2">Your Tiktok Card</h2>
+            
+            <div className="w-full flex justify-evenly items-center">
+              <button
+                className="flex_center gap-1.5 border-2 border-slate-200 hover:bg-slate-100 rounded-md px-2 py-1 m-2"
+                onClick={()=>{setHideDetails((prev)=>!prev)}}
+              >
+                <Image src={hideDetails ? '/icons/eyeOpen.svg' : '/icons/eyeClose.svg'} alt="icon" height={22} width={22}/>
+                <p className="text-sm">{hideDetails ? 'Show' : 'Hide'} Details</p>
+              </button>
+
+              <button
+                className="flex_center gap-1.5 border-2 border-slate-200 hover:bg-slate-100 rounded-md px-2 py-1 m-2"
+                onClick={()=>{}}
+              >
+                <Image src='/icons/freeze.svg' alt="icon" height={20} width={20}/>
+                <p className="text-sm">Freeze Card</p>
+              </button>
+            </div>
+            
+            {tiktokCardDetails && <TiktokCard 
+              number={tiktokCardDetails.number} 
+              cardName={tiktokCardDetails.cardName} 
+              cvc={tiktokCardDetails.cvc} 
+              expiryDate={tiktokCardDetails.expiryDate}
+              hideDetails={hideDetails}
+            />}
+
+          </div>
+
+
+          <div className="bg-gray-50 rounded-xl p-4 h-[360px] flex-grow flex-col justify-start items-start relative">
+            
+            <h2 className="text-gray-900 dark:text-white text-xl md:text-2xl font-bold mb-4 text-center">
+              Your Tiktok Wallet
+            </h2>
+            <div className="flex justify-center items-baseline gap-2">
+              <Image src="/icons/fiatCoins.svg" alt="fiat" height={20} width={30} className="-rotate-3 relative top-1"/>
+              <p className="text-2xl text-center font-normal text-gray-500 dark:text-gray-400 mb-6">
+                {walletDetails?.fiatAmount} {walletDetails?.currency}
+              </p>
+            </div>
+
+            <div className="flex justify-center items-baseline gap-2">
+              <Image src="/icons/tiktokCoins.svg" alt="fiat" height={20} width={30} className="-rotate-3 relative top-1"/>
+              <p className="text-2xl text-center font-normal text-gray-500 dark:text-gray-400 mb-6">
+                {walletDetails?.tiktokCoins} Tiktok Coins
+              </p>
+            </div>
+
+            <div className="absolute bottom-0 w-full flex justify-evenly items-start">
               <div className="flex-1 flex flex-col justify-start items-center">
                 <Link
                   href="/wallet/topup"
@@ -118,11 +167,15 @@ const WalletPage: React.FC = () => {
                   Exchange cash to TikTok Coin.
                 </p>
               </div>
-
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800 flex_center gap-2">
+          </div>
+            
 
+            <div className="bg-gray-50 dark:bg-gray-800 h-[360px] p-4 flex flex-col justify-start items-center gap-6">
+                <h2 className="text-gray-900 dark:text-white text-xl md:text-2xl font-bold mb-2">
+                  Your Summary
+                </h2>
               <div className="flex-1 w-full h-full flex_col_center gap-3">
                 <div className="flex_center gap-3">
                   <Image src="/icons/incomingTransactions.svg" alt="icon" height={45} width={45}/>
@@ -140,12 +193,8 @@ const WalletPage: React.FC = () => {
               </div>
             </div>
 
-          </div>
 
-          <div className="col-span-1 bg-gray-50 p-4 rounded-md shadow-sm w-full flex flex-col justify-center items-start">
-            <h2 className="text-gray-900 dark:text-white text-xl md:text-2xl font-bold mb-2">Your Tiktok Card</h2>
-            <Image src="/images/tiktokCard.svg" alt="tiktokcard" height={150} width={200}/>
-          </div>
+
         </div>
 
         <div className="w-full">
