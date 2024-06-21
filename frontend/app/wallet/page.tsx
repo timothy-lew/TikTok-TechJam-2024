@@ -64,7 +64,7 @@ const WalletPage: React.FC = () => {
       <div className="bg-gray-50 rounded-xl p-4 shadow-sm w-full">
         <h1 className="font-bold text-2xl md:text-3xl">
           Hello! Good to see you{" "}
-          <span className="capitalize">{user?.name || "NOT LOGGED IN"}</span>
+          <span className="capitalize">{user?.firstName || "NOT LOGGED IN"}</span>
         </h1>
       </div>
 

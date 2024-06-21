@@ -1,29 +1,57 @@
-type LoginDetails = {
-  email: string,
-  password: string,
+type UserRole = "ROLE_BUYER" | "ROLE_SELLER";
+
+interface BuyerProfile {
+  id: string,
+  shippingAddress: string,
+  billingAddress: string,
+  defaultPaymentMethod: string,
 }
 
-interface UserDetails {
+// Cross checked
+interface SellerProfile {
   id: string,
-  username: string,
-  email: string,
-  // firstName: string,
-  // lastName: string,
-  name: string,
-  roles: "ROLE_BUYER" | "ROLE_SELLER",
-  profilePic?: string,
+  businessName: string,
+  businessDescription: string,
+}
+
+// Cross checked
+interface UserWallet {
+  id: string,
   cashBalance: number,
   coinBalance: number,
 }
 
-type UserSignInDetails = {
+// Cross checked
+interface UserDetails {
+  id: string,
   username: string,
-  password: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  roles: UserRole[],
+  buyerProfile?: BuyerProfile,
+  sellerProfile?: SellerProfile,
+  wallet?:UserWallet
 }
 
+
+// Cross checked
 type UserSignUpDetails = {
   username: string,
-  name: string,
+  password: string,
   email: string,
+  firstName: string,
+  lastName: string,
+  roles: UserRole[],
+  shippingAddress: string,
+  billingAddress: string,
+  defaultPaymentMethod: string,
+  businessName: string,
+  businessDescription:string,
+}
+
+// Cross checked
+type UserSignInDetails = {
+  username: string,
   password: string,
 }

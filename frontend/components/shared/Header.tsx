@@ -94,8 +94,8 @@ const Header: React.FC = () => {
                   <DropdownMenuTrigger asChild>
                     <Button className="bg-transparent p-0">
                       <Avatar>
-                        <AvatarImage src={user.profilePic} alt="dp" className=""/>
-                        <AvatarFallback>{user.name[0]+user.name[1]}</AvatarFallback>
+                        {/* <AvatarImage src={user.profilePic} alt="dp" className=""/> */}
+                        <AvatarFallback>{user.firstName[0]+user.lastName[1]}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>

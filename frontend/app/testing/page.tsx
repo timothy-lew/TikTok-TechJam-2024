@@ -1,7 +1,10 @@
 "use client"
-
+import { useState } from "react";
 
 export const Testing = () => {
+
+    const [accessToken, setAccessToken] = useState("");
+    const [refreshToken, setRefreshToken] = useState("");
   
     const callAPI = async () => {
         try {
@@ -31,6 +34,9 @@ export const Testing = () => {
             });
         
             const data = await response.json();
+            
+            setAccessToken(data.accessToken);
+            setRefreshToken(data.refreshToken);
 
             console.log(data);
         }
@@ -42,7 +48,7 @@ export const Testing = () => {
   
   
     return (
-    <div>
+    <div className="flex_col_center w-full">
 
         <button
             onClick={callAPI}
@@ -50,7 +56,8 @@ export const Testing = () => {
         >
             Test
         </button>
-
+        
+        <p>{accessToken}</p>
 
     </div>
   )
