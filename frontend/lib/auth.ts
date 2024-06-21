@@ -49,14 +49,33 @@ export async function updateSession(request : NextRequest){
 export async function signup(userSignUpDetails : UserSignUpDetails){
   try {
     // const response = await fetch('http://localhost:8080/api/users/signup', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(userSignUpDetails),
-    // });
+    const response = await fetch('http://localhost:8080/api/login', {
 
-    // const data = response.json();
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': 'Bearer ' + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Njc1MzBmMmQ2MmFmMTZmNThjNjM3ODkiLCJpYXQiOjE3MTg5NzYyMTMsImV4cCI6MTcxOTA2MjYxM30.jMmofrfk1_JUng535BvGsZzHdMlM0yXqhUeRdAzTOIM"
+      },
+      // body: JSON.stringify(userSignUpDetails),
+      body: JSON.stringify({
+        "username": "alex",
+        "password": "password",
+        "email": "alex@gmail.com",
+        "firstName": "alex",
+        "lastName": "lee",
+        "roles": ["ROLE_BUYER", "ROLE_SELLER"],
+        "shippingAddress": "Block 123",
+        "billingAddress": "Block 123",
+        "defaultPaymentMethod": "Card",
+        "businessName": "Shop 123",
+        "businessDescription": "Tools 123"
+    }),
+
+    });
+
+    const data = response.json();
+
+    console.log(data);
 
     // HARDCODE - get from `data`
     const returnedUserDetails : UserDetails = {
