@@ -3,8 +3,13 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/auth-provider';
 
 const Signup: React.FC = () => {
+
+  const auth = useAuth();
+
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -33,23 +38,31 @@ const Signup: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:8080/api/users/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.status === 201) {
-        setIsModalOpen(true);
-      } else {
-        console.error('Signup failed');
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
+    try{
+      auth?.signUp(formData);
     }
+    catch(error){
+      alert('Error in signing up!');
+    }
+  
+    // I shifted these code to @lib/auth.ts which is called through our auth provider
+    // try {
+    //   const response = await fetch('http://localhost:8080/api/users/signup', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(formData),
+    //   });
+
+    //   if (response.status === 201) {
+    //     setIsModalOpen(true);
+    //   } else {
+    //     console.error('Signup failed');
+    //   }
+    // } catch (error) {
+    //   console.error('An error occurred:', error);
+    // }
   };
 
   const closeModalAndRedirect = () => {

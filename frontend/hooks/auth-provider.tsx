@@ -1,6 +1,6 @@
 "use client"
 
-import { login } from "@/lib/auth";
+import { login, logout, signup } from "@/lib/auth";
 import { createContext, useContext, useState } from "react";
 import { ReactNode } from "react";
 
@@ -40,7 +40,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
     }
   }
 
-  const signUp = (userSignUpDetails : UserSignUpDetails) => {
+  const signUp = async (userSignUpDetails : UserSignUpDetails) => {
 
 
       // HARDCODE - get from `data`
@@ -64,7 +64,8 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
   }
 
 
-  const signOut = () => {
+  const signOut = async () => {
+    await logout();
     setUser(null);
   }
 

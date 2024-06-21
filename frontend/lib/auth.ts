@@ -44,6 +44,45 @@ export async function updateSession(request : NextRequest){
   return request
 }
 
+export async function signup(userSignUpDetails : UserSignUpDetails){
+  try {
+    const response = await fetch('http://localhost:8080/api/users/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userSignUpDetails),
+    });
+
+    const data = response.json();
+
+    // HARDCODE - get from `data`
+    const returnedUserDetails : UserDetails = {
+      id: "7sdv8w23fn",
+      username: "chucky",
+      email: "chuck@gmail.com",
+      // firstName: "Chuck",
+      // lastName: "Lee",
+      roles: "ROLE_BUYER",
+      name: "Chuck",
+      cashBalance: 900.34,
+      coinBalance: 98721,
+    }
+
+    // Create the session
+    const expires = new Date(Date.now() + 10 * 1000);
+    const session = await encrypt({ returnedUserDetails, expires });
+
+    cookies().set('session', session, { expires, httpOnly: true})
+
+    return returnedUserDetails;
+
+  } catch (error) {
+    console.error('An error occurred:', error);
+    throw new Error(`Error in signing up ${error}`);
+  }
+}
+
 export async function login(userSignInDetails : UserSignInDetails){
 
   try{
@@ -84,9 +123,9 @@ export async function login(userSignInDetails : UserSignInDetails){
 
   }
   catch(error){
-    console.log(`Error in sign in: ${error}`)
+    console.log(`Error in sign in: ${error}`);
 
-    return null;
+    throw new Error(`Error in signing in ${error}`);
   }
 
 
