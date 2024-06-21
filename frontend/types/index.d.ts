@@ -23,5 +23,7 @@ type UserSignInDetails = {
 
 type UserSignUpDetails = {
   username: string,
+  name: string,
+  email: string,
   password: string,
 }

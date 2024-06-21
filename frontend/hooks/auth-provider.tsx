@@ -41,26 +41,13 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
   }
 
   const signUp = async (userSignUpDetails : UserSignUpDetails) => {
-
-
-      // HARDCODE - get from `data`
-      const tokenType = "";
-      const accessToken = "";
-      const refreshToken = "";
-
-      const returnedUserDetails : UserDetails = {
-        id: "7sdv8w23fn",
-        username: "chucky",
-        email: "chuck@gmail.com",
-        // firstName: "Chuck",
-        // lastName: "Lee",
-        roles: "ROLE_BUYER",
-        name: "Chuck",
-        cashBalance: 900.34,
-        coinBalance: 98721,
-      }
-
+    try{
+      const returnedUserDetails = await signup(userSignUpDetails);
       setUser(returnedUserDetails);
+    }
+    catch(error){
+      console.log(`Error in sign in: ${error}`)
+    }
   }
 
 

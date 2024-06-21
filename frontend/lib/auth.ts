@@ -46,34 +46,34 @@ export async function updateSession(request : NextRequest){
 
 export async function signup(userSignUpDetails : UserSignUpDetails){
   try {
-    const response = await fetch('http://localhost:8080/api/users/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userSignUpDetails),
-    });
+    // const response = await fetch('http://localhost:8080/api/users/signup', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(userSignUpDetails),
+    // });
 
-    const data = response.json();
+    // const data = response.json();
 
     // HARDCODE - get from `data`
     const returnedUserDetails : UserDetails = {
       id: "7sdv8w23fn",
-      username: "chucky",
-      email: "chuck@gmail.com",
+      username: userSignUpDetails.username,
+      email: userSignUpDetails.email,
       // firstName: "Chuck",
       // lastName: "Lee",
       roles: "ROLE_BUYER",
-      name: "Chuck",
+      name: userSignUpDetails.name,
       cashBalance: 900.34,
       coinBalance: 98721,
     }
 
     // Create the session
-    const expires = new Date(Date.now() + 10 * 1000);
-    const session = await encrypt({ returnedUserDetails, expires });
+    // const expires = new Date(Date.now() + 10 * 1000);
+    // const session = await encrypt({ returnedUserDetails, expires });
 
-    cookies().set('session', session, { expires, httpOnly: true})
+    // cookies().set('session', session, { expires, httpOnly: true})
 
     return returnedUserDetails;
 
@@ -114,10 +114,10 @@ export async function login(userSignInDetails : UserSignInDetails){
     }
 
     // Create the session
-    const expires = new Date(Date.now() + 10 * 1000);
-    const session = await encrypt({ returnedUserDetails, expires });
+    // const expires = new Date(Date.now() + 10 * 1000);
+    // const session = await encrypt({ returnedUserDetails, expires });
 
-    cookies().set('session', session, { expires, httpOnly: true})
+    // cookies().set('session', session, { expires, httpOnly: true})
 
     return returnedUserDetails;
 
