@@ -1,5 +1,6 @@
 package com.example.backend.item.controller;
 
+import com.example.backend.common.controller.BaseController;
 import com.example.backend.item.dto.ItemDTO;
 import com.example.backend.item.dto.ItemResponseDTO;
 import com.example.backend.item.service.ItemService;
@@ -16,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/items")
 @Slf4j
-public class ItemController {
+public class ItemController extends BaseController {
 
     private final ItemService itemService;
 

@@ -33,7 +33,7 @@ public class ProfileController extends BaseController {
 
     @GetMapping("/buyer/{userId}")
     public ResponseEntity<BuyerProfileResponseDTO> getBuyerProfile(@PathVariable String userId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        if (isUserBuyer(userPrincipal)) {
+        if (userNotBuyer(userPrincipal)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         BuyerProfileResponseDTO buyerProfileResponseDTO = buyerProfileService.getBuyerProfile(userId);

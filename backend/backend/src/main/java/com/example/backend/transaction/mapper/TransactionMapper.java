@@ -4,73 +4,68 @@ import com.example.backend.transaction.dto.ConversionTransactionDTO;
 import com.example.backend.transaction.dto.PurchaseTransactionDTO;
 import com.example.backend.transaction.dto.TopUpTransactionDTO;
 import com.example.backend.transaction.dto.TransactionResponseDTO;
-import com.example.backend.transaction.model.ConversionTransaction;
-import com.example.backend.transaction.model.PurchaseTransaction;
-import com.example.backend.transaction.model.TopUpTransaction;
 import com.example.backend.transaction.model.Transaction;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class TransactionMapper {
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface TransactionMapper {
 
-    public TransactionResponseDTO fromTransactiontoTransactionResponseDTO(Transaction transaction) {
-        TransactionResponseDTO dto = new TransactionResponseDTO();
-        dto.setId(transaction.getId());
-        dto.setTransactionType(transaction.getTransactionType().toString());
-        dto.setTransactionDate(transaction.getTransactionDate().toString());
-        dto.setUserId(transaction.getUserId());
+    @Mapping(target = "purchaseDetails", source = ".", qualifiedByName = "toPurchaseDetails")
+    @Mapping(target = "topUpDetails", source = ".", qualifiedByName = "toTopUpDetails")
+    @Mapping(target = "conversionDetails", source = ".", qualifiedByName = "toConversionDetails")
+    TransactionResponseDTO fromTransactiontoTransactionResponseDTO(Transaction transaction);
 
-        if (transaction instanceof PurchaseTransaction) {
-            PurchaseTransaction pt = (PurchaseTransaction) transaction;
-            dto.setBuyerProfileId(pt.getBuyerProfileId());
-            dto.setSellerProfileId(pt.getSellerProfileId());
-            dto.setItemId(pt.getItemId());
-            dto.setPrice(pt.getPrice());
-            dto.setQuantity(pt.getQuantity());
-            dto.setTotalAmount(pt.getTotalAmount());
-        } else if (transaction instanceof TopUpTransaction) {
-            TopUpTransaction tt = (TopUpTransaction) transaction;
-            dto.setTopUpAmount(tt.getTopUpAmount());
-            dto.setTopUpTransactionType(tt.getTopUpTransactionType().toString());
-        } else if (transaction instanceof ConversionTransaction) {
-            ConversionTransaction ct = (ConversionTransaction) transaction;
-            dto.setConversionRate(ct.getConversionRate());
-            dto.setCashBalance(ct.getCashBalance());
-            dto.setCoinBalance(ct.getCoinBalance());
+    @Named("toPurchaseDetails")
+    default TransactionResponseDTO.PurchaseDetails toPurchaseDetails(Transaction transaction) {
+        if (transaction.getTransactionType() != Transaction.TransactionType.PURCHASE) {
+            return null;
         }
-
-        return dto;
+        return new TransactionResponseDTO.PurchaseDetails(
+                transaction.getBuyerProfileId(),
+                transaction.getSellerProfileId(),
+                transaction.getItemId(),
+                transaction.getQuantity()
+        );
     }
 
-    public Transaction toEntity(PurchaseTransactionDTO dto) {
-        PurchaseTransaction pt = new PurchaseTransaction();
-        pt.setUserId(dto.getUserId());
-        pt.setBuyerProfileId(dto.getBuyerProfileId());
-        pt.setSellerProfileId(dto.getSellerProfileId());
-        pt.setItemId(dto.getItemId());
-        pt.setPrice(dto.getPrice());
-        pt.setQuantity(dto.getQuantity());
-        pt.setTotalAmount(dto.getTotalAmount());
-        pt.setTransactionType(Transaction.TransactionType.PURCHASE);
-        return pt;
+    @Named("toTopUpDetails")
+    default TransactionResponseDTO.TopUpDetails toTopUpDetails(Transaction transaction) {
+        if (transaction.getTransactionType() != Transaction.TransactionType.TOPUP) {
+            return null;
+        }
+        return new TransactionResponseDTO.TopUpDetails(
+                transaction.getTopUpTransactionType() != null ? transaction.getTopUpTransactionType().toString() : null,
+                transaction.getTopUpAmount()
+        );
     }
 
-    public Transaction toEntity(TopUpTransactionDTO dto) {
-        TopUpTransaction tt = new TopUpTransaction();
-        tt.setUserId(dto.getUserId());
-        tt.setTopUpAmount(dto.getTopUpAmount());
-        tt.setTopUpTransactionType(TopUpTransaction.TopUpTransactionType.valueOf(dto.getTopUpTransactionType()));
-        tt.setTransactionType(Transaction.TransactionType.TOPUP);
-        return tt;
+    @Named("toConversionDetails")
+    default TransactionResponseDTO.ConversionDetails toConversionDetails(Transaction transaction) {
+        if (transaction.getTransactionType() != Transaction.TransactionType.CONVERSION) {
+            return null;
+        }
+        return new TransactionResponseDTO.ConversionDetails(
+                transaction.getConversionRate(),
+                transaction.getCashBalance(),
+                transaction.getCoinBalance()
+        );
     }
 
-    public Transaction toEntity(ConversionTransactionDTO dto) {
-        ConversionTransaction ct = new ConversionTransaction();
-        ct.setUserId(dto.getUserId());
-        ct.setConversionRate(dto.getConversionRate());
-        ct.setCashBalance(dto.getCashBalance());
-        ct.setCoinBalance(dto.getCoinBalance());
-        ct.setTransactionType(Transaction.TransactionType.CONVERSION);
-        return ct;
-    }
+    @Mapping(target = "transactionDate", ignore = true)
+    @Mapping(target = "transactionType", constant = "CONVERSION")
+    Transaction fromDTOtoTransaction(ConversionTransactionDTO dto);
+
+    @Mapping(target = "transactionDate", ignore = true)
+    @Mapping(target = "transactionType", constant = "TOPUP")
+    Transaction fromDTOtoTransaction(TopUpTransactionDTO dto);
+
+    @Mapping(target = "transactionDate", ignore = true)
+    @Mapping(target = "transactionType", constant = "PURCHASE")
+    @Mapping(target = "userId", constant = "null")
+    @Mapping(target = "price", ignore = true)
+    @Mapping(target = "totalAmount", ignore = true)
+    Transaction fromDTOtoTransaction(PurchaseTransactionDTO dto);
 }

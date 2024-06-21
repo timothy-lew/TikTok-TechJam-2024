@@ -4,7 +4,6 @@ server:
 spring:
   data:
     mongodb:
-      mongodb cloud (not needed yet(?))
       uri: mongodb+srv://mongo:P%40ssword123@cluster0.bfooric.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: shopping_platform
       # uri: mongodb://root:secret@localhost:27017/?retryWrites=true&w=majority&appName=Cluster0
