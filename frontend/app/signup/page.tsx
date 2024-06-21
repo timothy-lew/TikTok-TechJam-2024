@@ -39,10 +39,12 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try{
+
       auth?.signUp(formData);
     }
     catch(error){
-      alert('Error in signing up!');
+      alert('Error in signing up from form!');
+      console.log(`Error in signing up form: ${error}`);
     }
   
     // I shifted these code to @lib/auth.ts which is called through our auth provider

@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 import {SignJWT, jwtVerify } from 'jose';
+
 const secretKey = "secret";
 const key = new TextEncoder().encode(secretKey);
 
@@ -32,6 +33,7 @@ export async function updateSession(request : NextRequest){
   const parsed = await decrypt(session);
   parsed.expires = new Date(Date.now() + 10*1000) // refresh the session
 
+  // Create a new response object to manipulate before sending it to client
   const res = NextResponse.next();
 
   res.cookies.set({
@@ -70,10 +72,10 @@ export async function signup(userSignUpDetails : UserSignUpDetails){
     }
 
     // Create the session
-    // const expires = new Date(Date.now() + 10 * 1000);
-    // const session = await encrypt({ returnedUserDetails, expires });
+    const expires = new Date(Date.now() + 10 * 1000);
+    const session = await encrypt({ returnedUserDetails, expires });
 
-    // cookies().set('session', session, { expires, httpOnly: true})
+    cookies().set('session', session, { expires, httpOnly: true})
 
     return returnedUserDetails;
 
@@ -86,7 +88,6 @@ export async function signup(userSignUpDetails : UserSignUpDetails){
 export async function login(userSignInDetails : UserSignInDetails){
 
   try{
-    console.log(`Sending to ${process.env.NEXT_PUBLIC_BACKEND_URL}`);
 
     // const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
     //   method: 'POST',

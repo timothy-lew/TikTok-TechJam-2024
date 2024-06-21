@@ -12,14 +12,9 @@ type Auth = {
 }
 
 // const initialAuthContext = {
-//   user: {
-//     userId: "Test",
-//     email: "chuck@gmail.com",
-//     firstName: "Chuck",
-//     lastName: "Lee",
-//     profilePic:""
-//   },
+//   user: null,
 //   signIn: () => {},
+//   signUp: () => {},
 //   signOut: () => {},
 // }
 
@@ -46,7 +41,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
       setUser(returnedUserDetails);
     }
     catch(error){
-      console.log(`Error in sign in: ${error}`)
+      console.log(`Error in sign up: ${error}`)
     }
   }
 
