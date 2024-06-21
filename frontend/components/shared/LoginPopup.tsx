@@ -26,6 +26,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, isOpen }) => {
     // Perform authentication logic here
     // For now, we assume the user details are correct and sign them in
     const userDetails = {
+      userId: "",
       email: email,
       firstName: "Chuck", // Replace with actual first name from your auth logic
       lastName: "Lee", // Replace with actual last name from your auth logic

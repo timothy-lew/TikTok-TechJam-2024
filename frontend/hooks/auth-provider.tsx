@@ -9,20 +9,20 @@ type Auth = {
   signOut: () => void;
 }
 
-const initialAuthContext = {
-  user: {
-    userId: "Test",
-    email: "chuck@gmail.com",
-    firstName: "Chuck",
-    lastName: "Lee",
-    profilePic:""
-  },
-  signIn: () => {},
-  signOut: () => {},
-}
+// const initialAuthContext = {
+//   user: {
+//     userId: "Test",
+//     email: "chuck@gmail.com",
+//     firstName: "Chuck",
+//     lastName: "Lee",
+//     profilePic:""
+//   },
+//   signIn: () => {},
+//   signOut: () => {},
+// }
 
 
-const AuthContext = createContext<Auth | null>(initialAuthContext);
+const AuthContext = createContext<Auth | null>(null);
 
 export const AuthProvider = ( {children} : {children: ReactNode}) => {
 

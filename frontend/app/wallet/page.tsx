@@ -16,11 +16,14 @@ import { type Wallet, useFetchWallet } from "@/hooks/useFetchWallet";
 
 const WalletPage: React.FC = () => {
   const auth = useAuth();
+
+  const user = auth?.user || null;
+
   // TODO: Fix this if not auth display pop
-  const [isLoginPopupOpen, setLoginPopupOpen] = useState(auth===null);
+  const [isLoginPopupOpen, setLoginPopupOpen] = useState(user===null);
 
   const handleClosePopup = () => setLoginPopupOpen(false);
-  if (!auth) {
+  if (!user) {
     return (
       <div className="flex_center min-h-screen bg-background text-foreground">
         {isLoginPopupOpen ? (
@@ -33,7 +36,6 @@ const WalletPage: React.FC = () => {
     );
   }
 
-  const user = auth.user || null;
 
   // Process Transaction Data
   const transactionData : Transaction[] = useFetchTransactions(user?.userId || "");
