@@ -8,6 +8,8 @@ import { useAuth } from "@/hooks/auth-provider";
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { FaWallet } from "react-icons/fa";
+import { FaShop } from "react-icons/fa6";
+
  
 import { displayAccounts, sidebarFooterCompany, sidebarFooterPrograms, sidebarFooterTermsPolicies } from "@/constants";
 import FriendsAccount from '@/components/shared/FriendsAccount';
@@ -127,6 +129,14 @@ const SideBar = () => {
         <FaWallet className={`${pathname.startsWith('/wallet') ? "text-tiktok-red" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
         <div className="flex_center gap-1.5">
           <p className={`hidden md:flex_col_center ${pathname.startsWith('/wallet') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Wallet</p>
+          <span className="text-xs px-1.5 py-0.5 bg-tiktok-red text-white font-bold rounded-xl">New</span>
+        </div>
+      </Link>
+
+      <Link href="/shop" className="flex justify-center items-center gap-2">
+        <FaShop className={`${pathname.startsWith('/shop') ? "text-tiktok-red" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
+        <div className="flex_center gap-1.5">
+          <p className={`hidden md:flex_col_center ${pathname.startsWith('/shop') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Shop</p>
           <span className="text-xs px-1.5 py-0.5 bg-tiktok-red text-white font-bold rounded-xl">New</span>
         </div>
       </Link>
