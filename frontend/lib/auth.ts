@@ -1,3 +1,5 @@
+"use server"
+
 // https://www.youtube.com/watch?v=DJvM2lSPn6w
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -42,20 +44,51 @@ export async function updateSession(request : NextRequest){
   return request
 }
 
-export async function login(loginDetails : LoginDetails){
+export async function login(userSignInDetails : UserSignInDetails){
 
-  // HARDCODE
-  const user : UserDetails = {
-    email: loginDetails.email,
-    firstName: 'Chuck',
-    lastName: 'Lee',
+  try{
+    console.log(`Sending to ${process.env.NEXT_PUBLIC_BACKEND_URL}`);
+
+    // const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(userSignInDetails),
+    // });
+
+    // const data = await response.json();
+
+    // console.log(`Sign In Success: ${data}`);
+
+    // HARDCODE - get from `data`
+    const returnedUserDetails : UserDetails = {
+      id: "7sdv8w23fn",
+      username: "chucky",
+      email: "chuck@gmail.com",
+      // firstName: "Chuck",
+      // lastName: "Lee",
+      roles: "ROLE_BUYER",
+      name: "Chuck",
+      cashBalance: 900.34,
+      coinBalance: 98721,
+    }
+
+    // Create the session
+    const expires = new Date(Date.now() + 10 * 1000);
+    const session = await encrypt({ returnedUserDetails, expires });
+
+    cookies().set('session', session, { expires, httpOnly: true})
+
+    return returnedUserDetails;
+
+  }
+  catch(error){
+    console.log(`Error in sign in: ${error}`)
+
+    return null;
   }
 
-  // Create the session
-  const expires = new Date(Date.now() + 10 * 1000);
-  const session = await encrypt({ user, expires });
-
-  cookies().set('session', session, { expires, httpOnly: true})
 
 
 }

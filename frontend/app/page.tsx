@@ -11,17 +11,15 @@ const HomePage = () => {
 
   // HARDCODE
   const userDetails = {
-    email: "chuck@gmail.com",
-    firstName: "Chuck",
-    lastName: "Lee",
-    profilePic:""
+    username: "chucky",
+    password: "TODO:hash",
   }
   
   return (
     <div>
       {user?
       <div>
-        <p>Signed in with {user.email}, {user.firstName}</p>
+        <p>Signed in with {user.email}, {user.name}</p>
         <button className="bg-red-400 px-4 py-2 rounded-lg" onClick={()=>{auth?.signOut()}}>Log out</button>
       </div>
       :

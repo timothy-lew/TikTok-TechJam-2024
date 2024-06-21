@@ -38,7 +38,7 @@ const WalletPage: React.FC = () => {
 
 
   // Process Transaction Data
-  const transactionData : Transaction[] = useFetchTransactions(user?.userId || "");
+  const transactionData : Transaction[] = useFetchTransactions(user?.id || "");
 
   let incoming : number = 0;
   let outgoing : number = 0;
@@ -48,17 +48,17 @@ const WalletPage: React.FC = () => {
     else outgoing += transaction.amount;
   })
 
-  const tiktokCardDetails = useFetchTiktokCard(user?.userId || "");
+  const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   const [hideDetails, setHideDetails] = useState<boolean>(true);
 
-  const walletDetails = useFetchWallet(user?.userId || "");
+  const walletDetails = useFetchWallet(user?.id || "");
 
   // Need to implement logic to get balance and recent transaction history from api
   return (
       <section className="bg-white dark:bg-gray-900 flex flex-col w-full justify-start items-start gap-4 px-6">
 
         <div className="bg-gray-50 rounded-xl p-4 shadow-sm w-full">
-          <h1 className="font-bold text-2xl md:text-3xl">Hello! Good to see you <span className="capitalize">{user?.firstName || "NOT LOGGED IN"}</span></h1>
+          <h1 className="font-bold text-2xl md:text-3xl">Hello! Good to see you <span className="capitalize">{user?.name || "NOT LOGGED IN"}</span></h1>
         </div>
 
         <div className="w-full flex justify-start items-start gap-6 min-h-[360px]">
