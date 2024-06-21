@@ -12,4 +12,14 @@ public class BaseController {
         }
         return principal.getId();
     }
+
+    // Method to check if user is ROLE_SELLER
+    public boolean isUserSeller(UserPrincipal principal) {
+        return principal.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SELLER"));
+    }
+
+    // Method to check if user is ROLE_BUYER
+    public boolean isUserBuyer(UserPrincipal principal) {
+        return principal.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_BUYER"));
+    }
 }
