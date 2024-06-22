@@ -189,13 +189,13 @@ public class TOKToken extends Contract {
         return executeRemoteCallTransaction(function);
     }
 
-    public RemoteFunctionCall<TransactionReceipt> balanceOf(String account) {
-        final Function function = new Function(
-                FUNC_BALANCEOF, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, account)), 
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
-    }
+//    public RemoteFunctionCall<TransactionReceipt> balanceOf(String account) {
+//        final Function function = new Function(
+//                FUNC_BALANCEOF,
+//                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, account)),
+//                Collections.<TypeReference<?>>emptyList());
+//        return executeRemoteCallTransaction(function);
+//    }
 
     public RemoteFunctionCall<TransactionReceipt> creator() {
         final Function function = new Function(
@@ -203,6 +203,14 @@ public class TOKToken extends Contract {
                 Arrays.<Type>asList(), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<BigInteger> balanceOf(String account) {
+        final Function function = new Function(
+                FUNC_BALANCEOF,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, account)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+        return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteFunctionCall<TransactionReceipt> decimals() {

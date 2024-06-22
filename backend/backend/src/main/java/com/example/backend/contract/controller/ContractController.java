@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -23,11 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContractController {
     private final ContractService contractService;
 
+    // this endpoint is an entry point for local dev
+    // alex's endpoint will call contractService.sendCrypto(sendCryptoDTO)
      @PostMapping("/transfer")
-     public ResponseEntity<SendCryptoDTO> sendCrypto(@RequestBody @Valid SendCryptoDTO
+     public ResponseEntity<BigDecimal> sendCrypto(@RequestBody @Valid SendCryptoDTO
      sendCryptoDTO) {
          log.info("body = {}", sendCryptoDTO);
-         SendCryptoDTO responseDTO = contractService.sendCrypto(sendCryptoDTO);
-     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+         BigDecimal balance = contractService.sendCrypto(sendCryptoDTO);
+     return new ResponseEntity<>(balance, HttpStatus.CREATED);
      }
 }

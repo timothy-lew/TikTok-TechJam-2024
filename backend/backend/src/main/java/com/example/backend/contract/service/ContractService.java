@@ -25,18 +25,6 @@ import java.math.BigInteger;
 @Service
 @RequiredArgsConstructor
 public class ContractService {
-
-    public SendCryptoDTO sendCrypto(SendCryptoDTO sendCryptoDTO) {
-        try {
-            TransactionReceipt receipt = transfer(sendCryptoDTO.getAddress(), sendCryptoDTO.getAmount());
-            log.info("receipt: {}", receipt);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
-        return sendCryptoDTO;
-    }
-
     @Value("${web3.rpc.url}")
 //    private String rpcUrl;
     private String rpcUrl = "http://127.0.0.1:8545";
@@ -61,10 +49,33 @@ public class ContractService {
         this.contract = TOKToken.load(contractAddress, web3j, transactionManager, gasProvider);
     }
 
+    public BigDecimal sendCrypto(SendCryptoDTO sendCryptoDTO) {
+        try {
+            transfer(sendCryptoDTO.getAddress(), sendCryptoDTO.getAmount());
+            return getBalance(sendCryptoDTO.getAddress());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
     public TransactionReceipt transfer(String userAddress, Long amountInEth) throws Exception {
         BigDecimal etherAmount = BigDecimal.valueOf(amountInEth);
         BigInteger weiAmount = Convert.toWei(etherAmount, Convert.Unit.ETHER).toBigInteger();
         return contract.transfer(userAddress, weiAmount).send();
+    }
+
+    public BigDecimal getBalance(String address) {
+        try {
+            BigInteger balanceInWei = contract.balanceOf(address).send();
+            BigDecimal balanceInEth = Convert.fromWei(balanceInWei.toString(), Convert.Unit.ETHER);
+            log.info("address {} has: {} TOKTokens", address, balanceInEth);
+
+            return balanceInEth;
+        } catch (Exception e) {
+            log.error("Error getting balance: {}", e.getMessage());
+            throw new RuntimeException("Error getting balance", e);
+        }
     }
 }
 
