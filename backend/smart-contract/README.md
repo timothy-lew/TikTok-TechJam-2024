@@ -29,10 +29,10 @@ Counting installed Node versions: none
 Auditing installed plugins: OK
 ```
 
-5. Install node 16.14.2
+5. Install node 20.9.0
 
 ```console
-nodenv install 16.14.2
+nodenv install 20.9.0
 ```
 
 6. Installs shims for all Node executables known to nodenv
@@ -93,4 +93,10 @@ yarn hardhat deploy --network hardhat/localhost
 
 ```
 yarn test
+```
+
+6. Generate wrapper code for Java
+
+```
+web3j generate solidity -b ./constants/TOKToken.bin -a ./constants/TOKToken.abi -o ../backend/src/main/java -p com.example.backend.contract
 ```

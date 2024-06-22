@@ -56,13 +56,13 @@ Start the application in the following order.
 cd path/to/repository/TikTok-TechJam-2024/backend/backend
 ```
 
-2. Compile the project with Maven
+7. Compile the project with Maven
 
 ```
 mvn clean package
 ```
 
-3. Run the Java Springboot application:
+8. Run the Java Springboot application:
 
 ```
 java -jar target/backend-0.0.1-SNAPSHOT.jar
