@@ -19,7 +19,7 @@ const HomePage = () => {
     <div>
       {user?
       <div>
-        <p>Signed in with {user.email}, {user.name}</p>
+        <p>Signed in with {user.email}, {user.firstName}</p>
         <button className="bg-red-400 px-4 py-2 rounded-lg" onClick={()=>{auth?.signOut()}}>Log out</button>
       </div>
       :

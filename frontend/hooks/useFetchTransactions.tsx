@@ -18,7 +18,7 @@ export function useFetchTransactions( userId: string){
 
   useEffect(()=>{
 
-    const fetchTransactions = async () => {
+    const fetchTransactions = () => {
 
       try{
         // const response = await fetch('');
