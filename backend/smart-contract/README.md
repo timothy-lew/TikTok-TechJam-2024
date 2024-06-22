@@ -116,6 +116,7 @@ yarn hardhat node
 7. **Reset Nonce Settings**
 
    - If you encounter a nonce error in Metamask, reset the nonce settings for both wallets ([Reset Nonce](https://docs.metamask.io/wallet/how-to/run-devnet/#reset-your-local-nonce-calculation)).
+   - Restart Google Chrome to refresh Metamask
 
 8. Run tests
 
