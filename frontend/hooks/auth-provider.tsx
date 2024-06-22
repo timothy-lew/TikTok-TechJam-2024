@@ -11,13 +11,6 @@ type Auth = {
   signOut: () => void;
 }
 
-// const initialAuthContext = {
-//   user: null,
-//   signIn: () => {},
-//   signUp: () => {},
-//   signOut: () => {},
-// }
-
 
 const AuthContext = createContext<Auth | null>(null);
 
@@ -27,8 +20,10 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
 
   const signIn = async (userSignInDetails : UserSignInDetails) => {
     try{
-      const returnedUserDetails = await login(userSignInDetails);
-      setUser(returnedUserDetails);
+      const userDetails = await login(userSignInDetails);
+      console.log("Inside sign in auth provider:");
+      console.log(userDetails);
+      setUser(userDetails);
     }
     catch(error){
       console.log(`Error in sign in: ${error}`)
@@ -37,10 +32,13 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
 
   const signUp = async (userSignUpDetails : UserSignUpDetails) => {
     try{
-      const returnedUserDetails = await signup(userSignUpDetails);
-      setUser(returnedUserDetails);
+      const userDetails = await signup(userSignUpDetails);
+      console.log("Inside sign up auth provider:");
+      console.log(userDetails);
+      setUser(userDetails);
     }
     catch(error){
+      console.log("Error in auth provider");
       console.log(`Error in sign up: ${error}`)
     }
   }

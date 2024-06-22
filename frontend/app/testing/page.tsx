@@ -1,23 +1,22 @@
 "use client"
 import { useState } from "react";
 
+import { useAuth } from "@/hooks/auth-provider";
+
 export const Testing = () => {
 
     const [accessToken, setAccessToken] = useState("");
     const [refreshToken, setRefreshToken] = useState("");
-  
+    
+    const auth = useAuth();
+
+
     const callAPI = async () => {
+
+        // Sign Up
         try {
-            // const response = await fetch('http://localhost:8080/api/users/signup', {
-            const response = await fetch('http://localhost:8080/api/login', {
-        
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                // 'Authorization': 'Bearer ' + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Njc1MzBmMmQ2MmFmMTZmNThjNjM3ODkiLCJpYXQiOjE3MTg5NzYyMTMsImV4cCI6MTcxOTA2MjYxM30.jMmofrfk1_JUng535BvGsZzHdMlM0yXqhUeRdAzTOIM"
-              },
-              // body: JSON.stringify(userSignUpDetails),
-              body: JSON.stringify({
+
+            const userSignUpDetails : UserSignUpDetails = {
                 "username": "alex",
                 "password": "password",
                 "email": "alex@gmail.com",
@@ -29,18 +28,14 @@ export const Testing = () => {
                 "defaultPaymentMethod": "Card",
                 "businessName": "Shop 123",
                 "businessDescription": "Tools 123"
-            }),
-        
-            });
-        
-            const data = await response.json();
+            }
             
-            setAccessToken(data.accessToken);
-            setRefreshToken(data.refreshToken);
+            auth?.signUp(userSignUpDetails);
 
-            console.log(data);
+
         }
         catch(error){
+            console.log("Error in testing page");
             console.log(error);
         }
 
