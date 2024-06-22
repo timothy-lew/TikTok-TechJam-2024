@@ -3,7 +3,7 @@ import Link from "next/link"
 const SignInOptions = ({ title, iconSVG }: { title: string, iconSVG: JSX.Element }) => {
     return (
       <Link
-		href="/signup/form"
+		href="/login/form"
       	className="flex justify-center items-center w-[300px] px-3 py-2 border border-slate-500 bg-gray-50 hover:bg-gray-100 cursor-pointer"
         >
         

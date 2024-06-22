@@ -46,15 +46,15 @@ const Header: React.FC = () => {
       <header className="bg-white border-b border-gray-200 h-[60px] flex justify-between items-center">
         
           {/* Logo */}
-          <div className="flex_center gap-1 px-4">
-            <Image
-              src="tiktokIconNoBg.svg"
-              alt="Logo"
-              width={30}
-              height={30}
-            />
-            <div className="text-2xl font-bold text-black">TikTok</div>
-          </div>
+            <Link href='/' className="flex_center gap-1 px-4">
+              <Image
+                src="tiktokIconNoBg.svg"
+                alt="Logo"
+                width={30}
+                height={30}
+              />
+              <div className="text-2xl font-bold text-black">TikTok</div>
+            </Link>
 
           {/* Search Bar */}
           <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 w-1/3">

@@ -90,6 +90,9 @@ export async function login(userSignInDetails : UserSignInDetails){
 
     const data = await responseSignIn.json();
 
+    console.log("Inside login in auth.ts - data:")
+    console.log(data);
+
     const userDetails = data.user;
 
     const accessToken = data.accessToken;

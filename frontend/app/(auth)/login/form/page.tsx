@@ -53,7 +53,7 @@ export default function SignInForm() {
           auth?.signIn({
             username: formattedValues.username,
             password: formattedValues.password
-        });
+          });
           alert("Successful Sign In!");
       } catch(error) {
           alert("Error in signing in")
