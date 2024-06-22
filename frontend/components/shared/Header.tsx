@@ -95,7 +95,7 @@ const Header: React.FC = () => {
                     <Button className="bg-transparent p-0">
                       <Avatar>
                         {/* <AvatarImage src={user.profilePic} alt="dp" className=""/> */}
-                        <AvatarFallback>{user.firstName[0]+user.lastName[1]}</AvatarFallback>
+                        <AvatarFallback>{user.firstName[0]+user.lastName[0]}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>

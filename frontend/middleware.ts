@@ -1,7 +1,8 @@
 // middleware.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-const PUBLIC_PATHS = ['/api/login', '/api/users/signup', '/testing', '/wallet', '/'];
+const PUBLIC_PATHS = ['/api/login', '/api/users/signup', '/testing', '/wallet', '/', '/signup', '/signup/form'];
+const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.svg'];
 
 async function refreshToken(request: NextRequest) {
   const refreshToken = request.cookies.get('refreshToken')?.value;
@@ -39,8 +40,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Bypass the middleware for public paths
-  if (PUBLIC_PATHS.includes(pathname)) {
-    console.log("bypassed");
+  if (PUBLIC_PATHS.includes(pathname) || IMAGE_EXTENSIONS.some(ext => pathname.endsWith(ext))) {
     return NextResponse.next();
   }
   
