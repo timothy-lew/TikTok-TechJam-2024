@@ -20,7 +20,7 @@ async function refreshToken(request: NextRequest) {
   const refreshToken = request.cookies.get('refreshToken')?.value;
 
   if (!refreshToken) {
-    return NextResponse.redirect('/login');
+    return NextResponse.redirect(new URL('/login', request.nextUrl.origin).toString());
   }
 
   // TODO:

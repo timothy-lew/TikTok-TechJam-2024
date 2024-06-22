@@ -11,8 +11,8 @@ const HomePage = () => {
 
   // HARDCODE
   const userDetails = {
-    username: "chucky",
-    password: "TODO:hash",
+    username: "alex2",
+    password: "password2",
   }
   
   return (
