@@ -1,7 +1,7 @@
 // middleware.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-const PUBLIC_PATHS = ['/api/login', '/api/users/signup', '/testing', '/wallet', '/', '/signup', '/signup/form'];
+const PUBLIC_PATHS = ['/api/login', '/api/users/signup', '/testing', '/wallet', '/', '/signup', '/signup/form', '/login', '/login/form'];
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.svg'];
 
 async function refreshToken(request: NextRequest) {
