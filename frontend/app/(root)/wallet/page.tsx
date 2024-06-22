@@ -29,6 +29,7 @@ const WalletPage: React.FC = () => {
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(user === null);
 
   const handleClosePopup = () => setLoginPopupOpen(false);
+  
   if (!user) {
     return (
       <div className="flex_center min-h-screen bg-background text-foreground">

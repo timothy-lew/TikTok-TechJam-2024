@@ -15,10 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-type UserSignInDetails = {
-  username: string,
-  password: string,
-};
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -54,7 +50,6 @@ export default function SignInForm() {
             username: formattedValues.username,
             password: formattedValues.password
           });
-          alert("Successful Sign In!");
       } catch(error) {
           alert("Error in signing in")
       }
