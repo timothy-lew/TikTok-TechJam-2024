@@ -8,6 +8,11 @@ import lombok.Setter;
 
 import java.util.Set;
 
+/**
+ * Contains fields for CRUD operations on user.
+ * Buyer and seller profile fields are populated only during account creation.
+ * Updates on buyer and seller profiles are done separately, not through this DTO.
+ */
 @Getter
 @Setter
 public class UserDTO {
@@ -17,12 +22,19 @@ public class UserDTO {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
-    @NotBlank(message = "Name is required")
-    private String name;
+    @NotBlank(message = "First name is required")
+    private String firstName;
+    @NotBlank(message = "Last name is required")
+    private String lastName;
     @NotBlank(message = "Password is required")
     private String password;
     @NotEmpty(message = "At least one role is required")
     private Set<String> roles;
-    private Float cashBalance;
-    private Float coinBalance;
+    // Buyer profile fields indicated once in sign up form, if any.
+    private String shippingAddress;
+    private String billingAddress;
+    private String defaultPaymentMethod;
+    // Seller profile fields indicated once in sign up form, if any.
+    private String businessName;
+    private String businessDescription;
 }

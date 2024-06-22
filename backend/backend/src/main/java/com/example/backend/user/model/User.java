@@ -8,16 +8,15 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * User class to store the user details.
- * One-to-one relationship with Wallet entity.
  * One-to-one relationship with BuyerProfile entity.
  * One-to-one relationship with SellerProfile entity.
+ * One-to-one relationship with Wallet entity.
  */
 @Data
 @NoArgsConstructor
@@ -31,12 +30,13 @@ public class User {
     private String username;
     @Indexed(unique = true)
     private String email;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String password;
     private Set<Role> roles = new HashSet<>(); // A user can have multiple roles
-    @DocumentReference(lazy = true)
+    @DBRef
     private BuyerProfile buyerProfile;
-    @DocumentReference(lazy = true)
+    @DBRef
     private SellerProfile sellerProfile;
     @DBRef
     private Wallet wallet;

@@ -1,11 +1,9 @@
 package com.example.backend.wallet.model;
 
-import com.example.backend.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -20,8 +18,7 @@ public class Wallet {
 
     @Id
     private String id;
+    private String userId;
     private Float cashBalance = 0.0f;
     private Float coinBalance = 0.0f;
-    @DBRef
-    private User user;
 }

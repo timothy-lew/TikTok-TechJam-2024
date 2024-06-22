@@ -13,9 +13,9 @@ public class WalletService {
         this.walletRepository = walletRepository;
     }
 
-    public Wallet createWalletForUser(User user) {
+    public Wallet createWallet(User user) {
         Wallet wallet = new Wallet();
-        wallet.setUser(user);
+        wallet.setUserId(user.getId());
         wallet.setCashBalance(0.0f);
         wallet.setCoinBalance(0.0f);
         return walletRepository.save(wallet);

@@ -12,7 +12,8 @@ import java.util.Collection;
 @Data
 public class UserPrincipal implements UserDetails {
     private String id;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String username;
     private String email;
     @JsonIgnore
@@ -21,7 +22,8 @@ public class UserPrincipal implements UserDetails {
 
     public UserPrincipal(User user) {
         this.id = user.getId();
-        this.name = user.getName();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.password = user.getPassword();

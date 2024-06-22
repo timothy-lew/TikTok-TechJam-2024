@@ -5,6 +5,8 @@ import com.example.backend.auth.dto.LoginResponse;
 import com.example.backend.auth.jwt.JwtTokenProvider;
 import com.example.backend.auth.model.UserPrincipal;
 import com.example.backend.common.exception.InvalidPrincipalException;
+import com.example.backend.user.dto.UserResponseDTO;
+import com.example.backend.user.mapper.UserMapper;
 import com.example.backend.user.model.User;
 import com.example.backend.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +28,13 @@ public class LoginService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public LoginService(PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, UserRepository userRepository) {
+    public LoginService(PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, UserRepository userRepository, UserMapper userMapper) {
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws InvalidPrincipalException {
@@ -44,8 +48,9 @@ public class LoginService implements UserDetailsService {
             }
             String accessToken = tokenProvider.generateAccessToken(user.getId());
             String refreshToken = tokenProvider.generateRefreshToken(user.getId());
+            UserResponseDTO userResponseDTO = userMapper.fromUsertoUserResponseDTO(user);
 
-            return new LoginResponse("", accessToken, refreshToken);
+            return new LoginResponse("Bearer", accessToken, refreshToken, userResponseDTO);
 
         } catch (AuthenticationException e) {
             // Handle authentication failure, rethrow as InvalidPrincipalException

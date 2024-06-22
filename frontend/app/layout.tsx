@@ -24,17 +24,15 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-            <section className="top-0 h-16 bg-black w-full absolute">
+            <section className="top-0 h-16 w-full absolute">
               <Header />
             </section>
             
-            <section className="flex justify-start items-center pt-20">
-              <nav className="w-40 min-h-screen">
+            <section className="flex justify-start items-start pt-20">
                 <SideBar />
-              </nav>
-              <div className="w-full min-h-screen">
+              <main className="w-full min-h-screen">
                 {children}
-              </div>
+              </main>
             </section>
         </AuthProvider>
       </body>
