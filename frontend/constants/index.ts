@@ -17,6 +17,13 @@ export const displayAccounts : DisplayAccount[] = [
   },
   {
     userId: "Test",
+    username: "tiktokshop_sg",
+    name: "TikTok Shop Singapore",
+    profilePic: "/images/profilepics/tiktokshop_sg.jpeg",
+    verified: true
+  },
+  {
+    userId: "Test",
     username: "shou.time",
     name: "Shou",
     profilePic: "/images/profilepics/shou.jpeg",

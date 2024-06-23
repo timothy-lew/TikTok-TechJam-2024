@@ -24,7 +24,7 @@ const SideBar = () => {
 
 
   return (
-    <nav className="w-[60px] md:w-[230px] flex flex-col items-start justify-start gap-4 px-4">
+    <nav className="w-[60px] md:w-[260px] flex flex-col items-start justify-start gap-4 px-4">
             
       <Link href="/" className="flex justify-center items-center gap-2">
         <svg
@@ -164,8 +164,8 @@ const SideBar = () => {
 
 
       <div className="hidden md:flex_col_center relative">
-        <Image src="/images/sidebarbannerbg.png" alt="banner" height={200} width={200}/>
-          <h4 className="absolute inset-0 flex items-center justify-center text-yellow-200 text-xs pl-[50px] px-2 py-1 font-semibold">Create TikTok effects, get a reward</h4>
+        <Image src="/images/sidebarbannerbg.png" alt="banner" height={280} width={220}/>
+          <h4 className="absolute inset-0 flex items-center justify-center text-yellow-200 text-xs pl-[50px] px-4 py-2 font-semibold">Create TikTok effects, get a reward</h4>
       </div>
       
       <div className="flex flex-col justify-center items-start w-full">

@@ -1,5 +1,5 @@
 "use client"
-
+import Post from "@/components/shared/Post";
 import { useAuth } from "@/hooks/auth-provider"
 
 const HomePage = () => {
@@ -16,7 +16,7 @@ const HomePage = () => {
   }
   
   return (
-    <div>
+    <div className="flex_col_center">
       {user?
       <div>
         <p>Signed in with {user.email}, {user.firstName}</p>
@@ -29,6 +29,16 @@ const HomePage = () => {
       </button>
       </div>
       }
+      
+      <Post
+        image="/images/homePost.png"
+        profile="/images/profilepics/tiktokshop_sg.jpeg"
+        likes={13.1}
+        comments={503}
+        bookmarks={325}
+        shares={112}
+      />
+
     </div>
   )
 }
