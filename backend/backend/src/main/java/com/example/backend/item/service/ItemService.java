@@ -35,6 +35,13 @@ public class ItemService {
         return itemMapper.fromItemtoItemResponseDTO(savedItem);
     }
 
+    public List<ItemResponseDTO> getAllItems() {
+        List<Item> items = itemRepository.findAll();
+        return items.stream()
+                .map(itemMapper::fromItemtoItemResponseDTO)
+                .toList();
+    }
+
     public ItemResponseDTO getItemById(String itemId) {
         Item existingItem = commonValidationAndGetService.validateAndGetItem(itemId);
         return itemMapper.fromItemtoItemResponseDTO(existingItem);

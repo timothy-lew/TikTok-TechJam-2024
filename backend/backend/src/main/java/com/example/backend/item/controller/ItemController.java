@@ -32,6 +32,12 @@ public class ItemController extends BaseController {
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public ResponseEntity<List<ItemResponseDTO>> getAllItems() {
+        List<ItemResponseDTO> responseDTOs = itemService.getAllItems();
+        return ResponseEntity.ok(responseDTOs);
+    }
+    
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponseDTO> getItemById(@PathVariable String itemId) {
         ItemResponseDTO responseDTO = itemService.getItemById(itemId);

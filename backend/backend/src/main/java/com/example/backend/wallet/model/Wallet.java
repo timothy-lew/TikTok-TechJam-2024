@@ -20,5 +20,5 @@ public class Wallet {
     private String id;
     private String userId;
     private Float cashBalance = 0.0f;
-    private Float coinBalance = 0.0f;
+    private Float coinBalance = 0.0f; // user's personal address
 }
