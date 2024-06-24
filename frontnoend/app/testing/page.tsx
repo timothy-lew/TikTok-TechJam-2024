@@ -9,6 +9,7 @@ const TestPage = () => {
   const user = auth?.user || null;
 
   const [accessToken, setAccessToken] = useState<undefined | string>(undefined);
+  const [refreshToken, setRefreshToken] = useState<undefined | string>(undefined);
 
   useEffect(() => {
     
