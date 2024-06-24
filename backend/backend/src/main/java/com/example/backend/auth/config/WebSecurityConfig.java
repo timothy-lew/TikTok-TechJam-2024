@@ -66,6 +66,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/login")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/users/signup")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/refresh-token")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/transfer")).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

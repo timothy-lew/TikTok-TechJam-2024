@@ -58,6 +58,19 @@ public class LoginService implements UserDetailsService {
         }
     }
 
+    public LoginResponse refreshToken(String refreshToken) throws InvalidPrincipalException {
+        if (tokenProvider.validateToken(refreshToken)) {
+            String userId = tokenProvider.getUserIdFromJWT(refreshToken);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new InvalidPrincipalException("Invalid refresh token"));
+            String newAccessToken = tokenProvider.generateAccessToken(userId);
+            UserResponseDTO userResponseDTO = userMapper.fromUsertoUserResponseDTO(user);
+            return new LoginResponse("Bearer", newAccessToken, refreshToken, userResponseDTO);
+        } else {
+            throw new InvalidPrincipalException("Invalid refresh token");
+        }
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = this.userRepository.findByUsername(username)
