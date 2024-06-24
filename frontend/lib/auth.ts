@@ -100,7 +100,8 @@ export async function login(userSignInDetails : UserSignInDetails){
 
     const nextResponse = NextResponse.next();
 
-    const accessExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes expiry
+    //const accessExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes expiry
+    const accessExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const refreshExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days expiry
 
     cookies().set('accessToken', accessToken, { httpOnly: true, expires: accessExpiry, path: '/' });

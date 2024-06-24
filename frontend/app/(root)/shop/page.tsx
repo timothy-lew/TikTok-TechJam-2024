@@ -25,10 +25,10 @@ const ProductGridSection = ({ products }: { products: Product[] }) => {
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
-        <h2 className="text-3xl font-bold">Products</h2>
+        <h2 className="text-3xl font-bold">Popular Products</h2>
         <Button variant="outline" asChild>
           <Link href="/products" className="space-x-2">
-            <span>View All</span>
+            <span>View More</span>
             <ArrowRight className="size-4" />
           </Link>
         </Button>
@@ -73,13 +73,7 @@ const ShopPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        //const token = middleware.request.cookies.get('accessToken')?.value;
-        const token =
-          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Njc1MzBmMmQ2MmFmMTZmNThjNjM3ODkiLCJpYXQiOjE3MTkyMDA0MTksImV4cCI6MTcxOTI4NjgxOX0.tmfLQAFQXUGupkYZGIVElU2DW7nh_4ETMKwLtXoMMqs";
-        if (!token) {
-          throw new Error("No access token available");
-        }
-
+        const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2Njc1MzBmMmQ2MmFmMTZmNThjNjM3ODkiLCJpYXQiOjE3MTkyMDY2MDUsImV4cCI6MTcxOTI5MzAwNX0.Nb--hvyurb_PfVGUHVcjHJkEli5ptR9HQ0EACkhXwVg'
         const response = await fetch(
           "http://localhost:8080/api/items/user/6673e9fa0913b266363289ab", // currently this is all the items from a particular user, and not the correct one
           {
