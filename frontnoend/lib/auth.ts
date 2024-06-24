@@ -4,6 +4,14 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+export async function getAccessToken(): Promise<string|undefined>{
+
+  const accessToken = cookies().get('accessToken');
+
+  return accessToken?.value;
+}
+
+
 export async function signup(userSignUpDetails : UserSignUpDetails){
 
   try {
@@ -52,7 +60,7 @@ export async function signup(userSignUpDetails : UserSignUpDetails){
     const refreshToken = data.refreshToken;
 
     const nextResponse = NextResponse.next();
-    const accessExpiry = new Date(Date.now() + (15*60*1000)); // 15 minutes expiry
+    const accessExpiry = new Date(Date.now() + (24 * 60 * 60 * 1000)); // 1 day expiry
     const refreshExpiry = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)) // 7 days expiry
     
     console.log("Setting cookies:");
@@ -100,7 +108,8 @@ export async function login(userSignInDetails : UserSignInDetails){
 
     const nextResponse = NextResponse.next();
 
-    const accessExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes expiry
+    const accessExpiry = new Date(Date.now() + (24 * 60 * 60 * 1000)); // 1 day expiry
+
     const refreshExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days expiry
 
     cookies().set('accessToken', accessToken, { httpOnly: true, expires: accessExpiry, path: '/' });

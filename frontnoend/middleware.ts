@@ -2,18 +2,12 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
  
 export function middleware(request: NextRequest) {
+  console.log("middleware ran");
 
-  console.log("Inside middlware with request:");
-  console.log(request);
+  const unconstructedRoutes = ['/explore', '/following', '/friends', '/live', '/profile'];
 
-
-  if (request.nextUrl.pathname.startsWith('/explore')) {
-    // return NextResponse.rewrite(new URL('/following', request.url))
-    return NextResponse.redirect(new URL('/following', request.url))
-  }
- 
-  if (request.nextUrl.pathname.startsWith('/dashboard')) {
-    return NextResponse.rewrite(new URL('/dashboard/user', request.url))
+  if (unconstructedRoutes.includes(request.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL('/', request.url));
   }
 }
 

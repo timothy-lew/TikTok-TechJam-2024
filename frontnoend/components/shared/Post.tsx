@@ -1,9 +1,4 @@
 import Image from "next/image"
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-  } from "@/components/ui/avatar"
 
 type PostProps = {
     image: string,
@@ -19,7 +14,7 @@ type PostProps = {
 
 const Post = ({image, name, verified, desc, profile, likes, comments, bookmarks, shares} : PostProps) => {
   return (
-    <div className="flex w-3/5 border-2 max-w-[800px] max-h-screen border-red-300">
+    <div className="flex w-3/5 max-w-[800px] max-h-screen ">
 
 				<div className="bg-black flex-grow relative h-screen py-[100px] mb-[100px]">
 					<div className="w-[300px]">
@@ -31,11 +26,13 @@ const Post = ({image, name, verified, desc, profile, likes, comments, bookmarks,
 					</div>
 
 					{/*  DEBUG THIS */}
-					<div className="flex_center gap-1 absolute bottom-1">
-						<p className="font-bold text-white">{name}</p>
-						{verified && <svg fontSize="14px" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clipPath="url(#Icon_Color-Verified_Badge_svg__a)"><path d="M0 24a24 24 0 1 1 48 0 24 24 0 0 1-48 0Z" fill="#20D5EC"></path><path fillRule="evenodd" clipRule="evenodd" d="M37.12 15.88a3 3 0 0 1 0 4.24l-13.5 13.5a3 3 0 0 1-4.24 0l-8.5-8.5a3 3 0 1 1 4.24-4.24l6.38 6.38 11.38-11.38a3 3 0 0 1 4.24 0Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Verified_Badge_svg__a"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>}
+					<div className="flex flex-col p-4 justify-center items-start gap-1 absolute bottom-1">
+						<div className="flex_center gap-2">
+							<p className="font-bold text-white">{name}</p>
+							{verified && <svg fontSize="14px" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"><g clipPath="url(#Icon_Color-Verified_Badge_svg__a)"><path d="M0 24a24 24 0 1 1 48 0 24 24 0 0 1-48 0Z" fill="#20D5EC"></path><path fillRule="evenodd" clipRule="evenodd" d="M37.12 15.88a3 3 0 0 1 0 4.24l-13.5 13.5a3 3 0 0 1-4.24 0l-8.5-8.5a3 3 0 1 1 4.24-4.24l6.38 6.38 11.38-11.38a3 3 0 0 1 4.24 0Z" fill="#fff"></path></g><defs><clipPath id="Icon_Color-Verified_Badge_svg__a"><path fill="#fff" d="M0 0h48v48H0z"></path></clipPath></defs></svg>}
+						</div>
+						<p className="text-white">{desc}</p>
         	</div>
-					<p className="text-white">{desc}</p>
 
 				</div>
 

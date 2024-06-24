@@ -61,7 +61,7 @@ const WalletPage: React.FC = () => {
 
   // Need to implement logic to get balance and recent transaction history from api
   return (
-    <section className="bg-white dark:bg-gray-900 flex flex-col w-full justify-start items-center gap-4 px-6">
+    <section className="bg-white flex flex-col w-full justify-start items-center gap-4 px-6">
       <div className="bg-gray-50 rounded-xl p-4 shadow-sm w-full">
         <h1 className="font-bold text-2xl md:text-3xl">
           Hello! Good to see you{" "}
@@ -72,7 +72,7 @@ const WalletPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
         {/* Your Tiktok Card Section */}
         <div className="bg-gray-50 p-4 rounded-md shadow-sm flex flex-col justify-start items-center">
-          <h2 className="text-gray-900 dark:text-white text-center w-full text-xl md:text-2xl font-bold mb-2">
+          <h2 className="text-gray-900 text-center w-full text-xl md:text-2xl font-bold mb-2">
             Your Tiktok Card
           </h2>
           <div className="w-full flex justify-evenly items-center mb-4">
@@ -116,7 +116,7 @@ const WalletPage: React.FC = () => {
 
         {/* Your Tiktok Wallet Section */}
         <div className="bg-gray-50 rounded-xl p-4 flex flex-col justify-start items-center relative">
-          <h2 className="text-gray-900 dark:text-white text-xl md:text-2xl font-bold mb-4 text-center">
+          <h2 className="text-gray-900text-xl md:text-2xl font-bold mb-4 text-center">
             Your Tiktok Wallet
           </h2>
 
@@ -204,8 +204,8 @@ const WalletPage: React.FC = () => {
         </div>
 
         {/* Your Summary Section */}
-        <div className="bg-gray-50 dark:bg-gray-800 p-4 flex flex-col justify-start items-center gap-6">
-          <h2 className="text-gray-900 dark:text-white text-xl md:text-2xl font-bold mb-2">
+        <div className="bg-gray-50  p-4 flex flex-col justify-start items-center gap-6">
+          <h2 className="text-gray-900 text-xl md:text-2xl font-bold mb-2">
             Your Summary
           </h2>
 

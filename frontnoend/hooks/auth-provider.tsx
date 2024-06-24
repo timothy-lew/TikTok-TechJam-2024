@@ -1,6 +1,6 @@
 "use client"
 
-import { login, logout, signup } from "@/lib/auth";
+import { login, logout, signup, getAccessToken } from "@/lib/auth";
 import { createContext, useContext, useState } from "react";
 import { ReactNode } from "react";
 
@@ -9,6 +9,7 @@ type Auth = {
   signIn: (user: UserSignInDetails) => void;
   signUp: (user: UserSignUpDetails) => void;
   signOut: () => void;
+  obtainAccessToken: () => Promise<string | undefined>;
 }
 
 
@@ -52,8 +53,19 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
   }
 
 
+  const obtainAccessToken = async () => {
+    try {
+      const accessToken = await getAccessToken();
+      return accessToken;
+    } catch (error) {
+      alert(`Error getting access token: ${error}`);
+      return undefined;
+    }
+  };
+
+
   return(
-    <AuthContext.Provider value={{user, signIn, signUp, signOut}}>
+    <AuthContext.Provider value={{user, signIn, signUp, signOut, obtainAccessToken}}>
       {children}
     </AuthContext.Provider>
   )
