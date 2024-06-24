@@ -29,10 +29,10 @@ Counting installed Node versions: none
 Auditing installed plugins: OK
 ```
 
-5. Install node 16.14.2
+5. Install node 20.9.0
 
 ```console
-nodenv install 16.14.2
+nodenv install 20.9.0
 ```
 
 6. Installs shims for all Node executables known to nodenv
@@ -79,18 +79,53 @@ yarn hardhat compile
 yarn hardhat node
 ```
 
-3. Deploy locally
+# Metamask Wallet Setup
 
-```
-yarn hardhat deploy --network hardhat/localhost
-```
+1. **Install Metamask Extension**
 
-4.0. Import local hardhat network to metamask. (https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/)  
-4.1. Import coin to metamask by specifying the contract address.  
-4.2. If you get a nonce error in metamask, reset the metamask nonce settings for both wallets
+   - Install the Metamask extension on Google Chrome.
 
-5. Run tests
+2. **Import TikTok's Wallet**
+
+   - Click on "Add Account" -> "Import Account".
+   - Enter the following private key for TikTok's account: `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`.
+
+3. **Import User's Wallet**
+
+   - Repeat step 2 using the following private key for User's account: `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d`.
+
+4. **Import Local Hardhat Network**
+
+   - Follow the instructions on [Metamask Docs](https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/) to import the local Hardhat network with the following configuration:
+     - **Network Name:** localhost-hardhat
+     - **RPC URL:** http://127.0.0.1:8545/
+     - **Chain ID:** 31337
+     - **Currency Symbol:** ETH
+
+5. **Run Local Blockchain Network and deploy TOKToken contract**
+
+   - Run the following command to start up the local blockchain network:
+     ```sh
+     yarn hardhat node
+     ```
+
+6. **Import TOKToken to Metamask**
+
+   - Import `TOKToken` to Metamask by specifying the contract address: `0x5FbDB2315678afecb367f032d93F642f64180aa3`.
+
+7. **Reset Nonce Settings**
+
+   - If you encounter a nonce error in Metamask, reset the nonce settings for both wallets ([Reset Nonce](https://docs.metamask.io/wallet/how-to/run-devnet/#reset-your-local-nonce-calculation)).
+   - Restart Google Chrome to refresh Metamask
+
+8. Run tests
 
 ```
 yarn test
+```
+
+6. Generate wrapper code for Java (only needed for Timothy)
+
+```
+web3j generate solidity -b ./constants/TOKToken.bin -a ./constants/TOKToken.abi -o ../backend/src/main/java -p com.example.backend.contract
 ```
