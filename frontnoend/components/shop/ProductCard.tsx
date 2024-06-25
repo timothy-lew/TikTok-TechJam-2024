@@ -1,4 +1,3 @@
-import { formatCurrency } from "@/lib/formatters"
 import {
   Card,
   CardContent,
@@ -34,7 +33,7 @@ export function ProductCard({
       </div>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>{formatCurrency(priceInCents)}</CardDescription>
+        <CardDescription>${priceInCents} or {Math.round(priceInCents*100)} TikTok Coins</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="line-clamp-4">{description}</p>
