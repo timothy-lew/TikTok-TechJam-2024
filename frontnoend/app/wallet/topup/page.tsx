@@ -1,138 +1,181 @@
-'use client'
-import LoginPopup from '@/components/shared/LoginPopup';
-import LoginRequired from '@/components/shared/LoginRequired';
-import { useAuth } from '@/hooks/auth-provider';
-import React, { useState } from 'react';
+"use client";
 
-const WalletTopUpPage: React.FC = () => {
+import { useState } from "react";
+import { useAuth } from "@/hooks/auth-provider";
+import Image from "next/image";
+import Link from "next/link";
+import { useFetchWallet } from "@/hooks/useFetchWallet";
+
+type TopUpMethod = "creditCard" | "giftCard";
+
+const TopUpPage: React.FC = () => {
   const auth = useAuth();
-
   const user = auth?.user || null;
+  const walletDetails = useFetchWallet(user?.id || "");
 
-  // TODO: Fix this if not auth display pop
-  const [isLoginPopupOpen, setLoginPopupOpen] = useState(user===null);
+  const [amount, setAmount] = useState<string>("");
+  const [topUpMethod, setTopUpMethod] = useState<TopUpMethod>("creditCard");
 
-  const handleClosePopup = () => setLoginPopupOpen(false);
-  if (!user) {
-    return (
-      <div className="flex_center min-h-screen bg-background text-foreground">
-        {isLoginPopupOpen ? (
-          <LoginPopup isOpen={isLoginPopupOpen} onClose={handleClosePopup} />
-        ) : (
-          // Display that login is required
-          <LoginRequired></LoginRequired>
-        )}
-      </div>
-    );
-  }
+  // Credit Card State
+  const [cardNumber, setCardNumber] = useState<string>("");
+  const [expiryDate, setExpiryDate] = useState<string>("");
+  const [cvv, setCvv] = useState<string>("");
 
-  
-  const [selectedMethod, setSelectedMethod] = useState<'creditCard' | 'uniqueCode' | null>(null);
-  const [creditCardNumber, setCreditCardNumber] = useState('');
-  const [nameOnCreditCard, setNameOnCreditCard] = useState('');
-  const [cvv, setCvv] = useState('');
-  const [expirationDate, setExpirationDate] = useState('');
-  const [uniqueCode, setUniqueCode] = useState('');
+  // Gift Card State
+  const [giftCardCode, setGiftCardCode] = useState<string>("");
 
-  const handleMethodSelect = (method: 'creditCard' | 'uniqueCode') => {
-    setSelectedMethod(method);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    if (name === 'creditCardNumber') {
-      setCreditCardNumber(value);
-    } else if (name === 'nameOnCreditCard') {
-      setNameOnCreditCard(value);
-    } else if (name === 'cvv') {
-      setCvv(value);
-    } else if (name === 'expirationDate') {
-      setExpirationDate(value);
-    } else if (name === 'uniqueCode') {
-      setUniqueCode(value);
-    }
+  const handleTopUp = () => {
+    // Implement top-up logic here
+    console.log("Top-up initiated");
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center py-12">
-      <div className="max-w-md w-full bg-white p-8 shadow-lg rounded-lg">
-        <h2 className="text-xl font-semibold mb-4">Choose Top-Up Method</h2>
-        
-        <div className="flex justify-between mb-4">
-          <button
-            className={`w-1/2 px-3 py-3 rounded-lg ${
-              selectedMethod === 'creditCard' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-600'
-            } hover:bg-red-200`}
-            onClick={() => handleMethodSelect('creditCard')}
-          >
-            Credit Card
-          </button>
-          <button
-            className={`w-1/2 px-3 py-3 rounded-lg ${
-              selectedMethod === 'uniqueCode' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-600'
-            } hover:bg-red-200`}
-            onClick={() => handleMethodSelect('uniqueCode')}
-          >
-            Unique Code
-          </button>
+    <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-cyan">
+        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-tiktok-cyan">
+          Top Up Your Wallet
+        </h1>
+      </div>
+
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-cyan">
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-2">Current Balance</h2>
+          <p className="text-muted-foreground">Fiat: ${walletDetails?.fiatAmount}</p>
+          <p className="text-muted-foreground">TikTok Coins: {walletDetails?.tiktokCoins}</p>
         </div>
 
-        {selectedMethod === 'creditCard' && (
-          <>
+        <div className="mb-6">
+          <div className="flex rounded-md overflow-hidden border border-tiktok-cyan">
+            <button
+              onClick={() => setTopUpMethod("creditCard")}
+              className={`flex-1 py-2 px-4 ${
+                topUpMethod === "creditCard"
+                  ? "bg-tiktok-cyan text-white"
+                  : "bg-card text-tiktok-cyan"
+              } transition duration-300`}
+            >
+              Credit Card
+            </button>
+            <button
+              onClick={() => setTopUpMethod("giftCard")}
+              className={`flex-1 py-2 px-4 ${
+                topUpMethod === "giftCard"
+                  ? "bg-tiktok-cyan text-white"
+                  : "bg-card text-tiktok-cyan"
+              } transition duration-300`}
+            >
+              Gift Card
+            </button>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <label htmlFor="amount" className="block text-sm font-medium text-foreground mb-2">
+            Amount to Top Up
+          </label>
+          <div className="flex items-center">
             <input
-              type="text"
-              className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4 focus:outline-none focus:border-blue-500"
-              placeholder="Enter Credit Card Number"
-              name="creditCardNumber"
-              value={creditCardNumber}
-              onChange={handleInputChange}
+              type="number"
+              id="amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="flex-grow px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+              placeholder="Enter amount"
             />
-            <input
-              type="text"
-              className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4 focus:outline-none focus:border-blue-500"
-              placeholder="Enter Name On Card"
-              name="nameOnCreditCard"
-              value={nameOnCreditCard}
-              onChange={handleInputChange}
-            />
-            <div className="flex mb-4">
+          </div>
+        </div>
+
+        {topUpMethod === "creditCard" ? (
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="cardNumber" className="block text-sm font-medium text-foreground mb-2">
+                Card Number
+              </label>
               <input
                 type="text"
-                className="w-1/2 mr-2 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500"
-                placeholder="CVV"
-                name="cvv"
-                value={cvv}
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                className="w-1/2 ml-2 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500"
-                placeholder="Expiration Date (MM/YYYY)"
-                name="expirationDate"
-                value={expirationDate}
-                onChange={handleInputChange}
+                id="cardNumber"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(e.target.value)}
+                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                placeholder="1234 5678 9012 3456"
               />
             </div>
-          </>
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <label htmlFor="expiryDate" className="block text-sm font-medium text-foreground mb-2">
+                  Expiry Date
+                </label>
+                <input
+                  type="text"
+                  id="expiryDate"
+                  value={expiryDate}
+                  onChange={(e) => setExpiryDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                  placeholder="MM/YY"
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="cvv" className="block text-sm font-medium text-foreground mb-2">
+                  CVV
+                </label>
+                <input
+                  type="text"
+                  id="cvv"
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value)}
+                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                  placeholder="123"
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <label htmlFor="giftCardCode" className="block text-sm font-medium text-foreground mb-2">
+              Gift Card Code
+            </label>
+            <input
+              type="text"
+              id="giftCardCode"
+              value={giftCardCode}
+              onChange={(e) => setGiftCardCode(e.target.value)}
+              className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+              placeholder="Enter gift card code"
+            />
+          </div>
         )}
 
-        {selectedMethod === 'uniqueCode' && (
-          <input
-            type="text"
-            className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4 focus:outline-none focus:border-green-500"
-            placeholder="Enter Unique Code"
-            name="uniqueCode"
-            value={uniqueCode}
-            onChange={handleInputChange}
-          />
-        )}
-
-        <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600">
-          Confirm Top-Up
+        <button
+          onClick={handleTopUp}
+          className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold mt-6"
+        >
+          Top Up Wallet
         </button>
       </div>
-    </div>
+
+      <Link
+        href="/wallet"
+        className="text-tiktok-cyan hover:text-tiktok-cyan-dark font-medium text-lg sm:text-xl inline-flex items-center transition duration-300"
+      >
+        <svg
+          className="w-4 h-4 mr-2 rotate-180"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 14 10"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M1 5h12m0 0L9 1m4 4L9 9"
+          />
+        </svg>
+        Back to Wallet
+      </Link>
+    </section>
   );
 };
 
-export default WalletTopUpPage;
+export default TopUpPage;
