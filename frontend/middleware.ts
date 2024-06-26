@@ -60,6 +60,7 @@ export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('accessToken')?.value;
 
   if (!accessToken) {
+    console.log("Failed to inject access token");
     return refreshToken(request);
   }
 
