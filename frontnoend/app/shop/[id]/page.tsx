@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Card,
   CardContent,
@@ -13,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/hooks/auth-provider";
+import { MdOutlineShoppingCart } from "react-icons/md";
+import { ArrowLeft } from "lucide-react";
 
 type Product = {
   id: string;
@@ -69,8 +70,42 @@ export default function Page({ params }) {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  const confirmPurchase = () => {
-    // Handle purchase logic here
+  const confirmPurchaseTiktokCoin = async () => {
+    if (!userInfo || !product || !sellerId) {
+      console.error('Missing required information for purchase');
+      return;
+    }
+  
+    const payload = {
+      buyerProfileId: userInfo.buyerProfile.id,
+      sellerProfileId: sellerId,
+      itemId: product.id,
+      quantity: quantity,
+      purchaseType: "TOK_TOKEN"
+    };
+  
+    console.log("Payload for purchase:", payload);
+  
+    try {
+      const response = await fetch('http://localhost:8080/api/transactions/purchase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`, // Include access token if needed
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log('Purchase successful:', data);
+    } catch (error) {
+      console.error('Error during purchase:', error);
+      
+    }
     closeModal();
   };
 
@@ -81,6 +116,30 @@ export default function Page({ params }) {
     const getAccessToken = async () => {
       const token = await auth?.obtainAccessToken();
       setAccessToken(token);
+      if (user) {
+        console.log("User details:", user);
+        const transformedUserInfo: UserInfo = {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          roles: user.roles,
+          buyerProfile: user.buyerProfile || {
+            id: "",
+            shippingAddress: "",
+            billingAddress: "",
+            defaultPaymentMethod: "",
+          },
+          sellerProfile: user.sellerProfile || {
+            id: "",
+            businessName: "",
+            businessDescription: "",
+          },
+          wallet: user.wallet || { id: "", cashBalance: 0, coinBalance: 0 },
+        };
+        setUserInfo(transformedUserInfo);
+      }
     };
 
     getAccessToken();
@@ -113,7 +172,7 @@ export default function Page({ params }) {
         console.log("seller id: " + data.sellerProfileId);
 
         const seller_response = await fetch(
-          `http://localhost:8080/api/users/${data.sellerProfileIdtqtq}`,
+          `http://localhost:8080/api/users/${data.sellerProfileId}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -143,19 +202,27 @@ export default function Page({ params }) {
 
   return (
     <>
+      <Link href="/shop" className="flex items-center space-x-2">
+        <ArrowLeft className="size-4" />
+        <span>Return to Shop</span>
+      </Link>
       <h1>{sellerUsername}</h1>
       {product && (
-        <ProductCardDetails product={product} sellerUsername={sellerUsername} openModal={openModal}/>
+        <ProductCardDetails
+          product={product}
+          sellerUsername={sellerUsername}
+          openModal={openModal}
+        />
       )}
       {isModalOpen && product && (
         <Modal
-        product={product}
-        quantity={quantity}
-        setQuantity={setQuantity}
-        onClose={closeModal}
-        onConfirm={confirmPurchase}
-      />
-      
+          product={product}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          onClose={closeModal}
+          onConfirmTiktokCoin={confirmPurchaseTiktokCoin}
+          shippingAddress={user?.buyerProfile?.shippingAddress || ""}
+        />
       )}
     </>
   );
@@ -209,11 +276,29 @@ type ModalProps = {
   quantity: number;
   setQuantity: (quantity: number) => void;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirmTiktokCoin: () => void;
+  shippingAddress: string;
 };
-const Modal = ({ product, quantity, setQuantity, onClose, onConfirm }: ModalProps) => {
+const Modal = ({
+  product,
+  quantity,
+  setQuantity,
+  onClose,
+  onConfirmTiktokCoin,
+  shippingAddress,
+}: ModalProps) => {
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuantity(parseInt(event.target.value, 10));
+  };
+
+  const increaseQuantity = () => {
+    setQuantity((prevQuantity: number) =>
+      Math.min(prevQuantity + 1, product.quantity)
+    );
+  };
+
+  const decreaseQuantity = () => {
+    setQuantity((prevQuantity: number) => Math.max(prevQuantity - 1, 1));
   };
 
   return (
@@ -224,39 +309,56 @@ const Modal = ({ product, quantity, setQuantity, onClose, onConfirm }: ModalProp
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                <svg
-                  className="h-6 w-6 text-blue-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M3 3h18l-1.5 9H4.5L3 3zm0 0l1 6h16l1-6H3zM4 13.5h16v1.5H4v-1.5zM5.5 15H8m4 0h2.5m3.5 0h1.5M8 13.5h8m0-2.25h-8"
-                  />
-                </svg>
+                <MdOutlineShoppingCart></MdOutlineShoppingCart>
               </div>
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                <h3
+                  className="text-lg leading-6 font-medium text-gray-900"
+                  id="modal-title"
+                >
                   Confirm Purchase
                 </h3>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500">Review your purchase details:</p>
-                  <p className="text-sm text-gray-500">Product: {product.name}</p>
-                  <p className="text-sm text-gray-500">Price: ${product.price}</p>
+                  <p className="text-sm font-semibold text-gray-500">
+                    Review your purchase details:
+                  </p>
+                  <br></br>
                   <p className="text-sm text-gray-500">
-                    Quantity: 
+                    Seller: {product.sellerProfileId}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Product: {product.name}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Price: ${product.price * quantity} or{" "}
+                    {Math.round(product.price * 100 * quantity)} TikTok Coins
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Quantity:
+                    <button
+                      onClick={decreaseQuantity}
+                      className="ml-2 px-2 border rounded"
+                    >
+                      -
+                    </button>
                     <input
                       type="number"
                       min="1"
                       max={product.quantity}
                       value={quantity}
                       onChange={handleQuantityChange}
-                      className="ml-2 border rounded"
+                      className="mx-2 border rounded"
+                      style={{ width: "50px", textAlign: "center" }}
                     />
+                    <button
+                      onClick={increaseQuantity}
+                      className="px-2 border rounded"
+                    >
+                      +
+                    </button>
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Shipping Address: {shippingAddress}
                   </p>
                 </div>
               </div>
@@ -266,9 +368,15 @@ const Modal = ({ product, quantity, setQuantity, onClose, onConfirm }: ModalProp
             <button
               type="button"
               className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={onConfirm}
             >
-              Confirm
+              Buy with Credit Card
+            </button>
+            <button
+              type="button"
+              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm"
+              onClick={onConfirmTiktokCoin}
+            >
+              Buy with TikTok Coins
             </button>
             <button
               type="button"
