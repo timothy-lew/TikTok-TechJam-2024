@@ -40,9 +40,8 @@ public class WalletService {
 
     // Handles deduction of buyer's and addition of seller's balance.
     // Depending on purchaseType, handles cash and toktoken deduction/addition differently.
-    // Cash balance is deducted/added directly from the respective buyer's and seller's Wallet entity.
-    // Toktoken balance is deducted/added by manually, through the crypto plugin, send the amount to the seller's wallet address.
-    // To check for the validity of the transaction through the crypto plugin, we call the sendCrypto method to listen to a queue from the blockchain.
+    // Cash balance is deducted/added automatically from the respective buyer's and seller's Wallet entity.
+    // Toktoken balance is deducted/added manually, through the crypto plugin, send the amount from buyer's to seller's wallet address.
     public void handlePurchase(String buyerProfileId, String sellerProfileId, BigDecimal amount, Transaction.PurchaseType purchaseType) {
         BuyerProfile buyerProfile = buyerProfileRepository.findById(buyerProfileId)
                 .orElseThrow(() -> new RuntimeException("Buyer profile not found"));
@@ -68,11 +67,10 @@ public class WalletService {
             if (contractService.getBalance(buyerWallet.getWalletAddress()).compareTo(amount) < 0) {
                 throw new RuntimeException("Insufficient TokToken balance");
             }
-            // TODO: Call contractService.listen(sellerWallet.getWalletAddress())
-//            while (contractService.listen(sellerWallet.getWalletAddress())) {
-//              e.g., if buyer sends successfully, then break the loop and return true, and continue with the rest of the code in transactionService.
-//            }
-            // Then manually, through the crypto plugin, send the amount to the seller's wallet address.
+            // TODO: Validation if time allows
+            // Assumption: Happy flow; buyer indeed manually sent toktoken through the plugin to seller's address, no validation here
+            contractService.listenToSellerAddress(sellerWallet.getWalletAddress());
+            // Then manually, through the crypto plugin, send the amount to tiktok's wallet address
         }
     }
 
@@ -101,7 +99,9 @@ public class WalletService {
             if (tokTokenBalance.compareTo(originalAmount) < 0) {
                 throw new RuntimeException("Insufficient token balance");
             }
-            // TODO: Call contractService.listen(), a separate method, to listen on tiktok address (hardcoded address, not dynamic)
+            // TODO: Validation if time allows
+            // Assumption: Happy flow; user indeed manually sent toktoken through the plugin to tiktok's address, no validation here
+            contractService.listenToTikTokAddress();
             // Then manually, through the crypto plugin, send the amount to tiktok's wallet address
             wallet.setCashBalance(wallet.getCashBalance().add(convertedAmount));
         }
