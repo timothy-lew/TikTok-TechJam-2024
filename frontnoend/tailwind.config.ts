@@ -25,7 +25,7 @@ const config: Config = {
         'tiktok-red': 'rgba(254, 44, 85, 1)',
         'tiktok-gray': 'rgba(22, 24, 35, 1)',
         'tiktok-cyan': {
-          DEFAULT: '#00F2EA',
+          DEFAULT: '#00F0ED',
           dark: '#00D2CA',
         },
         border: "hsl(var(--border))",

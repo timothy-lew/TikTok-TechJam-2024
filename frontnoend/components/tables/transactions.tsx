@@ -45,6 +45,11 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
+    accessorKey: "desc",
+    header: () => <div className="text-right">Desc</div>,
+
+  },
+  {
     accessorKey: "status",
     header: "Status",
   },

@@ -4,14 +4,19 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/auth-provider";
 import Image from "next/image";
 import Link from "next/link";
+
 import { useFetchWallet } from "@/hooks/useFetchWallet";
+import { useTopUpWallet } from "@/hooks/useTopUpWallet";
+import { ReceiptRussianRuble } from "lucide-react";
 
 type TopUpMethod = "creditCard" | "giftCard";
 
 const TopUpPage: React.FC = () => {
   const auth = useAuth();
+  
   const user = auth?.user || null;
   const walletDetails = useFetchWallet(user?.id || "");
+  const { topUpWallet, success, isToppingUp, error } = useTopUpWallet();
 
   const [amount, setAmount] = useState<string>("");
   const [topUpMethod, setTopUpMethod] = useState<TopUpMethod>("creditCard");
@@ -24,9 +29,36 @@ const TopUpPage: React.FC = () => {
   // Gift Card State
   const [giftCardCode, setGiftCardCode] = useState<string>("");
 
-  const handleTopUp = () => {
-    // Implement top-up logic here
-    console.log("Top-up initiated");
+  const handleCreditCardTopUp = async () => {
+    const accessToken = await auth?.obtainAccessToken();
+    const userId = user?.id || null;
+
+    if (!userId || !accessToken) return;
+
+
+    await topUpWallet({
+      accessToken: accessToken,
+      userId: userId,
+      topUpTransactionType: 'CREDIT_CARD',
+      topUpAmount: Number(amount)
+    });
+  };
+
+  const handleGiftCardTopUp = async () => {
+    const accessToken = await auth?.obtainAccessToken();
+    const userId = user?.id || null;
+
+    if (!userId || !accessToken) return;
+
+    // const accessToken = "HARDCODE";
+    // const userId = "HARDCODE";
+
+    await topUpWallet({
+      accessToken: accessToken,
+      userId: userId,
+      topUpTransactionType: 'GIFT_CARD',
+      topUpAmount: 0,
+    });
   };
 
   return (
@@ -69,24 +101,25 @@ const TopUpPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="mb-6">
-          <label htmlFor="amount" className="block text-sm font-medium text-foreground mb-2">
-            Amount to Top Up
-          </label>
-          <div className="flex items-center">
-            <input
-              type="number"
-              id="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="flex-grow px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
-              placeholder="Enter amount"
-            />
-          </div>
-        </div>
+
 
         {topUpMethod === "creditCard" ? (
           <div className="space-y-4">
+            <div className="mb-6">
+              <label htmlFor="amount" className="block text-sm font-medium text-foreground mb-2">
+                Amount to Top Up
+              </label>
+              <div className="flex items-center">
+                <input
+                  type="number"
+                  id="amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="flex-grow px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                  placeholder="Enter amount"
+                />
+              </div>
+            </div>
             <div>
               <label htmlFor="cardNumber" className="block text-sm font-medium text-foreground mb-2">
                 Card Number
@@ -127,30 +160,46 @@ const TopUpPage: React.FC = () => {
                   placeholder="123"
                 />
               </div>
+              <button
+                onClick={handleGiftCardTopUp}
+                disabled={isToppingUp}
+                className={`w-full ${isToppingUp ? 'bg-yellow-600 hover:bg-yellow-600/90' :'bg-tiktok-red hover:bg-tiktok-red/90'} text-white py-3 rounded-md  transition duration-300 font-semibold mt-6`}
+              >
+              {isToppingUp ? 'Processing...' : 'Top Up Wallet'}
+              </button>
             </div>
           </div>
         ) : (
-          <div>
-            <label htmlFor="giftCardCode" className="block text-sm font-medium text-foreground mb-2">
-              Gift Card Code
-            </label>
-            <input
-              type="text"
-              id="giftCardCode"
-              value={giftCardCode}
-              onChange={(e) => setGiftCardCode(e.target.value)}
-              className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
-              placeholder="Enter gift card code"
-            />
-          </div>
+          <div className="space-y-6">
+            <div>
+              <label htmlFor="giftCardCode" className="block text-sm font-medium text-foreground mb-2">
+                Gift Card Code
+              </label>
+              <input
+                type="text"
+                id="giftCardCode"
+                value={giftCardCode}
+                onChange={(e) => setGiftCardCode(e.target.value)}
+                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                placeholder="Enter gift card code"
+              />
+            </div>
+            <button
+              onClick={handleGiftCardTopUp}
+              disabled={isToppingUp}
+              className={`w-full ${isToppingUp ? 'bg-yellow-600 hover:bg-yellow-600/90' :'bg-tiktok-red hover:bg-tiktok-red/90'} text-white py-3 rounded-md  transition duration-300 font-semibold mt-6`}
+            >
+            {isToppingUp ? 'Processing...' : 'Top Up Wallet'}
+            </button>
+        </div>
         )}
 
-        <button
-          onClick={handleTopUp}
-          className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold mt-6"
-        >
-          Top Up Wallet
-        </button>
+        <div className="space-y-6">
+          {error && <p style={{ color: 'red' }}>
+          Error occurred: {error.message}
+        </p>}
+        </div>
+
       </div>
 
       <Link

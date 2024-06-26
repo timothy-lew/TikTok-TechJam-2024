@@ -38,7 +38,7 @@ export function useFetchWallet( userId: string){
     }
 
     fetchWalletData();
-  }, [])
+  }, [userId])
 
   return walletData;
 }
