@@ -7,6 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -14,6 +25,8 @@ import Image from "next/image";
 import { useAuth } from "@/hooks/auth-provider";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { ArrowLeft } from "lucide-react";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Product = {
   id: string;
@@ -70,43 +83,60 @@ export default function Page({ params }) {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+  const [alertDialogContent, setAlertDialogContent] = useState("");
+  const router = useRouter();
+
   const confirmPurchaseTiktokCoin = async () => {
     if (!userInfo || !product || !sellerId) {
-      console.error('Missing required information for purchase');
+      console.error("Missing required information for purchase");
       return;
     }
-  
+
     const payload = {
       buyerProfileId: userInfo.buyerProfile.id,
       sellerProfileId: sellerId,
       itemId: product.id,
       quantity: quantity,
-      purchaseType: "TOK_TOKEN"
+      purchaseType: "TOK_TOKEN",
     };
-  
+
     console.log("Payload for purchase:", payload);
-  
+
+    setIsAlertDialogOpen(true); 
+
     try {
-      const response = await fetch('http://localhost:8080/api/transactions/purchase', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`, // Include access token if needed
-        },
-        body: JSON.stringify(payload),
-      });
-  
+      const response = await fetch(
+        "http://localhost:8080/api/transactions/purchase",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
-  
+
       const data = await response.json();
-      console.log('Purchase successful:', data);
+      console.log("Purchase successful:", data);
+      setAlertDialogContent("Purchase successful! Redirecting to home page...");
     } catch (error) {
-      console.error('Error during purchase:', error);
-      
+      console.error("Error during purchase:", error);
+      setAlertDialogContent("Error during purchase. Please try again.");
+    } finally {
+      setTimeout(() => {
+        setIsAlertDialogOpen(false); // Close the alert dialog
+        closeModal();
+        console.log("redirecting to homepage...");
+        router.push("/shop");
+      }, 2000);
     }
-    closeModal();
   };
 
   const auth = useAuth();
@@ -215,14 +245,34 @@ export default function Page({ params }) {
         />
       )}
       {isModalOpen && product && (
-        <Modal
-          product={product}
-          quantity={quantity}
-          setQuantity={setQuantity}
-          onClose={closeModal}
-          onConfirmTiktokCoin={confirmPurchaseTiktokCoin}
-          shippingAddress={user?.buyerProfile?.shippingAddress || ""}
-        />
+        <>
+          <Modal
+            product={product}
+            quantity={quantity}
+            setQuantity={setQuantity}
+            onClose={closeModal}
+            onConfirmTiktokCoin={confirmPurchaseTiktokCoin}
+            shippingAddress={user?.buyerProfile?.shippingAddress || ""}
+          />
+          <AlertDialog
+            open={isAlertDialogOpen}
+            onOpenChange={setIsAlertDialogOpen}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Transaction Status</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {alertDialogContent}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                {/* <AlertDialogCancel onClick={() => setIsAlertDialogOpen(false)}>
+                  Close
+                </AlertDialogCancel> */}
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
       )}
     </>
   );
