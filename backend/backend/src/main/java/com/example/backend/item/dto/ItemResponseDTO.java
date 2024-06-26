@@ -14,4 +14,5 @@ public class ItemResponseDTO {
     private Float price;
     private Integer quantity;
     private String imageUrl;
+    // TODO: Include sellerWalletAddress, tell frontend guys to show in the UI e.g., 'send TokToken to this seller address'.
 }

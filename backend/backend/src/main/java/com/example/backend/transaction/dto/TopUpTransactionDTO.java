@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TopUpTransactionDTO {
     private String userId;
-    private String topUpTransactionType;
+    private String topUpType;
     private Float topUpAmount;
 }

@@ -12,4 +12,5 @@ public class PurchaseTransactionDTO {
     private String sellerProfileId;
     private String itemId;
     private Integer quantity;
+    private String purchaseType;
 }

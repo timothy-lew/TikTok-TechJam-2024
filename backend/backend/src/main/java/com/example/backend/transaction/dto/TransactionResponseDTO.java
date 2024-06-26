@@ -28,23 +28,24 @@ public class TransactionResponseDTO {
         private String sellerProfileId;
         private String itemId;
         private Integer quantity;
+        private String purchaseType;
     }
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TopUpDetails {
-        private String topUpTransactionType;
+        private String topUpType;
         private Float topUpAmount;
     }
 
-    // TODO: Potentially removing this endpoint and dto, since wallet controller will handle this, only provide service method to create transaction.
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ConversionDetails {
         private Float conversionRate;
         private Float cashBalance;
-        private Float coinBalance;
+        private Float tokTokenBalance;
+        private String conversionType;
     }
 }

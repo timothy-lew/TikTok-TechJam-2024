@@ -27,7 +27,8 @@ public interface TransactionMapper {
                 transaction.getBuyerProfileId(),
                 transaction.getSellerProfileId(),
                 transaction.getItemId(),
-                transaction.getQuantity()
+                transaction.getQuantity(),
+                transaction.getPurchaseType() != null ? transaction.getPurchaseType().toString() : null
         );
     }
 
@@ -37,7 +38,7 @@ public interface TransactionMapper {
             return null;
         }
         return new TransactionResponseDTO.TopUpDetails(
-                transaction.getTopUpTransactionType() != null ? transaction.getTopUpTransactionType().toString() : null,
+                transaction.getTopUpType() != null ? transaction.getTopUpType().toString() : null,
                 transaction.getTopUpAmount()
         );
     }
@@ -50,22 +51,52 @@ public interface TransactionMapper {
         return new TransactionResponseDTO.ConversionDetails(
                 transaction.getConversionRate(),
                 transaction.getCashBalance(),
-                transaction.getCoinBalance()
+                transaction.getTokTokenBalance(),
+                transaction.getConversionType() != null ? transaction.getConversionType().toString() : null
         );
     }
 
     @Mapping(target = "transactionDate", ignore = true)
-    @Mapping(target = "transactionType", constant = "CONVERSION")
+    @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.CONVERSION)")
+    @Mapping(target = "cashBalance", ignore = true)
+    @Mapping(target = "tokTokenBalance", ignore = true)
+    @Mapping(target = "conversionType", source = "conversionType", qualifiedByName = "toConversionType")
     Transaction fromDTOtoTransaction(ConversionTransactionDTO dto);
 
     @Mapping(target = "transactionDate", ignore = true)
-    @Mapping(target = "transactionType", constant = "TOPUP")
+    @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.TOPUP)")
+    @Mapping(target = "topUpType", source = "topUpType", qualifiedByName = "toTopUpType")
     Transaction fromDTOtoTransaction(TopUpTransactionDTO dto);
 
     @Mapping(target = "transactionDate", ignore = true)
-    @Mapping(target = "transactionType", constant = "PURCHASE")
+    @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.PURCHASE)")
     @Mapping(target = "userId", constant = "null")
     @Mapping(target = "price", ignore = true)
     @Mapping(target = "totalAmount", ignore = true)
+    @Mapping(target = "purchaseType", source = "purchaseType", qualifiedByName = "toPurchaseType")
     Transaction fromDTOtoTransaction(PurchaseTransactionDTO dto);
+
+    @Named("toConversionType")
+    default Transaction.ConversionType toConversionType(String conversionType) {
+        if (conversionType == null) {
+            return null;
+        }
+        return Transaction.ConversionType.valueOf(conversionType);
+    }
+
+    @Named("toTopUpType")
+    default Transaction.TopUpType toTopUpType(String topUpType) {
+        if (topUpType == null) {
+            return null;
+        }
+        return Transaction.TopUpType.valueOf(topUpType);
+    }
+
+    @Named("toPurchaseType")
+    default Transaction.PurchaseType toPurchaseType(String purchaseType) {
+        if (purchaseType == null) {
+            return null;
+        }
+        return Transaction.PurchaseType.valueOf(purchaseType);
+    }
 }

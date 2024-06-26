@@ -59,7 +59,6 @@ public class TransactionController extends BaseController {
         return ResponseEntity.ok(response);
     }
 
-    // TODO: Potentially removing this endpoint and dto, since wallet controller will handle this, only provide service method to create transaction.
     @PostMapping("/conversion")
     public ResponseEntity<TransactionResponseDTO> createConversionTransaction(@RequestBody ConversionTransactionDTO dto) {
         TransactionResponseDTO response = transactionService.createConversionTransaction(dto);

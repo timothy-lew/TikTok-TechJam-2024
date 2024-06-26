@@ -16,21 +16,12 @@ import java.util.stream.Collectors;
 public interface UserMapper {
 
     @Mapping(target = "roles", source = "roles", qualifiedByName = "rolesToStringSet")
-//    @Mapping(target = "buyerProfileId", source = "buyerProfile.id")
-//    @Mapping(target = "shippingAddress", source = "buyerProfile.shippingAddress")
-//    @Mapping(target = "billingAddress", source = "buyerProfile.billingAddress")
-//    @Mapping(target = "defaultPaymentMethod", source = "buyerProfile.defaultPaymentMethod")
-//    @Mapping(target = "sellerProfileId", source = "sellerProfile.id")
-//    @Mapping(target = "businessName", source = "sellerProfile.businessName")
-//    @Mapping(target = "businessDescription", source = "sellerProfile.businessDescription")
-//    @Mapping(target = "walletId", source = "wallet.id")
-//    @Mapping(target = "cashBalance", source = "wallet.cashBalance")
-//    @Mapping(target = "coinBalance", source = "wallet.coinBalance")
     UserResponseDTO fromUsertoUserResponseDTO(User user);
 
     // Buyer and seller profile fields are populated only during user creation, hence not ignored here.
     @Mapping(target = "roles", source = "roles", qualifiedByName = "stringSetToRoles")
     @Mapping(target = "wallet", ignore = true)
+    // handle wallet separately in UserService
     User fromUserDTOtoUserForCreate(UserDTO userDTO);
 
     // Buyer and seller profile fields are not populated during user update, but in separate endpoints, hence ignored here.

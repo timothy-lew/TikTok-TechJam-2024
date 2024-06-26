@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+
 /**
  * Wallet class to store the wallet details of the user.
  * One-to-one relationship with User entity.
@@ -19,6 +21,6 @@ public class Wallet {
     @Id
     private String id;
     private String userId;
-    private Float cashBalance = 0.0f;
-    private Float coinBalance = 0.0f; // user's personal address
+    private BigDecimal cashBalance;
+    private String walletAddress;
 }

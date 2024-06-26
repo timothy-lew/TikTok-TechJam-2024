@@ -37,4 +37,6 @@ public class UserDTO {
     // Seller profile fields indicated once in sign up form, if any.
     private String businessName;
     private String businessDescription;
+    // Wallet profile field
+    private String walletAddress;
 }

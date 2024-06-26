@@ -41,7 +41,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User savedUser = userRepository.save(user);
 
-        savedUser.setWallet(walletService.createWallet(savedUser));
+        savedUser.setWallet(walletService.createWallet(savedUser.getId(), userDTO.getWalletAddress()));
         savedUser.setBuyerProfile(buyerProfileService.createBuyerProfile(userDTO, savedUser.getId()));
         savedUser.setSellerProfile(sellerProfileService.createSellerProfile(userDTO, savedUser.getId()));
 

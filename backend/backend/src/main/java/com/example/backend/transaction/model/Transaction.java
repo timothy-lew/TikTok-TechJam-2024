@@ -20,20 +20,25 @@ public class Transaction {
     private TransactionType transactionType;
     private LocalDateTime transactionDate;
     private String userId; // Needed by top-up and conversion transactions, not needed by purchase transactions
-    // Purchase transaction details
+    // Although these 2 fields are not needed by top-up and conversion transactions, they are still included in the model
+    // This is so that our getTransactionByBuyerProfileId() and getTransactionBySellerProfileId() methods in TransactionService
+    // can return the transactions based on these fields.
     private String buyerProfileId;
     private String sellerProfileId;
+    // Purchase transaction details
     private String itemId;
     private Float price;
     private Integer quantity;
     private Float totalAmount;
+    private PurchaseType purchaseType;
     // Top-up transaction details
-    private TopUpTransactionType topUpTransactionType;
+    private TopUpType topUpType;
     private Float topUpAmount;
-    // Conversion transaction details TODO: Potentially removing this endpoint and dto, since wallet controller will handle this, only provide service method to create transaction.
+    // Conversion transaction details
     private Float conversionRate;
     private Float cashBalance;
-    private Float coinBalance;
+    private Float tokTokenBalance;
+    private ConversionType conversionType;
 
     public enum TransactionType {
         PURCHASE,
@@ -41,8 +46,18 @@ public class Transaction {
         TOPUP
     }
 
-    public enum TopUpTransactionType {
+    public enum PurchaseType {
+        TOK_TOKEN,
+        CASH
+    }
+
+    public enum TopUpType {
         GIFT_CARD,
         CREDIT_CARD,
+    }
+
+    public enum ConversionType {
+        CASH_TO_TOKTOKEN,
+        TOKTOKEN_TO_CASH
     }
 }
