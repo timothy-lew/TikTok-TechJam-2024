@@ -23,4 +23,6 @@ public class Item {
     private Float price;
     private Integer quantity;
     private Binary image; // MongoDB requires Binary type for storing images
+    private String businessName;
+    private String sellerWalletAddress;
 }

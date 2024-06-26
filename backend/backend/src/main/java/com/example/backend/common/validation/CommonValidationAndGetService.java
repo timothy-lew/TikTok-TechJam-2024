@@ -9,6 +9,8 @@ import com.example.backend.user.model.User;
 import com.example.backend.user.repository.BuyerProfileRepository;
 import com.example.backend.user.repository.SellerProfileRepository;
 import com.example.backend.user.repository.UserRepository;
+import com.example.backend.wallet.model.Wallet;
+import com.example.backend.wallet.repository.WalletRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class CommonValidationAndGetService {
     private final BuyerProfileRepository buyerProfileRepository;
     private final SellerProfileRepository sellerProfileRepository;
     private final ItemRepository itemRepository;
+    private final WalletRepository walletRepository;
 
     public User validateAndGetUser(String userId) throws ResourceNotFoundException {
         return userRepository.findById(userId)
@@ -41,5 +44,10 @@ public class CommonValidationAndGetService {
     public Item validateAndGetItem(String itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Item not found with id: " + itemId));
+    }
+
+    public Wallet validateAndGetWallet(String userId) {
+        return walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Wallet not found with userId: " + userId));
     }
 }

@@ -7,6 +7,8 @@ import com.example.backend.item.mapper.ItemMapper;
 import com.example.backend.item.model.Item;
 import com.example.backend.item.repository.ItemRepository;
 import com.example.backend.user.model.SellerProfile;
+import com.example.backend.user.model.User;
+import com.example.backend.wallet.model.Wallet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +30,14 @@ public class ItemService {
     }
 
     public ItemResponseDTO createItem(ItemDTO itemDTO, String userId) {
-        SellerProfile sellerProfile = commonValidationAndGetService.validateAndGetSellerProfile(userId);
+        User user = commonValidationAndGetService.validateAndGetUser(userId);
+        SellerProfile sellerProfile = user.getSellerProfile();
+        Wallet sellerWallet = user.getWallet();
+
         Item item = itemMapper.fromItemDTOtoItem(itemDTO);
         item.setSellerProfileId(sellerProfile.getId());
+        item.setBusinessName(sellerProfile.getBusinessName());
+        item.setSellerWalletAddress(sellerWallet.getWalletAddress());
         Item savedItem = itemRepository.save(item);
         return itemMapper.fromItemtoItemResponseDTO(savedItem);
     }
