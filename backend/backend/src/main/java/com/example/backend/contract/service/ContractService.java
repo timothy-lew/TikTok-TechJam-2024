@@ -2,6 +2,7 @@ package com.example.backend.contract.service;
 
 import com.example.backend.contract.TOKToken;
 import com.example.backend.contract.dto.SendCryptoDTO;
+import io.reactivex.disposables.Disposable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,9 @@ public class ContractService {
     private final Web3j web3j;
     private final TOKToken contract;
 
+    private Disposable tikTokSubscription;
+    private Disposable sellerSubscription;
+
     public ContractService() {
         this.web3j = Web3j.build(new HttpService(rpcUrl));
         Credentials credentials = Credentials.create(privateKey);
@@ -51,10 +55,9 @@ public class ContractService {
         TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
         ContractGasProvider gasProvider = new DefaultGasProvider();
         this.contract = TOKToken.load(contractAddress, web3j, transactionManager, gasProvider);
-        this.listen();
     }
 
-    public void listen() {
+    public void listenToTikTokAddress() {
         Web3j web3j = Web3j.build(new HttpService(rpcUrl));
         String tikTokAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
         String contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
@@ -65,8 +68,8 @@ public class ContractService {
                 DefaultBlockParameterName.LATEST,
                 contractAddress
         );
-        web3j.ethLogFlowable(filter).subscribe(log -> {
-            System.out.println("listening");
+        tikTokSubscription = web3j.ethLogFlowable(filter).subscribe(log -> {
+            System.out.println("listening to tiktok address");
             List<String> topics = log.getTopics();
             String contractAddress2 = topics.get(0);
 
@@ -83,13 +86,58 @@ public class ContractService {
                 String cleanTikTokAddress = tikTokAddress.substring(2).toLowerCase();
                 if (cleanReceiverAddress.contains(cleanTikTokAddress)) {
                     System.out.println(cleanReceiverAddress + " received " + amountReceivedInEth + " tokens from " + senderAddress);
-                    // call alex's service if need be to update any db tables, can query user table by sender address
-                    // inform seller to ship goods
-                    // we manually transfer TOKTokens to seller because
-                    // seller might scam the buyer and there is no way i can get the seller address
+                    stopListenToTikTokAddress();
                 }
             }
         });
+    }
+
+    public void listenToSellerAddress(String address) {
+        Web3j web3j = Web3j.build(new HttpService(rpcUrl));
+        String contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+
+        // Subscribe to token transfer events
+        EthFilter filter = new EthFilter(
+                DefaultBlockParameterName.EARLIEST,
+                DefaultBlockParameterName.LATEST,
+                contractAddress
+        );
+        sellerSubscription = web3j.ethLogFlowable(filter).subscribe(log -> {
+            System.out.println("listening to " + address);
+            List<String> topics = log.getTopics();
+            String contractAddress2 = topics.get(0);
+
+            if (topics.size() > 0 && contractAddress2.equals(EventEncoder.encode(TOKToken.TRANSFER_EVENT))) {
+                String senderAddress = topics.get(1);
+                String receiverAddress = topics.get(2);
+
+                String amountInHex = log.getData();
+                String cleanHex = amountInHex.replaceFirst("0x", "");
+                BigInteger weiAmount = new BigInteger(cleanHex, 16);
+                BigInteger amountReceivedInEth = Convert.fromWei(weiAmount.toString(), Convert.Unit.ETHER).toBigInteger();
+
+                String cleanReceiverAddress = receiverAddress.substring(2).toLowerCase();
+                String cleanTikTokAddress = address.substring(2).toLowerCase();
+                if (cleanReceiverAddress.contains(cleanTikTokAddress)) {
+                    System.out.println(cleanReceiverAddress + " received " + amountReceivedInEth + " tokens from " + senderAddress);
+                    stopListenToSellerAddress();
+                }
+            }
+        });
+    }
+
+    public void stopListenToTikTokAddress() {
+        if (tikTokSubscription != null && !tikTokSubscription.isDisposed()) {
+            tikTokSubscription.dispose();
+            log.info("Stopped listening to tikTokSubscription");
+        }
+    }
+
+    public void stopListenToSellerAddress() {
+        if (sellerSubscription != null && !sellerSubscription.isDisposed()) {
+            sellerSubscription.dispose();
+            log.info("Stopped listening to sellerSubscription");
+        }
     }
 
     public BigDecimal sendCrypto(SendCryptoDTO sendCryptoDTO) {

@@ -1,5 +1,6 @@
 package com.example.backend.contract.controller;
 
+import com.example.backend.contract.dto.ListenDTO;
 import com.example.backend.contract.dto.SendCryptoDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ import java.math.BigDecimal;
 public class ContractController {
     private final ContractService contractService;
 
-    // this endpoint is an entry point for local dev
+    // these endpoints are entry points for local dev, frontend need not call
     // alex's endpoint will call contractService.sendCrypto(sendCryptoDTO)
      @PostMapping("/transfer")
      public ResponseEntity<BigDecimal> sendCrypto(@RequestBody @Valid SendCryptoDTO
@@ -34,4 +35,29 @@ public class ContractController {
          BigDecimal balance = contractService.sendCrypto(sendCryptoDTO);
      return new ResponseEntity<>(balance, HttpStatus.CREATED);
      }
+
+    @PostMapping("/listen")
+    public ResponseEntity<String> listenToTikTokAddress() {
+        contractService.listenToTikTokAddress();
+        return new ResponseEntity<>("OK", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/listen/stop")
+    public ResponseEntity<String> stopListenToTikTokAddress() {
+        contractService.stopListenToTikTokAddress();
+        return new ResponseEntity<>("OK", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/listen/seller")
+    public ResponseEntity<String> listenToSellerAddress(@RequestBody @Valid ListenDTO ListenDTO) {
+        log.info("body = {}", ListenDTO);
+        contractService.listenToSellerAddress(ListenDTO.getAddress());
+        return new ResponseEntity<>(ListenDTO.getAddress(), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/listen/seller/stop")
+    public ResponseEntity<String> stopListenToSellerAddress() {
+        contractService.stopListenToSellerAddress();
+        return new ResponseEntity<>("OK", HttpStatus.CREATED);
+    }
 }
