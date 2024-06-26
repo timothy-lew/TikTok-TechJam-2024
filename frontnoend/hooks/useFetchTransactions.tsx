@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 
 export type Transaction = {
   id: string
-  transactionType: "shopping" | "transfer"
+  transactionType: "shopping" | "transfer" | "topup" | "exchange"
   amount: number
-  receiver: string
-  type: "incoming" | "outgoing"
+  receiver: string // can be the shop username for SHOPPING, @tiktokOfficial for coins TOPUP/EXCHANGE, friend username for TRANSFER
+  type: "incoming" | "outgoing" | "exchange"
   status: "pending" | "processing" | "success" | "failed"
+  desc?: string
   date: Date
 }
 
@@ -18,17 +19,18 @@ const data: Transaction[] = [
     id: "728ed52f",
     amount: 100,
     type: "incoming",
-    receiver: "@tiktokshop1",
-    transactionType: "shopping",
-    status: "pending",
+    receiver: "@tiktokOfficial",
+    transactionType: "topup",
+    status: "success",
     date: new Date("2024-06-19"),
   },
   {
     id: "a4f8b2d1",
     amount: 250,
-    type: "incoming",
-    receiver: "@tiktokshop2",
-    transactionType: "shopping",
+    type: "exchange",
+    receiver: "@tiktokOfficial",
+    transactionType: "exchange",
+    desc:"250SGD converted to 25000 Tiktok Coins",
     status: "success",
     date: new Date("2024-06-18"),
   },

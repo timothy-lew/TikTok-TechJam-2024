@@ -13,7 +13,7 @@ const TiktokCard: React.FC<TiktokCardProps> = ({ number, cardName, cvc, expiryDa
       </div>
       <div className="text-base sm:text-xl font-mono tracking-widest mt-2 sm:mt-4 flex flex-wrap justify-center sm:justify-start">
         {number.map((num, index) => (
-          <span key={index} className="mx-1 sm:mx-0">{hideDetails ? '****' : num} </span>
+          <span key={index} className="mx-1 sm:mx-0 pr-2">{hideDetails ? '****' : num}</span>
         ))}
       </div>
       <div className="flex justify-between items-end mt-2 sm:mt-4">
