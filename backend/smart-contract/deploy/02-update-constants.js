@@ -8,11 +8,11 @@ const fs = require('fs');
 const { network } = require('hardhat');
 
 module.exports = async () => {
-  console.log('Writing to front end...');
+  console.log('Writing to constants...');
   await updateContractAddresses();
   await updateAbi();
   await updateBytecode();
-  console.log('Front end written!');
+  console.log('constants written!');
 };
 
 async function updateAbi() {

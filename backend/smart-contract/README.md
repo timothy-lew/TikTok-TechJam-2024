@@ -58,7 +58,7 @@ node --version
 1. Installation
 
 ```console
-npm i
+npm i --legacy-peer-deps
 ```
 
 ### Error: `distutils not found` when running `npm install`
@@ -85,46 +85,44 @@ yarn hardhat node
 
    - Install the Metamask extension on Google Chrome.
 
-2. **Import TikTok's Wallet**
+2. **Import Local Hardhat Network**
+
+- Follow the instructions on [Metamask Docs](https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/) to import the local Hardhat network with the following configuration:
+  - **Network Name:** localhost-hardhat
+  - **RPC URL:** http://127.0.0.1:8545/
+  - **Chain ID:** 31337
+  - **Currency Symbol:** ETH
+
+3. **Import TikTok's Wallet**
 
    - Click on "Add Account" -> "Import Account".
    - Enter the following private key for TikTok's account: `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`.
 
-3. **Import User's Wallet**
+4. **Import User 1's Wallet**
 
-   - Repeat step 2 using the following private key for User's account: `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d`.
+   - Repeat step 3 using the following private key for User's account: `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d`.
 
-4. **Import Local Hardhat Network**
+5. **Import User 2's Wallet**
 
-   - Follow the instructions on [Metamask Docs](https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/) to import the local Hardhat network with the following configuration:
-     - **Network Name:** localhost-hardhat
-     - **RPC URL:** http://127.0.0.1:8545/
-     - **Chain ID:** 31337
-     - **Currency Symbol:** ETH
+- Repeat step 3 using the following private key for User's account: `0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a`.
 
-5. **Run Local Blockchain Network and deploy TOKToken contract**
+6. **Run Local Blockchain Network and deploy TOKToken contract**
 
    - Run the following command to start up the local blockchain network:
      ```sh
      yarn hardhat node
      ```
 
-6. **Import TOKToken to Metamask**
+7. **Import TOKToken to Metamask**
 
    - Import `TOKToken` to Metamask by specifying the contract address: `0x5FbDB2315678afecb367f032d93F642f64180aa3`.
 
-7. **Reset Nonce Settings**
+8. **Reset Nonce Settings**
 
    - If you encounter a nonce error in Metamask, reset the nonce settings for both wallets ([Reset Nonce](https://docs.metamask.io/wallet/how-to/run-devnet/#reset-your-local-nonce-calculation)).
    - Restart Google Chrome to refresh Metamask
 
-8. Run tests
-
-```
-yarn test
-```
-
-6. Generate wrapper code for Java (only needed for Timothy)
+9. Generate wrapper code for Java (only needed for Timothy)
 
 ```
 web3j generate solidity -b ./constants/TOKToken.bin -a ./constants/TOKToken.abi -o ../backend/src/main/java -p com.example.backend.contract
