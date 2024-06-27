@@ -27,6 +27,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { ArrowLeft } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { ProductDetailsSkeleton } from "@/components/shop/ProductCard";
 
 type Product = {
   id: string;
@@ -227,7 +228,7 @@ export default function Page({ params }) {
   }, [params.id, accessToken]);
 
   if (loading) {
-    return <p>loading...</p>;
+    return <ProductDetailsSkeleton></ProductDetailsSkeleton>;
   }
 
   return (
@@ -313,7 +314,7 @@ function ProductCardDetails({
           <p>Quantity available: {quantity}</p>
         </CardContent>
         <CardFooter>
-          <Button onClick={openModal} size="lg" className="w-full">
+          <Button onClick={openModal} size="lg" className="w-full bg-red-500 hover:bg-red-600">
             Buy Now
           </Button>
         </CardFooter>

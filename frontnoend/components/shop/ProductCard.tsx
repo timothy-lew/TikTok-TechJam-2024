@@ -39,7 +39,7 @@ export function ProductCard({
         <p className="line-clamp-4">{description}</p>
       </CardContent>
       <CardFooter>
-        <Button asChild size="lg" className="w-full">
+      <Button asChild size="lg" className="w-full bg-white text-black border border-gray-400 hover:bg-black hover:text-white focus:bg-black focus:text-white">
           <Link href={`/shop/${id}/`}>Purchase</Link>
         </Button>
       </CardFooter>
@@ -70,5 +70,39 @@ export function ProductCardSkeleton() {
         <Button className="w-full" disabled size="lg"></Button>
       </CardFooter>
     </Card>
+  )
+}
+
+
+
+export function ProductDetailsSkeleton() {
+  return (
+    <div className="w-full sm:w-1/2 mx-auto">
+      <Card className="overflow-hidden flex flex-col animate-pulse">
+        <div className="relative w-full aspect-video bg-gray-300" />
+        <CardHeader>
+          <CardTitle>
+            <div className="w-3/4 h-6 rounded-full bg-gray-300" />
+          </CardTitle>
+          <CardDescription>
+            <div className="w-1/2 h-4 rounded-full bg-gray-300" />
+          </CardDescription>
+          <CardDescription>
+            <div className="w-1/3 h-4 rounded-full bg-gray-300" />
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2 flex-grow">
+          <div className="w-full h-4 rounded-full bg-gray-300" />
+          <div className="w-full h-4 rounded-full bg-gray-300" />
+          <div className="w-3/4 h-4 rounded-full bg-gray-300" />
+          <div className="w-1/4 h-4 rounded-full bg-gray-300" />
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full bg-gray-300 text-transparent" disabled size="lg">
+            Buy Now
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   )
 }
