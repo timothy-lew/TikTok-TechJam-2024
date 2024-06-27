@@ -38,6 +38,11 @@ public class ItemService {
         item.setSellerProfileId(sellerProfile.getId());
         item.setBusinessName(sellerProfile.getBusinessName());
         item.setSellerWalletAddress(sellerWallet.getWalletAddress());
+
+        // Set tokTokenPrice based on current conversion rate
+        float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
+        item.setTokTokenPrice(item.getPrice() * conversionRate);
+
         Item savedItem = itemRepository.save(item);
         return itemMapper.fromItemtoItemResponseDTO(savedItem);
     }

@@ -21,6 +21,7 @@ public class Item {
     private String name;
     private String description;
     private Float price;
+    private Float tokTokenPrice;
     private Integer quantity;
     private Binary image; // MongoDB requires Binary type for storing images
     private String businessName;
