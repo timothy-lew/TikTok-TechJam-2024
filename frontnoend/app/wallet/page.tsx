@@ -35,9 +35,22 @@ const WalletPage: React.FC = () => {
   let incoming: number = 0;
   let outgoing: number = 0;
 
+  // Conversion is excluded
   transactionData.forEach((transaction) => {
-    if (transaction.type === "incoming") incoming += transaction.amount;
-    else outgoing += transaction.amount;
+    
+    switch(transaction.transactionType){
+
+      case 'PURCHASE':
+        outgoing += transaction.purchaseDetails?.purchaseAmount || 0;
+        break;
+      case 'TOPUP':
+        incoming += transaction.topUpDetails?.topUpAmount || 0;
+        break;        
+
+    } 
+
+
+    
   });
 
   // if (!user) {
