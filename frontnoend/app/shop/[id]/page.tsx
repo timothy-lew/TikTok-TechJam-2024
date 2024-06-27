@@ -28,6 +28,7 @@ import { ArrowLeft } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { ProductDetailsSkeleton } from "@/components/shop/ProductCard";
+import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
 
 type Product = {
   id: string;
@@ -37,9 +38,11 @@ type Product = {
   price: number;
   quantity: number;
   imageUrl: string;
+  businessName: string;
+  sellerWalletAddress: string;
 };
 
-type UserInfo = {
+type BuyerInfo = {
   id: string;
   username: string;
   email: string;
@@ -73,8 +76,9 @@ type Wallet = {
 export default function Page({ params }) {
   const [product, setProduct] = useState<Product | null>(null);
   const [sellerId, setSellerId] = useState<string | null>(null);
-  const [sellerUsername, setSellerUsername] = useState<string | null>(null);
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [sellerBusinessName, setBusinessName] = useState<string | null>(null);
+  const [sellerWalletAddress, setSellerWalletAddress] = useState<string | null>(null);
+  const [buyerInfo, setBuyerInfo] = useState<BuyerInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
@@ -91,13 +95,13 @@ export default function Page({ params }) {
   const router = useRouter();
 
   const confirmPurchaseTiktokCoin = async () => {
-    if (!userInfo || !product || !sellerId) {
+    if (!buyerInfo || !product || !sellerId) {
       console.error("Missing required information for purchase");
       return;
     }
 
     const payload = {
-      buyerProfileId: userInfo.buyerProfile.id,
+      buyerProfileId: buyerInfo.buyerProfile.id,
       sellerProfileId: sellerId,
       itemId: product.id,
       quantity: quantity,
@@ -155,7 +159,7 @@ export default function Page({ params }) {
       setAccessToken(token);
       if (user) {
         console.log("User details:", user);
-        const transformedUserInfo: UserInfo = {
+        const transformedBuyerInfo: BuyerInfo = {
           id: user.id,
           username: user.username,
           email: user.email,
@@ -175,7 +179,7 @@ export default function Page({ params }) {
           },
           wallet: user.wallet || { id: "", cashBalance: 0, coinBalance: 0 },
         };
-        setUserInfo(transformedUserInfo);
+        setBuyerInfo(transformedBuyerInfo);
       }
     };
 
@@ -206,24 +210,15 @@ export default function Page({ params }) {
         console.log(data);
         setProduct(data);
         setSellerId(data.sellerProfileId);
+        setBusinessName(data.businessName)
+        setSellerWalletAddress(data.sellerWalletAddress);
+        console.log('seller wallet address: ' + data.sellerWalletAddress)
         console.log("seller id: " + data.sellerProfileId);
+        console.log("Business Name" + data.businessName)
 
-        const seller_response = await fetch(
-          `http://localhost:8080/api/users/${data.sellerProfileId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        if (!seller_response.ok) {
-          throw new Error("Failed to fetch seller details");
-        }
+       
 
-        const sellerData = await seller_response.json();
-        console.log(sellerData);
-        console.log(sellerData.username);
-        setSellerUsername(sellerData.username);
+
       } catch (err) {
         setError(err as Error);
         setLoading(false);
@@ -272,19 +267,19 @@ export default function Page({ params }) {
         <ArrowLeft className="size-4" />
         <span>Return to Shop</span>
       </Link>
-      <h1>{sellerUsername}</h1>
       {product && (
         <ProductCardDetails
           product={product}
-          sellerUsername={sellerUsername}
+          sellerBusinessName={sellerBusinessName}
           openModal={openModal}
         />
       )}
-      {isModalOpen && product && (
+      {isModalOpen && product && buyerInfo && (
         <>
           <Modal
             product={product}
             quantity={quantity}
+            buyer={buyerInfo}
             setQuantity={setQuantity}
             onClose={closeModal}
             onConfirmTiktokCoin={confirmPurchaseTiktokCoin}
@@ -302,7 +297,8 @@ export default function Page({ params }) {
                   {alertDialogContent === "" && (
                     <>
                       <p className="font-medium">
-                        Seller Wallet Address: {product?.sellerProfileId}
+                        Seller Wallet Address:
+                        <WalletAddressBar wallet_address={product?.sellerWalletAddress}></WalletAddressBar>
                       </p>
                       <p className="font-medium text-red-600">
                         Time left to complete the transaction:{" "}
@@ -335,11 +331,11 @@ export default function Page({ params }) {
 
 function ProductCardDetails({
   product,
-  sellerUsername,
+  sellerBusinessName,
   openModal,
 }: {
   product: Product;
-  sellerUsername: string | null;
+  sellerBusinessName: string | null;
   openModal: () => void;
 }) {
   const { id, name, description, price, quantity, imageUrl } = product;
@@ -361,7 +357,7 @@ function ProductCardDetails({
           <CardDescription>
             ${price} or {Math.round(price * 100)} TikTok Coins{" "}
           </CardDescription>
-          <CardDescription>Sold by {product?.sellerProfileId}</CardDescription>
+          <CardDescription>Sold by {sellerBusinessName}</CardDescription>
         </CardHeader>
         <CardContent className="flex-grow">
           <h3 className="line-clamp-4">{description}</h3>
@@ -383,6 +379,7 @@ function ProductCardDetails({
 type ModalProps = {
   product: Product;
   quantity: number;
+  buyer: BuyerInfo;
   setQuantity: (quantity: number) => void;
   onClose: () => void;
   onConfirmTiktokCoin: () => void;
@@ -392,6 +389,7 @@ type ModalProps = {
 const Modal = ({
   product,
   quantity,
+  buyer,
   setQuantity,
   onClose,
   onConfirmTiktokCoin,
@@ -421,14 +419,17 @@ const Modal = ({
           Confirm Purchase
         </h3>
         <div className="text-sm px-4 py-3 text-gray-700 space-y-2">
-          <p className="font-medium">Please review your purchase details:</p>
-          <p>Seller: {product.sellerProfileId}</p>
-          <p>Product: {product.name}</p>
-          <p>
+          <p className="font-semibold">Please review your purchase details:</p>
+          <p className="p-1">Seller: {product.businessName}</p>
+          <p className="p-1">Seller ID: {product.sellerProfileId}</p>
+          <p className="p-1">Product: {product.name}</p>
+          <p className="p-1">Recipient: {buyer.firstName + ' ' + buyer.lastName}</p>
+          <p className="p-1">Shipping Address: {shippingAddress}</p>
+          <p className="p-1 ">
             Price: ${(product.price * quantity).toFixed(2)} or{" "}
             {Math.round(product.price * 100 * quantity)} TikTok Coins
           </p>
-          <div className="flex items-center space-x-2">
+          <div className="p-1 flex items-center space-x-2">
             <span>Quantity:</span>
             <button
               onClick={decreaseQuantity}
@@ -451,7 +452,7 @@ const Modal = ({
               +
             </button>
           </div>
-          <p>Shipping Address: {shippingAddress}</p>
+          
         </div>
         <div className="px-3 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
           <button
