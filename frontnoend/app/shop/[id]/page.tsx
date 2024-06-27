@@ -87,6 +87,7 @@ export default function Page({ params }) {
 
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [alertDialogContent, setAlertDialogContent] = useState("");
+  const [countdown, setCountdown] = useState(300);
   const router = useRouter();
 
   const confirmPurchaseTiktokCoin = async () => {
@@ -105,39 +106,44 @@ export default function Page({ params }) {
 
     console.log("Payload for purchase:", payload);
 
-    setIsAlertDialogOpen(true); 
+    setIsAlertDialogOpen(true); // Open the AlertDialog to show the address and countdown
 
-    try {
-      const response = await fetch(
-        "http://localhost:8080/api/transactions/purchase",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify(payload),
+    // Display the address and countdown for 5 seconds before starting the purchase
+    setTimeout(async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/transactions/purchase",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-      );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const data = await response.json();
+        console.log("Purchase successful:", data);
+        setAlertDialogContent(
+          "Purchase successful! Redirecting to home page..."
+        );
+      } catch (error) {
+        console.error("Error during purchase:", error);
+        setAlertDialogContent("Error during purchase. Please try again.");
+      } finally {
+        setTimeout(() => {
+          setIsAlertDialogOpen(false); // Close the alert dialog
+          closeModal();
+          console.log("redirecting to homepage...");
+          router.push("/shop");
+        }, 5000);
       }
-
-      const data = await response.json();
-      console.log("Purchase successful:", data);
-      setAlertDialogContent("Purchase successful! Redirecting to home page...");
-    } catch (error) {
-      console.error("Error during purchase:", error);
-      setAlertDialogContent("Error during purchase. Please try again.");
-    } finally {
-      setTimeout(() => {
-        setIsAlertDialogOpen(false); // Close the alert dialog
-        closeModal();
-        console.log("redirecting to homepage...");
-        router.push("/shop");
-      }, 2000);
-    }
+    }, 10000); // 10 seconds delay before making the purchase API call
   };
 
   const auth = useAuth();
@@ -227,6 +233,35 @@ export default function Page({ params }) {
     fetchProducts();
   }, [params.id, accessToken]);
 
+  useEffect(() => {
+    if (isAlertDialogOpen) {
+      const timer = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          if (prevCountdown <= 0) {
+            clearInterval(timer);
+            onCloseAlert();
+            return 0;
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [isAlertDialogOpen]);
+
+  const onCloseAlert = () => {
+    setIsAlertDialogOpen(false);
+    closeModal();
+    router.push("/shop");
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   if (loading) {
     return <ProductDetailsSkeleton></ProductDetailsSkeleton>;
   }
@@ -264,12 +299,31 @@ export default function Page({ params }) {
                 <AlertDialogTitle>Transaction Status</AlertDialogTitle>
                 <AlertDialogDescription>
                   {alertDialogContent}
+                  {alertDialogContent === "" && (
+                    <>
+                      <p className="font-medium">
+                        Seller Wallet Address: {product?.sellerProfileId}
+                      </p>
+                      <p className="font-medium text-red-600">
+                        Time left to complete the transaction:{" "}
+                        {formatTime(countdown)}
+                      </p>
+                    </>
+                  )}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                {/* <AlertDialogCancel onClick={() => setIsAlertDialogOpen(false)}>
+                {alertDialogContent === "" && (
+                  <AlertDialogAction
+                    onClick={confirmPurchaseTiktokCoin}
+                    className="bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    Confirm Purchase
+                  </AlertDialogAction>
+                )}
+                <AlertDialogCancel onClick={onCloseAlert}>
                   Close
-                </AlertDialogCancel> */}
+                </AlertDialogCancel>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -307,14 +361,18 @@ function ProductCardDetails({
           <CardDescription>
             ${price} or {Math.round(price * 100)} TikTok Coins{" "}
           </CardDescription>
-          <CardDescription>Sold by {sellerUsername}</CardDescription>
+          <CardDescription>Sold by {product?.sellerProfileId}</CardDescription>
         </CardHeader>
         <CardContent className="flex-grow">
           <h3 className="line-clamp-4">{description}</h3>
           <p>Quantity available: {quantity}</p>
         </CardContent>
         <CardFooter>
-          <Button onClick={openModal} size="lg" className="w-full bg-red-500 hover:bg-red-600">
+          <Button
+            onClick={openModal}
+            size="lg"
+            className="w-full bg-red-500 hover:bg-red-600"
+          >
             Buy Now
           </Button>
         </CardFooter>
@@ -330,6 +388,7 @@ type ModalProps = {
   onConfirmTiktokCoin: () => void;
   shippingAddress: string;
 };
+
 const Modal = ({
   product,
   quantity,
@@ -343,100 +402,78 @@ const Modal = ({
   };
 
   const increaseQuantity = () => {
-    setQuantity((prevQuantity: number) =>
-      Math.min(prevQuantity + 1, product.quantity)
-    );
+    setQuantity((prevQuantity) => Math.min(prevQuantity + 1, product.quantity));
   };
 
   const decreaseQuantity = () => {
-    setQuantity((prevQuantity: number) => Math.max(prevQuantity - 1, 1));
+    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
   };
 
   return (
-    <div className="fixed inset-0 z-10 overflow-y-auto">
-      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-      <div className="flex items-center justify-center min-h-screen px-4 text-center sm:block sm:p-0">
-        <div className="relative inline-block transform bg-white rounded-lg text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div className="sm:flex sm:items-start">
-              <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                <MdOutlineShoppingCart></MdOutlineShoppingCart>
-              </div>
-              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3
-                  className="text-lg leading-6 font-medium text-gray-900"
-                  id="modal-title"
-                >
-                  Confirm Purchase
-                </h3>
-                <div className="mt-2">
-                  <p className="text-sm font-semibold text-gray-500">
-                    Review your purchase details:
-                  </p>
-                  <br></br>
-                  <p className="text-sm text-gray-500">
-                    Seller: {product.sellerProfileId}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Product: {product.name}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Price: ${product.price * quantity} or{" "}
-                    {Math.round(product.price * 100 * quantity)} TikTok Coins
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Quantity:
-                    <button
-                      onClick={decreaseQuantity}
-                      className="ml-2 px-2 border rounded"
-                    >
-                      -
-                    </button>
-                    <input
-                      type="number"
-                      min="1"
-                      max={product.quantity}
-                      value={quantity}
-                      onChange={handleQuantityChange}
-                      className="mx-2 border rounded"
-                      style={{ width: "50px", textAlign: "center" }}
-                    />
-                    <button
-                      onClick={increaseQuantity}
-                      className="px-2 border rounded"
-                    >
-                      +
-                    </button>
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Shipping Address: {shippingAddress}
-                  </p>
-                </div>
-              </div>
-            </div>
+    <div className="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center bg-gray-500 bg-opacity-75">
+      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto p-6">
+        <div className="flex items-center justify-center mb-4">
+          <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-blue-100">
+            <MdOutlineShoppingCart className="h-8 w-8 text-black-600" />
           </div>
-          <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        </div>
+        <h3 className="text-2xl leading-6 font-medium text-gray-900 text-center mb-4">
+          Confirm Purchase
+        </h3>
+        <div className="text-sm px-4 py-3 text-gray-700 space-y-2">
+          <p className="font-medium">Please review your purchase details:</p>
+          <p>Seller: {product.sellerProfileId}</p>
+          <p>Product: {product.name}</p>
+          <p>
+            Price: ${(product.price * quantity).toFixed(2)} or{" "}
+            {Math.round(product.price * 100 * quantity)} TikTok Coins
+          </p>
+          <div className="flex items-center space-x-2">
+            <span>Quantity:</span>
             <button
-              type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm"
+              onClick={decreaseQuantity}
+              className="px-2 py-1 border rounded"
             >
-              Buy with Credit Card
+              -
             </button>
+            <input
+              type="number"
+              min="1"
+              max={product.quantity}
+              value={quantity}
+              onChange={handleQuantityChange}
+              className="w-12 text-center border rounded"
+            />
             <button
-              type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={onConfirmTiktokCoin}
+              onClick={increaseQuantity}
+              className="px-2 py-1 border rounded"
             >
-              Buy with TikTok Coins
-            </button>
-            <button
-              type="button"
-              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm"
-              onClick={onClose}
-            >
-              Cancel
+              +
             </button>
           </div>
+          <p>Shipping Address: {shippingAddress}</p>
+        </div>
+        <div className="px-3 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:w-auto sm:text-sm"
+          >
+            Buy with Cash
+          </button>
+          <button
+            type="button"
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:w-auto sm:text-sm"
+            onClick={onConfirmTiktokCoin}
+          >
+            Buy with TikTok Coin
+          </button>
+          <button
+            type="button"
+            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
