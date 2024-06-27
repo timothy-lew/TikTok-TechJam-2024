@@ -1,0 +1,96 @@
+[{
+  "_id": {
+    "$oid": "667d4fb59a4f0b6e3fbb5c01"
+  },
+  "transactionType": "PURCHASE",
+  "transactionDate": {
+    "$date": "2024-06-27T11:40:37.522Z"
+  },
+  "userId": "null",
+  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "sellerProfileId": "667c1c55d2687e76c2bfca11",
+  "itemId": "667c203ffe08ec33cf32e737",
+  "price": 34.900001525878906,
+  "quantity": 3,
+  "totalAmount": 104.70000457763672,
+  "purchaseType": "CASH",
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "667d4fc59a4f0b6e3fbb5c02"
+  },
+  "transactionType": "PURCHASE",
+  "transactionDate": {
+    "$date": "2024-06-27T11:40:53.297Z"
+  },
+  "userId": "null",
+  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "sellerProfileId": "667c1c55d2687e76c2bfca11",
+  "itemId": "667c2069fe08ec33cf32e738",
+  "price": 20.5,
+  "quantity": 2,
+  "totalAmount": 410,
+  "purchaseType": "TOK_TOKEN",
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "667d4fce9a4f0b6e3fbb5c03"
+  },
+  "transactionType": "TOPUP",
+  "transactionDate": {
+    "$date": "2024-06-27T11:41:02.772Z"
+  },
+  "userId": "667c1b41d2687e76c2bfca09",
+  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "topUpType": "CREDIT_CARD",
+  "topUpAmount": 4000,
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "667d4fdc9a4f0b6e3fbb5c04"
+  },
+  "transactionType": "TOPUP",
+  "transactionDate": {
+    "$date": "2024-06-27T11:41:16.622Z"
+  },
+  "userId": "667c1b41d2687e76c2bfca09",
+  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "topUpType": "GIFT_CARD",
+  "topUpAmount": 100,
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "667d4fe99a4f0b6e3fbb5c05"
+  },
+  "transactionType": "CONVERSION",
+  "transactionDate": {
+    "$date": "2024-06-27T11:41:29.239Z"
+  },
+  "userId": "667c1b41d2687e76c2bfca09",
+  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "conversionRate": 10,
+  "cashToConvert": 15,
+  "convertedAmount": 150,
+  "conversionType": "CASH_TO_TOKTOKEN",
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "667d4ff09a4f0b6e3fbb5c06"
+  },
+  "transactionType": "CONVERSION",
+  "transactionDate": {
+    "$date": "2024-06-27T11:41:36.562Z"
+  },
+  "userId": "667c1b41d2687e76c2bfca09",
+  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "conversionRate": 0.10000000149011612,
+  "tokTokenToConvert": 2000,
+  "convertedAmount": 200,
+  "conversionType": "TOKTOKEN_TO_CASH",
+  "_class": "com.example.backend.transaction.model.Transaction"
+}]

@@ -59,11 +59,19 @@ public class TransactionService {
             throw new RuntimeException("Insufficient quantity");
         }
 
-        // Calculate total amount
-        float totalAmount = item.getPrice() * dto.getQuantity();
+        // Calculate total amount based on purchase type
+        float totalAmount;
+        if (Transaction.PurchaseType.CASH.equals(Transaction.PurchaseType.valueOf(dto.getPurchaseType()))) {
+            totalAmount = item.getPrice() * dto.getQuantity();
+        } else if (Transaction.PurchaseType.TOK_TOKEN.equals(Transaction.PurchaseType.valueOf(dto.getPurchaseType()))) {
+            // Fetch current conversion rate
+            float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
+            totalAmount = item.getPrice() * dto.getQuantity() * conversionRate;
+        } else {
+            throw new RuntimeException("Unsupported purchase type");
+        }
 
-        // Deduct balance from buyer's wallet and start listening to the queue from blockchain to check if buyer sends successfully.
-        // If buyer doesn't have sufficient balance (cash/toktoken), exception is thrown.
+        // Deduct balance from buyer's wallet
         walletService.handlePurchase(dto.getBuyerProfileId(), dto.getSellerProfileId(), BigDecimal.valueOf(totalAmount), Transaction.PurchaseType.valueOf(dto.getPurchaseType()));
 
         // Create and populate the transaction
@@ -76,9 +84,11 @@ public class TransactionService {
         item.setQuantity(item.getQuantity() - dto.getQuantity());
         itemRepository.save(item);
 
+        // Save transaction
         Transaction savedTransaction = transactionRepository.save(transaction);
         return transactionMapper.fromTransactiontoTransactionResponseDTO(savedTransaction);
     }
+
 
     public TransactionResponseDTO createTopUpTransaction(TopUpTransactionDTO dto) {
         // TODO: Handle gift card and credit card top-up types (credit card one just simplify it)
