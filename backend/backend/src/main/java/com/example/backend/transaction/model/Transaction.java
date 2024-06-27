@@ -19,10 +19,11 @@ public class Transaction {
     private String id;
     private TransactionType transactionType;
     private LocalDateTime transactionDate;
-    private String userId; // Needed by top-up and conversion transactions, not needed by purchase transactions
-    // Although these 2 fields are not needed by top-up and conversion transactions, they are still included in the model
-    // This is so that our getTransactionByBuyerProfileId() and getTransactionBySellerProfileId() methods in TransactionService
-    // can return the transactions based on these fields.
+    // Needed by top-up and conversion transactions, not needed by purchase transactions
+    private String userId;
+    // Needed only by purchase transactions, but we still store it for all transaction types.
+    // For top-up and conversion transactions, these fields will store the user's respective profile IDs.
+    // This is required for the ease of getting transactions by buyer/seller profile ID.
     private String buyerProfileId;
     private String sellerProfileId;
     // Purchase transaction details
@@ -36,8 +37,9 @@ public class Transaction {
     private Float topUpAmount;
     // Conversion transaction details
     private Float conversionRate;
-    private Float cashBalance;
-    private Float tokTokenBalance;
+    private Float cashToConvert;
+    private Float tokTokenToConvert;
+    private Float convertedAmount;
     private ConversionType conversionType;
 
     public enum TransactionType {

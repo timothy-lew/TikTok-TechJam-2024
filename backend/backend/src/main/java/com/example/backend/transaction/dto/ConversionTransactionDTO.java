@@ -1,5 +1,6 @@
 package com.example.backend.transaction.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConversionTransactionDTO {
     private String userId;
-    private Float conversionRate;
-    private Float cashBalance;
-    private Float tokTokenBalance;
+    private Float cashToConvert;
+    private Float tokTokenToConvert;
+    @NotBlank(message = "Conversion type is required")
     private String conversionType;
 }

@@ -55,7 +55,7 @@ public class ItemService {
     }
 
     public List<ItemResponseDTO> getItemsByUserId(String userId) {
-        SellerProfile sellerProfile = commonValidationAndGetService.validateAndGetSellerProfile(userId);
+        SellerProfile sellerProfile = commonValidationAndGetService.validateAndGetSellerProfileByUserId(userId);
         List<Item> items = itemRepository.findBySellerProfileId(sellerProfile.getId());
         return items.stream()
                 .map(itemMapper::fromItemtoItemResponseDTO)
