@@ -32,7 +32,7 @@ const WalletPage: React.FC = () => {
 
   const handleClosePopup = () => setLoginPopupOpen(false);
 
-  const transactionData: Transaction[] = useFetchTransactions(user?.id || "");
+  const transactionData: Transaction[] = useFetchTransactions(user?.buyerProfile?.id || "");
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   
   const { walletData } = useWallet();
@@ -70,11 +70,9 @@ const WalletPage: React.FC = () => {
   //   );
   // }
 
-
   
   return (
     <section className="text-gray-800 flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8 flex-grow">
-
         <div className="bg-white shadow-md w-full flex justify-center items-start border border-tiktok-red">
         {/* Combined Wallet and Card Section */}
         <div className=" rounded-xl p-4 sm:p-6 w-full flex_col_center gap-4">
@@ -166,11 +164,12 @@ const WalletPage: React.FC = () => {
         </div>
 
           <div className="hidden xl:flex flex-col justify-center items-center w-[390px]">
+
             <div className="flex_col_center py-4 px-1">
               <TiktokCard
                 number={["***", "***", "***", "***"]}
                 cardName={"Your Name"}
-                cvc={"123"}
+                cvc={"***"}
                 expiryDate={"99/99"}
                 hideDetails={false}
                 variant="red"
@@ -187,7 +186,7 @@ const WalletPage: React.FC = () => {
               <TiktokCard
                 number={["***", "***", "***", "***"]}
                 cardName={"Your Name"}
-                cvc={"123"}
+                cvc={"***"}
                 expiryDate={"99/99"}
                 hideDetails={false}
                 variant="black"

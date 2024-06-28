@@ -56,13 +56,13 @@ const CurrencyExchangePage: React.FC = () => {
 
   return (
     <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-cyan">
-        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-tiktok-cyan">
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
+        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-tiktok-red">
           Currency Exchange
         </h1>
       </div>
 
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-cyan">
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-red">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <div className="mb-4 sm:mb-0">
             <h2 className="text-lg font-semibold mb-2">Your Balance</h2>
@@ -76,13 +76,13 @@ const CurrencyExchangePage: React.FC = () => {
         </div>
 
         <div className="mb-6">
-          <div className="flex rounded-md overflow-hidden border border-tiktok-cyan">
+          <div className="flex rounded-md overflow-hidden border border-tiktok-red">
             <button
               onClick={() => setConversionType("CASH_TO_TOKTOKEN")}
               className={`flex-1 py-2 px-4 ${
                 conversionType === "CASH_TO_TOKTOKEN"
-                  ? "bg-tiktok-cyan text-white"
-                  : "bg-card text-tiktok-cyan"
+                  ? "bg-tiktok-red text-white"
+                  : "bg-card text-tiktok-red"
               } transition duration-300`}
             >
               Fiat to TikTok Coins
@@ -91,8 +91,8 @@ const CurrencyExchangePage: React.FC = () => {
               onClick={() => setConversionType("TOKTOKEN_TO_CASH")}
               className={`flex-1 py-2 px-4 ${
                 conversionType === "TOKTOKEN_TO_CASH"
-                  ? "bg-tiktok-cyan text-white"
-                  : "bg-card text-tiktok-cyan"
+                  ? "bg-tiktok-red text-white"
+                  : "bg-card text-tiktok-red"
               } transition duration-300`}
             >
               TikTok Coins to Fiat
@@ -110,7 +110,7 @@ const CurrencyExchangePage: React.FC = () => {
               id="amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="flex-grow px-3 py-2 border border-input rounded-l-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+              className="flex-grow px-3 py-2 border border-input rounded-l-md focus:outline-none focus:ring-2 focus:ring-tiktok-red"
               placeholder="Enter amount"
             />
             <span className="bg-muted text-muted-foreground px-4 py-2 rounded-r-md">
@@ -121,7 +121,7 @@ const CurrencyExchangePage: React.FC = () => {
 
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">You will receive:</h3>
-          <p className="text-2xl font-bold text-tiktok-cyan">
+          <p className="text-2xl font-bold text-tiktok-red">
             {isNaN(calculatedAmount) ? "0" : calculatedAmount.toFixed(2)}{" "}
             {conversionType === "CASH_TO_TOKTOKEN" ? "TikTok Coins" : walletData?.currency}
           </p>
@@ -137,7 +137,7 @@ const CurrencyExchangePage: React.FC = () => {
 
       <Link
         href="/wallet"
-        className="text-tiktok-cyan hover:text-tiktok-cyan-dark font-medium text-lg sm:text-xl inline-flex items-center transition duration-300"
+        className="text-tiktok-red hover:text-tiktok-red-dark font-medium text-lg sm:text-xl inline-flex items-center transition duration-300"
       >
         <svg
           className="w-4 h-4 mr-2 rotate-180"

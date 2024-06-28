@@ -70,13 +70,13 @@ const TopUpPage: React.FC = () => {
 
   return (
     <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-cyan">
-        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-tiktok-cyan">
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
+        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-tiktok-red">
           Top Up Your Wallet
         </h1>
       </div>
 
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-cyan">
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-red">
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Current Balance</h2>
           <p className="text-muted-foreground">Fiat: ${walletData?.fiatAmount}</p>
@@ -84,13 +84,13 @@ const TopUpPage: React.FC = () => {
         </div>
 
         <div className="mb-6">
-          <div className="flex rounded-md overflow-hidden border border-tiktok-cyan">
+          <div className="flex rounded-md overflow-hidden border border-tiktok-red">
             <button
               onClick={() => setTopUpMethod("creditCard")}
               className={`flex-1 py-2 px-4 ${
                 topUpMethod === "creditCard"
-                  ? "bg-tiktok-cyan text-white"
-                  : "bg-card text-tiktok-cyan"
+                  ? "bg-tiktok-red text-white"
+                  : "bg-card text-tiktok-red"
               } transition duration-300`}
             >
               Credit Card
@@ -99,8 +99,8 @@ const TopUpPage: React.FC = () => {
               onClick={() => setTopUpMethod("giftCard")}
               className={`flex-1 py-2 px-4 ${
                 topUpMethod === "giftCard"
-                  ? "bg-tiktok-cyan text-white"
-                  : "bg-card text-tiktok-cyan"
+                  ? "bg-tiktok-red text-white"
+                  : "bg-card text-tiktok-red"
               } transition duration-300`}
             >
               Gift Card
@@ -122,7 +122,7 @@ const TopUpPage: React.FC = () => {
                   id="amount"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="flex-grow px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                  className="flex-grow px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-red"
                   placeholder="Enter amount"
                 />
               </div>
@@ -136,7 +136,7 @@ const TopUpPage: React.FC = () => {
                 id="cardNumber"
                 value={cardNumber}
                 onChange={(e) => setCardNumber(e.target.value)}
-                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-red"
                 placeholder="1234 5678 9012 3456"
               />
             </div>
@@ -150,7 +150,7 @@ const TopUpPage: React.FC = () => {
                   id="expiryDate"
                   value={expiryDate}
                   onChange={(e) => setExpiryDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-red"
                   placeholder="MM/YY"
                 />
               </div>
@@ -163,7 +163,7 @@ const TopUpPage: React.FC = () => {
                   id="cvv"
                   value={cvv}
                   onChange={(e) => setCvv(e.target.value)}
-                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-red"
                   placeholder="123"
                 />
               </div>
@@ -188,7 +188,7 @@ const TopUpPage: React.FC = () => {
                 id="giftCardCode"
                 value={giftCardCode}
                 onChange={(e) => setGiftCardCode(e.target.value)}
-                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-cyan"
+                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-tiktok-red"
                 placeholder="Enter gift card code"
               />
             </div>
@@ -215,7 +215,7 @@ const TopUpPage: React.FC = () => {
 
       <Link
         href="/wallet"
-        className="text-tiktok-cyan hover:text-tiktok-cyan-dark font-medium text-lg sm:text-xl inline-flex items-center transition duration-300"
+        className="text-tiktok-red hover:text-tiktok-red-dark font-medium text-lg sm:text-xl inline-flex items-center transition duration-300"
       >
         <svg
           className="w-4 h-4 mr-2 rotate-180"
