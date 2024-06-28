@@ -42,11 +42,14 @@ public class Transaction {
     private Float tokTokenToConvert;
     private Float convertedAmount;
     private ConversionType conversionType;
+    // Withdraw transaction details
+    private Float withdrawAmount;
 
     public enum TransactionType {
         PURCHASE,
         CONVERSION,
-        TOPUP
+        TOPUP,
+        WITHDRAW
     }
 
     public enum PurchaseType {

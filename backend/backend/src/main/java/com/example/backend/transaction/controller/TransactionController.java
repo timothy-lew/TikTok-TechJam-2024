@@ -67,6 +67,12 @@ public class TransactionController extends BaseController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/withdraw")
+    public ResponseEntity<TransactionResponseDTO> createWithdrawTransaction(@RequestBody WithdrawTransactionDTO dto) {
+        TransactionResponseDTO response = transactionService.createWithdrawTransaction(dto);
+        return ResponseEntity.ok(response);
+    }
+
     // Sole purpose to just provide a way to create gift cards, not required in application
     @PostMapping("/giftcard")
     public ResponseEntity<List<GiftCard>> createGiftCards(@RequestBody List<GiftCardDTO> giftCardDTOs) {

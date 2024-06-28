@@ -5,10 +5,7 @@ import com.example.backend.common.exception.InvalidGiftCardException;
 import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.item.model.Item;
 import com.example.backend.item.repository.ItemRepository;
-import com.example.backend.transaction.dto.ConversionTransactionDTO;
-import com.example.backend.transaction.dto.PurchaseTransactionDTO;
-import com.example.backend.transaction.dto.TopUpTransactionDTO;
-import com.example.backend.transaction.dto.TransactionResponseDTO;
+import com.example.backend.transaction.dto.*;
 import com.example.backend.transaction.mapper.TransactionMapper;
 import com.example.backend.transaction.model.GiftCard;
 import com.example.backend.transaction.model.Transaction;
@@ -186,4 +183,29 @@ public class TransactionService {
         return transactionMapper.fromTransactiontoTransactionResponseDTO(savedTransaction);
     }
 
+    public TransactionResponseDTO createWithdrawTransaction(WithdrawTransactionDTO dto) {
+        // Handle the withdrawal
+        walletService.handleWithdraw(dto.getUserId(), BigDecimal.valueOf(dto.getWithdrawAmount()));
+
+        // Create the transaction object
+        Transaction transaction = transactionMapper.fromDTOtoTransaction(dto);
+        transaction.setTransactionDate(LocalDateTime.now());
+
+        // For ease of querying transactions by buyer/seller profile ID
+        User user = commonValidationAndGetService.validateAndGetUser(dto.getUserId());
+        if (user.getRoles().contains(User.Role.ROLE_BUYER)) {
+            transaction.setBuyerProfileId(user.getBuyerProfile().getId());
+            transaction.setSellerProfileId(null);
+        } else if (user.getRoles().contains(User.Role.ROLE_SELLER)) {
+            transaction.setBuyerProfileId(null);
+            transaction.setSellerProfileId(user.getSellerProfile().getId());
+        }
+
+        // Save the transaction to the repository
+        Transaction savedTransaction = transactionRepository.save(transaction);
+
+        // Map and return the response DTO
+        return transactionMapper.fromTransactiontoTransactionResponseDTO(savedTransaction);
+    }
+    
 }

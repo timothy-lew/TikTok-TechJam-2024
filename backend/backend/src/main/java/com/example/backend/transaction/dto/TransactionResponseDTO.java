@@ -19,6 +19,7 @@ public class TransactionResponseDTO {
     private PurchaseDetails purchaseDetails;
     private TopUpDetails topUpDetails;
     private ConversionDetails conversionDetails;
+    private WithdrawDetails withdrawDetails;
 
     @Data
     @NoArgsConstructor
@@ -51,5 +52,12 @@ public class TransactionResponseDTO {
         private Float tokTokenToConvert;
         private Float convertedAmount;
         private String conversionType;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class WithdrawDetails {
+        private Float withdrawAmount;
     }
 }

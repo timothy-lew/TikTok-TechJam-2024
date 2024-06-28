@@ -1,10 +1,36 @@
 [{
   "_id": {
-    "$oid": "667e437d5e1e7e10b20ddcde"
+    "$oid": "667e4bd8ec01a3445898e0df"
+  },
+  "transactionType": "WITHDRAW",
+  "transactionDate": {
+    "$date": "2024-06-28T05:36:24.063Z"
+  },
+  "userId": "667c1b41d2687e76c2bfca09",
+  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "withdrawAmount": 200,
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "667e4be7ec01a3445898e0e0"
+  },
+  "transactionType": "WITHDRAW",
+  "transactionDate": {
+    "$date": "2024-06-28T05:36:39.158Z"
+  },
+  "userId": "667c1b41d2687e76c2bfca09",
+  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "withdrawAmount": 2200,
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "667e4c14ec01a3445898e0e1"
   },
   "transactionType": "PURCHASE",
   "transactionDate": {
-    "$date": "2024-06-28T05:00:45.269Z"
+    "$date": "2024-06-28T05:37:23.982Z"
   },
   "userId": "null",
   "buyerProfileId": "667c1b41d2687e76c2bfca0b",
@@ -18,11 +44,11 @@
 },
 {
   "_id": {
-    "$oid": "667e43855e1e7e10b20ddcdf"
+    "$oid": "667e4c19ec01a3445898e0e2"
   },
   "transactionType": "PURCHASE",
   "transactionDate": {
-    "$date": "2024-06-28T05:00:53.487Z"
+    "$date": "2024-06-28T05:37:29.616Z"
   },
   "userId": "null",
   "buyerProfileId": "667c1b41d2687e76c2bfca0b",
@@ -36,11 +62,11 @@
 },
 {
   "_id": {
-    "$oid": "667e438d5e1e7e10b20ddce0"
+    "$oid": "667e4c1bec01a3445898e0e3"
   },
   "transactionType": "CONVERSION",
   "transactionDate": {
-    "$date": "2024-06-28T05:01:01.834Z"
+    "$date": "2024-06-28T05:37:31.642Z"
   },
   "userId": "667c1b41d2687e76c2bfca09",
   "buyerProfileId": "667c1b41d2687e76c2bfca0b",
@@ -52,11 +78,11 @@
 },
 {
   "_id": {
-    "$oid": "667e43905e1e7e10b20ddce1"
+    "$oid": "667e4c1eec01a3445898e0e4"
   },
   "transactionType": "CONVERSION",
   "transactionDate": {
-    "$date": "2024-06-28T05:01:04.310Z"
+    "$date": "2024-06-28T05:37:34.795Z"
   },
   "userId": "667c1b41d2687e76c2bfca09",
   "buyerProfileId": "667c1b41d2687e76c2bfca0b",
@@ -68,11 +94,11 @@
 },
 {
   "_id": {
-    "$oid": "667e43975e1e7e10b20ddce2"
+    "$oid": "667e4c22ec01a3445898e0e5"
   },
   "transactionType": "TOPUP",
   "transactionDate": {
-    "$date": "2024-06-28T05:01:11.114Z"
+    "$date": "2024-06-28T05:37:38.640Z"
   },
   "userId": "667c1b41d2687e76c2bfca09",
   "buyerProfileId": "667c1b41d2687e76c2bfca0b",
@@ -82,11 +108,11 @@
 },
 {
   "_id": {
-    "$oid": "667e439d5e1e7e10b20ddce3"
+    "$oid": "667e4c69ec01a3445898e0e6"
   },
   "transactionType": "TOPUP",
   "transactionDate": {
-    "$date": "2024-06-28T05:01:17.045Z"
+    "$date": "2024-06-28T05:38:49.940Z"
   },
   "userId": "667c1b41d2687e76c2bfca09",
   "buyerProfileId": "667c1b41d2687e76c2bfca0b",

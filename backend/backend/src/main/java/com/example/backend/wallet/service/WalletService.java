@@ -108,5 +108,18 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
+    public void handleWithdraw(String userId, BigDecimal amount) {
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
 
+        BigDecimal currentBalance = wallet.getCashBalance();
+
+        if (currentBalance.compareTo(amount) < 0) {
+            throw new RuntimeException("Insufficient coin balance");
+        }
+
+        wallet.setCashBalance(currentBalance.subtract(amount));
+        walletRepository.save(wallet);
+    }
+    
 }

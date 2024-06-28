@@ -1,10 +1,7 @@
 package com.example.backend.transaction.mapper;
 
 import com.example.backend.common.validation.CommonValidationAndGetService;
-import com.example.backend.transaction.dto.ConversionTransactionDTO;
-import com.example.backend.transaction.dto.PurchaseTransactionDTO;
-import com.example.backend.transaction.dto.TopUpTransactionDTO;
-import com.example.backend.transaction.dto.TransactionResponseDTO;
+import com.example.backend.transaction.dto.*;
 import com.example.backend.transaction.model.Transaction;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,6 +18,7 @@ public abstract class TransactionMapper {
     @Mapping(target = "purchaseDetails", source = ".", qualifiedByName = "toPurchaseDetails")
     @Mapping(target = "topUpDetails", source = ".", qualifiedByName = "toTopUpDetails")
     @Mapping(target = "conversionDetails", source = ".", qualifiedByName = "toConversionDetails")
+    @Mapping(target = "withdrawDetails", source = ".", qualifiedByName = "toWithdrawDetails")
     public abstract TransactionResponseDTO fromTransactiontoTransactionResponseDTO(Transaction transaction);
 
     @Named("toPurchaseDetails")
@@ -67,6 +65,16 @@ public abstract class TransactionMapper {
         );
     }
 
+    @Named("toWithdrawDetails")
+    TransactionResponseDTO.WithdrawDetails toWithdrawDetails(Transaction transaction) {
+        if (transaction.getTransactionType() != Transaction.TransactionType.WITHDRAW) {
+            return null;
+        }
+        return new TransactionResponseDTO.WithdrawDetails(
+                transaction.getWithdrawAmount()
+        );
+    }
+
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.CONVERSION)")
     @Mapping(target = "conversionRate", ignore = true)
@@ -90,6 +98,10 @@ public abstract class TransactionMapper {
     @Mapping(target = "totalAmount", ignore = true)
     @Mapping(target = "purchaseType", source = "purchaseType", qualifiedByName = "toPurchaseType")
     public abstract Transaction fromDTOtoTransaction(PurchaseTransactionDTO dto);
+
+    @Mapping(target = "transactionDate", ignore = true)
+    @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.WITHDRAW)")
+    public abstract Transaction fromDTOtoTransaction(WithdrawTransactionDTO dto);
 
     @Named("toConversionType")
     Transaction.ConversionType toConversionType(String conversionType) {
