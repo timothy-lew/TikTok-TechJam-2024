@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/conversionRate")
 public class ConversionRateController {
@@ -25,5 +27,10 @@ public class ConversionRateController {
     @GetMapping("/current")
     public ResponseEntity<ConversionRate> getCurrentConversionRate() {
         return ResponseEntity.ok(conversionRateService.getCurrentRate());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ConversionRate>> getAllConversionRates() {
+        return ResponseEntity.ok(conversionRateService.getAllRates());
     }
 }

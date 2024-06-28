@@ -48,5 +48,9 @@ public class ConversionRateService {
 
         return savedRate;
     }
+
+    public List<ConversionRate> getAllRates() {
+        return conversionRateRepository.findAll();
+    }
 }
 
