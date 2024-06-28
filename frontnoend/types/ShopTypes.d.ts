@@ -8,6 +8,7 @@ export type Product = {
   imageUrl: string;
   businessName: string;
   sellerWalletAddress: string;
+  tokTokenPrice: number;
 };
 
 export type BuyerInfo = {

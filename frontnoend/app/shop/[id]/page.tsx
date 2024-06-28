@@ -36,7 +36,7 @@ interface PageProps {
   };
 }
 
-export default function Page({ params }: PageProps) {
+export default function ProductDetailsPage({ params }: PageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [sellerId, setSellerId] = useState<string | null>(null);
   const [sellerBusinessName, setBusinessName] = useState<string | null>(null);
@@ -109,7 +109,7 @@ export default function Page({ params }: PageProps) {
           closeModal();
           console.log("redirecting to homepage...");
           router.push("/shop");
-        }, 3000);
+        }, 3000); // 3 second delay to show redirect to shop home
       }
     }, 10000); // 10 seconds delay before making the purchase API call
   };
@@ -256,8 +256,13 @@ export default function Page({ params }: PageProps) {
                   {alertDialogContent}
                   {alertDialogContent === "" && (
                     <>
-                      <p className="font-medium">
-                        Seller Wallet Address:
+                      <p>
+                        Please make your payment of <strong>
+                           {product.tokTokenPrice * quantity} TikTok Coins
+                        </strong> to the following 
+                      </p>
+                      <p>
+                        Seller's Wallet Address:
                         <WalletAddressBar
                           wallet_address={product?.sellerWalletAddress}
                         ></WalletAddressBar>
@@ -279,9 +284,9 @@ export default function Page({ params }: PageProps) {
                     Confirm Purchase
                   </AlertDialogAction>
                 )}
-                <AlertDialogCancel onClick={onCloseAlert}>
+                {/* <AlertDialogCancel onClick={onCloseAlert}>
                   Cancel
-                </AlertDialogCancel>
+                </AlertDialogCancel> */}
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -317,9 +322,17 @@ function ProductCardDetails({
         <CardHeader>
           <CardTitle>{name}</CardTitle>
           <CardDescription>
-            ${price} or {Math.round(price * 100)} TikTok Coins{" "}
+            ${price} or {product.tokTokenPrice} TikTok Coins
           </CardDescription>
-          <CardDescription>Sold by {sellerBusinessName}</CardDescription>
+          <CardDescription>
+            Sold by{" "}
+            <Link
+              className="underline"
+              href={`/shop/seller/${product.sellerProfileId}`}
+            >
+              {sellerBusinessName}
+            </Link>
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex-grow">
           <h3 className="line-clamp-4">{description}</h3>
@@ -367,7 +380,7 @@ const Modal = ({
       setQuantity(newQuantity);
     }
   };
-  
+
   const decreaseQuantity = () => {
     const newQuantity = Math.max(quantity - 1, 1);
     setQuantity(newQuantity);
@@ -377,8 +390,8 @@ const Modal = ({
     <div className="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center bg-gray-500 bg-opacity-75">
       <div className="relative bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto p-6">
         <div className="flex items-center justify-center mb-4">
-          <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-blue-100">
-            <MdOutlineShoppingCart className="h-8 w-8 text-black-600" />
+          <div className="flex-shrink-0 flex items-center justify-center h-24 w-24 rounded-full bg-blue-100">
+            <MdOutlineShoppingCart className="h-12 w-12 text-black-600" />
           </div>
         </div>
         <h3 className="text-2xl leading-6 font-medium text-gray-900 text-center mb-4">
@@ -395,7 +408,7 @@ const Modal = ({
           <p className="p-1">Shipping Address: {shippingAddress}</p>
           <p className="p-1 ">
             Price: ${(product.price * quantity).toFixed(2)} or{" "}
-            {Math.round(product.price * 100 * quantity)} TikTok Coins
+            {product.tokTokenPrice * quantity} TikTok Coins
           </p>
           <div className="p-1 flex items-center space-x-2">
             <span>Quantity:</span>
