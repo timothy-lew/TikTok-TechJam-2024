@@ -25,66 +25,31 @@ import Image from "next/image";
 import { useAuth } from "@/hooks/auth-provider";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { ArrowLeft } from "lucide-react";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { ProductDetailsSkeleton } from "@/components/shop/ProductCard";
 import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
+import { BuyerInfo, Product } from "@/types/ShopTypes";
 
-type Product = {
-  id: string;
-  sellerProfileId: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  imageUrl: string;
-  businessName: string;
-  sellerWalletAddress: string;
-};
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
 
-type BuyerInfo = {
-  id: string;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  roles: string[];
-  buyerProfile: BuyerProfile;
-  sellerProfile: SellerProfile;
-  wallet: Wallet;
-};
-
-type BuyerProfile = {
-  id: string;
-  shippingAddress: string;
-  billingAddress: string;
-  defaultPaymentMethod: string;
-};
-
-type SellerProfile = {
-  id: string;
-  businessName: string;
-  businessDescription: string;
-};
-
-type Wallet = {
-  id: string;
-  cashBalance: number;
-  coinBalance: number;
-};
-
-export default function Page({ params }) {
+export default function ProductDetailsPage({ params }: PageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [sellerId, setSellerId] = useState<string | null>(null);
   const [sellerBusinessName, setBusinessName] = useState<string | null>(null);
-  const [sellerWalletAddress, setSellerWalletAddress] = useState<string | null>(null);
+  const [sellerWalletAddress, setSellerWalletAddress] = useState<string | null>(
+    null
+  );
   const [buyerInfo, setBuyerInfo] = useState<BuyerInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number>(1);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -112,7 +77,6 @@ export default function Page({ params }) {
 
     setIsAlertDialogOpen(true); // Open the AlertDialog to show the address and countdown
 
-    // Display the address and countdown for 5 seconds before starting the purchase
     setTimeout(async () => {
       try {
         const response = await fetch(
@@ -145,7 +109,7 @@ export default function Page({ params }) {
           closeModal();
           console.log("redirecting to homepage...");
           router.push("/shop");
-        }, 5000);
+        }, 3000); // 3 second delay to show redirect to shop home
       }
     }, 10000); // 10 seconds delay before making the purchase API call
   };
@@ -210,15 +174,11 @@ export default function Page({ params }) {
         console.log(data);
         setProduct(data);
         setSellerId(data.sellerProfileId);
-        setBusinessName(data.businessName)
+        setBusinessName(data.businessName);
         setSellerWalletAddress(data.sellerWalletAddress);
-        console.log('seller wallet address: ' + data.sellerWalletAddress)
+        console.log("seller wallet address: " + data.sellerWalletAddress);
         console.log("seller id: " + data.sellerProfileId);
-        console.log("Business Name" + data.businessName)
-
-       
-
-
+        console.log("Business Name" + data.businessName);
       } catch (err) {
         setError(err as Error);
         setLoading(false);
@@ -296,9 +256,16 @@ export default function Page({ params }) {
                   {alertDialogContent}
                   {alertDialogContent === "" && (
                     <>
-                      <p className="font-medium">
-                        Seller Wallet Address:
-                        <WalletAddressBar wallet_address={product?.sellerWalletAddress}></WalletAddressBar>
+                      <p>
+                        Please make your payment of <strong>
+                           {product.tokTokenPrice * quantity} TikTok Coins
+                        </strong> to the following 
+                      </p>
+                      <p>
+                        Seller's Wallet Address:
+                        <WalletAddressBar
+                          wallet_address={product?.sellerWalletAddress}
+                        ></WalletAddressBar>
                       </p>
                       <p className="font-medium text-red-600">
                         Time left to complete the transaction:{" "}
@@ -317,9 +284,9 @@ export default function Page({ params }) {
                     Confirm Purchase
                   </AlertDialogAction>
                 )}
-                <AlertDialogCancel onClick={onCloseAlert}>
-                  Close
-                </AlertDialogCancel>
+                {/* <AlertDialogCancel onClick={onCloseAlert}>
+                  Cancel
+                </AlertDialogCancel> */}
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -355,9 +322,17 @@ function ProductCardDetails({
         <CardHeader>
           <CardTitle>{name}</CardTitle>
           <CardDescription>
-            ${price} or {Math.round(price * 100)} TikTok Coins{" "}
+            ${price} or {product.tokTokenPrice} TikTok Coins
           </CardDescription>
-          <CardDescription>Sold by {sellerBusinessName}</CardDescription>
+          <CardDescription>
+            Sold by{" "}
+            <Link
+              className="underline"
+              href={`/shop/seller/${product.sellerProfileId}`}
+            >
+              {sellerBusinessName}
+            </Link>
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex-grow">
           <h3 className="line-clamp-4">{description}</h3>
@@ -400,19 +375,23 @@ const Modal = ({
   };
 
   const increaseQuantity = () => {
-    setQuantity((prevQuantity) => Math.min(prevQuantity + 1, product.quantity));
+    if (product) {
+      const newQuantity = Math.min(quantity + 1, product.quantity);
+      setQuantity(newQuantity);
+    }
   };
 
   const decreaseQuantity = () => {
-    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
+    const newQuantity = Math.max(quantity - 1, 1);
+    setQuantity(newQuantity);
   };
 
   return (
     <div className="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center bg-gray-500 bg-opacity-75">
       <div className="relative bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto p-6">
         <div className="flex items-center justify-center mb-4">
-          <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-blue-100">
-            <MdOutlineShoppingCart className="h-8 w-8 text-black-600" />
+          <div className="flex-shrink-0 flex items-center justify-center h-24 w-24 rounded-full bg-blue-100">
+            <MdOutlineShoppingCart className="h-12 w-12 text-black-600" />
           </div>
         </div>
         <h3 className="text-2xl leading-6 font-medium text-gray-900 text-center mb-4">
@@ -423,11 +402,13 @@ const Modal = ({
           <p className="p-1">Seller: {product.businessName}</p>
           <p className="p-1">Seller ID: {product.sellerProfileId}</p>
           <p className="p-1">Product: {product.name}</p>
-          <p className="p-1">Recipient: {buyer.firstName + ' ' + buyer.lastName}</p>
+          <p className="p-1">
+            Recipient: {buyer.firstName + " " + buyer.lastName}
+          </p>
           <p className="p-1">Shipping Address: {shippingAddress}</p>
           <p className="p-1 ">
             Price: ${(product.price * quantity).toFixed(2)} or{" "}
-            {Math.round(product.price * 100 * quantity)} TikTok Coins
+            {product.tokTokenPrice * quantity} TikTok Coins
           </p>
           <div className="p-1 flex items-center space-x-2">
             <span>Quantity:</span>
@@ -452,7 +433,6 @@ const Modal = ({
               +
             </button>
           </div>
-          
         </div>
         <div className="px-3 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
           <button

@@ -11,13 +11,11 @@ import {
 import { useAuth } from "@/hooks/auth-provider";
 import { Product } from "@/types/ShopTypes";
 
-
-
 const ProductGridSection = ({ products }: { products: Product[] }) => {
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
-        <h2 className="text-3xl font-bold">Recommended Products</h2>
+        <h2 className="text-3xl font-bold">Products from Seller</h2>
         <Button variant="outline" asChild>
           <Link href="/products" className="space-x-2">
             <span>View More</span>
@@ -42,7 +40,13 @@ const ProductGridSection = ({ products }: { products: Product[] }) => {
   );
 };
 
-const ShopPage = () => {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+const ShopPage = ({ params }: PageProps) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -65,14 +69,11 @@ const ShopPage = () => {
 
     const fetchProducts = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8080/api/items",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await fetch(`http://localhost:8080/api/user/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -88,7 +89,7 @@ const ShopPage = () => {
     };
 
     fetchProducts();
-  }, [accessToken]);
+  }, [params.id, accessToken]);
 
   if (loading) {
     return (
