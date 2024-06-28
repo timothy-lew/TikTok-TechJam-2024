@@ -4,26 +4,53 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/auth-provider";
 import Image from "next/image";
 import Link from "next/link";
-import { useFetchWallet } from "@/hooks/useFetchWallet";
+import { useWallet } from "@/hooks/wallet-provider";
+import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 
-type ConversionType = "fiatToTiktok" | "tiktokToFiat";
 
 const CurrencyExchangePage: React.FC = () => {
   const auth = useAuth();
   const user = auth?.user || null;
-  const walletDetails = useFetchWallet(user?.id || "");
+  
+  const {walletData, setWalletData} = useWallet();
+  const { convertCurrency, success, isConverting, error } = useConvertCurrency();
 
   const [amount, setAmount] = useState<string>("");
-  const [conversionType, setConversionType] = useState<ConversionType>("fiatToTiktok");
+  const [conversionType, setConversionType] = useState<"CASH_TO_TOKTOKEN" | "TOKTOKEN_TO_CASH">("TOKTOKEN_TO_CASH");
 
-  const exchangeRate = 100;
+  const EXCHANGE_RATE = 10;
 
-  const handleExchange = () => {
-    // Implement exchange logic here
-    console.log("Exchange initiated");
+  const handleExchange = async () => {
+    // const accessToken = await auth?.obtainAccessToken();
+    const userId = 'HARDCODE'
+    const accessToken = 'HARDCODE'
+
+
+    if (!walletData || !userId || !accessToken){
+      return
+    }
+    alert("Exchange initiated");
+
+    const convertedResult = await convertCurrency({
+      accessToken,
+      userId,
+      cashToConvert: conversionType==='CASH_TO_TOKTOKEN' ? Number(amount) : 0,
+      tokTokenToConvert: conversionType==='CASH_TO_TOKTOKEN' ? 0 : Number(amount),
+      conversionType
+    });
+
+    setWalletData((prev)=>{
+      if (!prev) return null;
+      return({
+        ...prev,
+        fiatAmount: prev.fiatAmount + convertedResult.cashConverted,
+        tiktokCoins: prev.tiktokCoins + convertedResult.coinsConverted,
+    })})
+
+
   };
 
-  const calculatedAmount = parseFloat(amount) * (conversionType === "fiatToTiktok" ? exchangeRate : 1 / exchangeRate);
+  const calculatedAmount = parseFloat(amount) * (conversionType === "CASH_TO_TOKTOKEN" ? EXCHANGE_RATE : 1 / EXCHANGE_RATE);
 
   return (
     <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
@@ -37,21 +64,21 @@ const CurrencyExchangePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <div className="mb-4 sm:mb-0">
             <h2 className="text-lg font-semibold mb-2">Your Balance</h2>
-            <p className="text-muted-foreground">Fiat: ${walletDetails?.fiatAmount}</p>
-            <p className="text-muted-foreground">TikTok Coins: {walletDetails?.tiktokCoins}</p>
+            <p className="text-muted-foreground">Fiat: ${walletData?.fiatAmount}</p>
+            <p className="text-muted-foreground">TikTok Coins: {walletData?.tiktokCoins}</p>
           </div>
           <div>
             <h2 className="text-lg font-semibold mb-2">Exchange Rate</h2>
-            <p className="text-muted-foreground">1 {walletDetails?.currency} = {exchangeRate} TikTok Coins</p>
+            <p className="text-muted-foreground">1 {walletData?.currency} = {EXCHANGE_RATE} TikTok Coins</p>
           </div>
         </div>
 
         <div className="mb-6">
           <div className="flex rounded-md overflow-hidden border border-tiktok-cyan">
             <button
-              onClick={() => setConversionType("fiatToTiktok")}
+              onClick={() => setConversionType("CASH_TO_TOKTOKEN")}
               className={`flex-1 py-2 px-4 ${
-                conversionType === "fiatToTiktok"
+                conversionType === "CASH_TO_TOKTOKEN"
                   ? "bg-tiktok-cyan text-white"
                   : "bg-card text-tiktok-cyan"
               } transition duration-300`}
@@ -59,9 +86,9 @@ const CurrencyExchangePage: React.FC = () => {
               Fiat to TikTok Coins
             </button>
             <button
-              onClick={() => setConversionType("tiktokToFiat")}
+              onClick={() => setConversionType("TOKTOKEN_TO_CASH")}
               className={`flex-1 py-2 px-4 ${
-                conversionType === "tiktokToFiat"
+                conversionType === "TOKTOKEN_TO_CASH"
                   ? "bg-tiktok-cyan text-white"
                   : "bg-card text-tiktok-cyan"
               } transition duration-300`}
@@ -85,7 +112,7 @@ const CurrencyExchangePage: React.FC = () => {
               placeholder="Enter amount"
             />
             <span className="bg-muted text-muted-foreground px-4 py-2 rounded-r-md">
-              {conversionType === "fiatToTiktok" ? walletDetails?.currency : "TikTok Coins"}
+              {conversionType === "CASH_TO_TOKTOKEN" ? walletData?.currency : "TikTok Coins"}
             </span>
           </div>
         </div>
@@ -94,7 +121,7 @@ const CurrencyExchangePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2">You will receive:</h3>
           <p className="text-2xl font-bold text-tiktok-cyan">
             {isNaN(calculatedAmount) ? "0" : calculatedAmount.toFixed(2)}{" "}
-            {conversionType === "fiatToTiktok" ? "TikTok Coins" : walletDetails?.currency}
+            {conversionType === "CASH_TO_TOKTOKEN" ? "TikTok Coins" : walletData?.currency}
           </p>
         </div>
 
