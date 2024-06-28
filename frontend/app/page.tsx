@@ -32,6 +32,9 @@ const HomePage = () => {
       
       <Post
         image="/images/homePost.png"
+        name="TikTok Shop Singapore"
+        verified={true}
+        desc="Check out our new offers at tiktok.com/shop!"
         profile="/images/profilepics/tiktokshop_sg.jpeg"
         likes={13.1}
         comments={503}

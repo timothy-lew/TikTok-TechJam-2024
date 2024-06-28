@@ -32,13 +32,13 @@ const TopUpPage: React.FC = () => {
   const [toppedUpAmount, setToppedUpAmount] = useState<number | null>(null);
 
   const handleGiftCardTopUp = async () => {
-    // const accessToken = await auth?.obtainAccessToken();
-    // const userId = user?.id || null;
+    const accessToken = await auth?.obtainAccessToken();
+    const userId = user?.id || null;
 
-    // if (!userId || !accessToken) return;
+    if (!userId || !accessToken) return;
 
-    const accessToken = "HARDCODE";
-    const userId = "HARDCODE";
+    // const accessToken = "HARDCODE";
+    // const userId = "HARDCODE";
 
     const result = await topUpWallet({
       accessToken: accessToken,

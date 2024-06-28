@@ -21,15 +21,17 @@ const CurrencyExchangePage: React.FC = () => {
   const EXCHANGE_RATE = 10;
 
   const handleExchange = async () => {
-    // const accessToken = await auth?.obtainAccessToken();
-    const userId = 'HARDCODE'
-    const accessToken = 'HARDCODE'
+
+    const userId = user?.id || null;
+
+    const accessToken = await auth?.obtainAccessToken();
+    // const userId = 'HARDCODE'
+    // const accessToken = 'HARDCODE'
 
 
     if (!walletData || !userId || !accessToken){
       return
     }
-    alert("Exchange initiated");
 
     const convertedResult = await convertCurrency({
       accessToken,
