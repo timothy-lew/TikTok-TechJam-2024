@@ -98,8 +98,10 @@ public class TransactionService {
             GiftCard giftCard;
             try {
                 giftCard = giftCardService.validateGiftCard(dto.getGiftCardCode());
-            } catch (InvalidGiftCardException | AlreadyUsedGiftCardException e) {
-                throw new RuntimeException(e.getMessage());
+            } catch (InvalidGiftCardException e) {
+                throw new InvalidGiftCardException("Invalid gift card.");
+            } catch (AlreadyUsedGiftCardException e) {
+                throw new AlreadyUsedGiftCardException("Gift card has already been used");
             }
             // Retrieve the gift card value
             topUpAmount = BigDecimal.valueOf(giftCard.getValue());
@@ -207,5 +209,5 @@ public class TransactionService {
         // Map and return the response DTO
         return transactionMapper.fromTransactiontoTransactionResponseDTO(savedTransaction);
     }
-    
+
 }

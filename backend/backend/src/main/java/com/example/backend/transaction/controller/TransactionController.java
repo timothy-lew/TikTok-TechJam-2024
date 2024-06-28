@@ -2,6 +2,8 @@ package com.example.backend.transaction.controller;
 
 import com.example.backend.auth.model.UserPrincipal;
 import com.example.backend.common.controller.BaseController;
+import com.example.backend.common.exception.AlreadyUsedGiftCardException;
+import com.example.backend.common.exception.InvalidGiftCardException;
 import com.example.backend.transaction.dto.*;
 import com.example.backend.transaction.model.GiftCard;
 import com.example.backend.transaction.service.GiftCardService;
@@ -55,10 +57,19 @@ public class TransactionController extends BaseController {
         return ResponseEntity.ok(response);
     }
 
+
     @PostMapping("/topup")
-    public ResponseEntity<TransactionResponseDTO> createTopUpTransaction(@RequestBody TopUpTransactionDTO dto) {
-        TransactionResponseDTO response = transactionService.createTopUpTransaction(dto);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> createTopUpTransaction(@RequestBody TopUpTransactionDTO dto) {
+        try {
+            TransactionResponseDTO responseDTO = transactionService.createTopUpTransaction(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+        } catch (InvalidGiftCardException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (AlreadyUsedGiftCardException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Gift card has already been used.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+        }
     }
 
     @PostMapping("/conversion")
