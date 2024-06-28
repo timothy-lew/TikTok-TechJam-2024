@@ -222,7 +222,7 @@ const WalletPage: React.FC = () => {
                   Incoming:
                 </h2>
               </div>
-              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">+${incoming}</p>
+              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">+${incoming.toFixed(2)}</p>
             </div>
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-4">
@@ -236,7 +236,7 @@ const WalletPage: React.FC = () => {
                   Outgoing:
                 </h2>
               </div>
-              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-{outgoing}</p>
+              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-{outgoing.toFixed(2)}</p>
             </div>
           </div>
 
