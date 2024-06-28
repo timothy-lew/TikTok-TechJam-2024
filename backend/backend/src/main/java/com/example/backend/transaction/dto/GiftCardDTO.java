@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TopUpTransactionDTO {
-    private String userId;
-    private String topUpType;
-    private Float topUpAmount;
-    private String giftCardCode;
+public class GiftCardDTO {
+    private String code;
+    private float value;
 }

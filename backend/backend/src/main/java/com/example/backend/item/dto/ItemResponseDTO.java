@@ -12,6 +12,7 @@ public class ItemResponseDTO {
     private String name;
     private String description;
     private Float price;
+    private Float tokTokenPrice;
     private Integer quantity;
     private String imageUrl;
     private String businessName;

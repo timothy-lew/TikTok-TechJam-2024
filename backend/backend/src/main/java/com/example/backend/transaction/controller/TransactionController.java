@@ -2,10 +2,9 @@ package com.example.backend.transaction.controller;
 
 import com.example.backend.auth.model.UserPrincipal;
 import com.example.backend.common.controller.BaseController;
-import com.example.backend.transaction.dto.ConversionTransactionDTO;
-import com.example.backend.transaction.dto.PurchaseTransactionDTO;
-import com.example.backend.transaction.dto.TopUpTransactionDTO;
-import com.example.backend.transaction.dto.TransactionResponseDTO;
+import com.example.backend.transaction.dto.*;
+import com.example.backend.transaction.model.GiftCard;
+import com.example.backend.transaction.service.GiftCardService;
 import com.example.backend.transaction.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,9 +24,11 @@ import java.util.List;
 public class TransactionController extends BaseController {
 
     private final TransactionService transactionService;
+    private final GiftCardService giftCardService;
 
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService, GiftCardService giftCardService) {
         this.transactionService = transactionService;
+        this.giftCardService = giftCardService;
     }
 
     @GetMapping("/buyer/{buyerProfileId}")
@@ -64,4 +66,23 @@ public class TransactionController extends BaseController {
         TransactionResponseDTO response = transactionService.createConversionTransaction(dto);
         return ResponseEntity.ok(response);
     }
+
+    // Sole purpose to just provide a way to create gift cards, not required in application
+    @PostMapping("/giftcard")
+    public ResponseEntity<List<GiftCard>> createGiftCards(@RequestBody List<GiftCardDTO> giftCardDTOs) {
+        List<GiftCard> createdGiftCards = new ArrayList<>();
+        for (GiftCardDTO dto : giftCardDTOs) {
+            GiftCard giftCard = giftCardService.createGiftCard(dto.getCode(), dto.getValue());
+            createdGiftCards.add(giftCard);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdGiftCards);
+    }
+
+    // Not required in application, just for testing purposes
+    @GetMapping("/giftcard")
+    public ResponseEntity<List<GiftCard>> getAllGiftCards() {
+        List<GiftCard> giftCards = giftCardService.getAllGiftCards();
+        return ResponseEntity.ok(giftCards);
+    }
+
 }

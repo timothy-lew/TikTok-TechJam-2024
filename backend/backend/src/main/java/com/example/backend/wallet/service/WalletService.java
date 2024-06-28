@@ -78,7 +78,6 @@ public class WalletService {
     public void handleTopUp(String userId, BigDecimal amount) {
         Wallet wallet = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Wallet not found"));
-        // TODO: Handle gift card and credit card top-up types
         wallet.setCashBalance(wallet.getCashBalance().add(amount));
         walletRepository.save(wallet);
     }

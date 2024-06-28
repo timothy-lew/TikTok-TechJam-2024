@@ -1,5 +1,6 @@
 package com.example.backend.transaction.mapper;
 
+import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.transaction.dto.ConversionTransactionDTO;
 import com.example.backend.transaction.dto.PurchaseTransactionDTO;
 import com.example.backend.transaction.dto.TopUpTransactionDTO;
@@ -9,31 +10,40 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface TransactionMapper {
+public abstract class TransactionMapper {
+
+    @Autowired
+    private CommonValidationAndGetService commonValidationAndGetService;
 
     @Mapping(target = "purchaseDetails", source = ".", qualifiedByName = "toPurchaseDetails")
     @Mapping(target = "topUpDetails", source = ".", qualifiedByName = "toTopUpDetails")
     @Mapping(target = "conversionDetails", source = ".", qualifiedByName = "toConversionDetails")
-    TransactionResponseDTO fromTransactiontoTransactionResponseDTO(Transaction transaction);
+    public abstract TransactionResponseDTO fromTransactiontoTransactionResponseDTO(Transaction transaction);
 
     @Named("toPurchaseDetails")
-    default TransactionResponseDTO.PurchaseDetails toPurchaseDetails(Transaction transaction) {
+    @Mapping(target = "buyerUserName", ignore = true)
+    @Mapping(target = "sellerBusinessName", ignore = true)
+    TransactionResponseDTO.PurchaseDetails toPurchaseDetails(Transaction transaction) {
         if (transaction.getTransactionType() != Transaction.TransactionType.PURCHASE) {
             return null;
         }
         return new TransactionResponseDTO.PurchaseDetails(
                 transaction.getBuyerProfileId(),
+                commonValidationAndGetService.validateAndGetUserByBuyerProfileId(transaction.getBuyerProfileId()).getUsername(),
                 transaction.getSellerProfileId(),
+                commonValidationAndGetService.validateAndGetSellerProfile(transaction.getSellerProfileId()).getBusinessName(),
                 transaction.getItemId(),
                 transaction.getQuantity(),
+                transaction.getTotalAmount(),
                 transaction.getPurchaseType() != null ? transaction.getPurchaseType().toString() : null
         );
     }
 
     @Named("toTopUpDetails")
-    default TransactionResponseDTO.TopUpDetails toTopUpDetails(Transaction transaction) {
+    TransactionResponseDTO.TopUpDetails toTopUpDetails(Transaction transaction) {
         if (transaction.getTransactionType() != Transaction.TransactionType.TOPUP) {
             return null;
         }
@@ -44,29 +54,34 @@ public interface TransactionMapper {
     }
 
     @Named("toConversionDetails")
-    default TransactionResponseDTO.ConversionDetails toConversionDetails(Transaction transaction) {
+    TransactionResponseDTO.ConversionDetails toConversionDetails(Transaction transaction) {
         if (transaction.getTransactionType() != Transaction.TransactionType.CONVERSION) {
             return null;
         }
         return new TransactionResponseDTO.ConversionDetails(
                 transaction.getConversionRate(),
-                transaction.getCashBalance(),
-                transaction.getTokTokenBalance(),
-                transaction.getConversionType() != null ? transaction.getConversionType().toString() : null
+                transaction.getCashToConvert(),
+                transaction.getTokTokenToConvert(),
+                transaction.getConvertedAmount(),
+                transaction.getConversionType().toString()
         );
     }
 
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.CONVERSION)")
-    @Mapping(target = "cashBalance", ignore = true)
-    @Mapping(target = "tokTokenBalance", ignore = true)
+    @Mapping(target = "conversionRate", ignore = true)
+    @Mapping(target = "cashToConvert", ignore = true)
+    @Mapping(target = "tokTokenToConvert", ignore = true)
+    @Mapping(target = "convertedAmount", ignore = true)
     @Mapping(target = "conversionType", source = "conversionType", qualifiedByName = "toConversionType")
-    Transaction fromDTOtoTransaction(ConversionTransactionDTO dto);
+    public abstract Transaction fromDTOtoTransaction(ConversionTransactionDTO dto);
 
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.TOPUP)")
     @Mapping(target = "topUpType", source = "topUpType", qualifiedByName = "toTopUpType")
-    Transaction fromDTOtoTransaction(TopUpTransactionDTO dto);
+    @Mapping(target = "topUpAmount", ignore = true)
+    @Mapping(target = "giftCardCode", ignore = true)
+    public abstract Transaction fromDTOtoTransaction(TopUpTransactionDTO dto);
 
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.PURCHASE)")
@@ -74,10 +89,10 @@ public interface TransactionMapper {
     @Mapping(target = "price", ignore = true)
     @Mapping(target = "totalAmount", ignore = true)
     @Mapping(target = "purchaseType", source = "purchaseType", qualifiedByName = "toPurchaseType")
-    Transaction fromDTOtoTransaction(PurchaseTransactionDTO dto);
+    public abstract Transaction fromDTOtoTransaction(PurchaseTransactionDTO dto);
 
     @Named("toConversionType")
-    default Transaction.ConversionType toConversionType(String conversionType) {
+    Transaction.ConversionType toConversionType(String conversionType) {
         if (conversionType == null) {
             return null;
         }
@@ -85,7 +100,7 @@ public interface TransactionMapper {
     }
 
     @Named("toTopUpType")
-    default Transaction.TopUpType toTopUpType(String topUpType) {
+    Transaction.TopUpType toTopUpType(String topUpType) {
         if (topUpType == null) {
             return null;
         }
@@ -93,7 +108,7 @@ public interface TransactionMapper {
     }
 
     @Named("toPurchaseType")
-    default Transaction.PurchaseType toPurchaseType(String purchaseType) {
+    Transaction.PurchaseType toPurchaseType(String purchaseType) {
         if (purchaseType == null) {
             return null;
         }

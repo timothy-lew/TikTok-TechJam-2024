@@ -38,6 +38,11 @@ public class ItemService {
         item.setSellerProfileId(sellerProfile.getId());
         item.setBusinessName(sellerProfile.getBusinessName());
         item.setSellerWalletAddress(sellerWallet.getWalletAddress());
+
+        // Set tokTokenPrice based on current conversion rate
+        float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
+        item.setTokTokenPrice(item.getPrice() * conversionRate);
+
         Item savedItem = itemRepository.save(item);
         return itemMapper.fromItemtoItemResponseDTO(savedItem);
     }
@@ -55,7 +60,7 @@ public class ItemService {
     }
 
     public List<ItemResponseDTO> getItemsByUserId(String userId) {
-        SellerProfile sellerProfile = commonValidationAndGetService.validateAndGetSellerProfile(userId);
+        SellerProfile sellerProfile = commonValidationAndGetService.validateAndGetSellerProfileByUserId(userId);
         List<Item> items = itemRepository.findBySellerProfileId(sellerProfile.getId());
         return items.stream()
                 .map(itemMapper::fromItemtoItemResponseDTO)

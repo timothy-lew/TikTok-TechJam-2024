@@ -17,6 +17,7 @@ import java.util.Base64;
 public interface ItemMapper {
 
     @Mapping(target = "image", source = "image", qualifiedByName = "multipartFileToBinary")
+    @Mapping(target = "tokTokenPrice", ignore = true)
     Item fromItemDTOtoItem(ItemDTO itemDTO);
 
     @Mapping(target = "imageUrl", source = "image", qualifiedByName = "binaryToImageUrl")

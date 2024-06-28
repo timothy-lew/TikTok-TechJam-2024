@@ -1,5 +1,8 @@
 package com.example.backend.transaction.service;
 
+import com.example.backend.common.exception.AlreadyUsedGiftCardException;
+import com.example.backend.common.exception.InvalidGiftCardException;
+import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.item.model.Item;
 import com.example.backend.item.repository.ItemRepository;
 import com.example.backend.transaction.dto.ConversionTransactionDTO;
@@ -7,8 +10,10 @@ import com.example.backend.transaction.dto.PurchaseTransactionDTO;
 import com.example.backend.transaction.dto.TopUpTransactionDTO;
 import com.example.backend.transaction.dto.TransactionResponseDTO;
 import com.example.backend.transaction.mapper.TransactionMapper;
+import com.example.backend.transaction.model.GiftCard;
 import com.example.backend.transaction.model.Transaction;
 import com.example.backend.transaction.repository.TransactionRepository;
+import com.example.backend.user.model.User;
 import com.example.backend.wallet.service.WalletService;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +28,16 @@ public class TransactionService {
     private final TransactionMapper transactionMapper;
     private final ItemRepository itemRepository;
     private final WalletService walletService;
+    private final CommonValidationAndGetService commonValidationAndGetService;
+    private final GiftCardService giftCardService;
 
-    public TransactionService(TransactionRepository transactionRepository, TransactionMapper transactionMapper, ItemRepository itemRepository, WalletService walletService) {
+    public TransactionService(TransactionRepository transactionRepository, TransactionMapper transactionMapper, ItemRepository itemRepository, WalletService walletService, CommonValidationAndGetService commonValidationAndGetService, GiftCardService giftCardService) {
         this.transactionRepository = transactionRepository;
         this.transactionMapper = transactionMapper;
         this.itemRepository = itemRepository;
         this.walletService = walletService;
+        this.commonValidationAndGetService = commonValidationAndGetService;
+        this.giftCardService = giftCardService;
     }
 
     public List<TransactionResponseDTO> getBuyerTransactions(String buyerProfileId) {
@@ -55,11 +64,19 @@ public class TransactionService {
             throw new RuntimeException("Insufficient quantity");
         }
 
-        // Calculate total amount
-        float totalAmount = item.getPrice() * dto.getQuantity();
+        // Calculate total amount based on purchase type
+        float totalAmount;
+        if (Transaction.PurchaseType.CASH.equals(Transaction.PurchaseType.valueOf(dto.getPurchaseType()))) {
+            totalAmount = item.getPrice() * dto.getQuantity();
+        } else if (Transaction.PurchaseType.TOK_TOKEN.equals(Transaction.PurchaseType.valueOf(dto.getPurchaseType()))) {
+            // Fetch current conversion rate
+            float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
+            totalAmount = item.getPrice() * dto.getQuantity() * conversionRate;
+        } else {
+            throw new RuntimeException("Unsupported purchase type");
+        }
 
-        // Deduct balance from buyer's wallet and start listening to the queue from blockchain to check if buyer sends successfully.
-        // If buyer doesn't have sufficient balance (cash/toktoken), exception is thrown.
+        // Deduct balance from buyer's wallet
         walletService.handlePurchase(dto.getBuyerProfileId(), dto.getSellerProfileId(), BigDecimal.valueOf(totalAmount), Transaction.PurchaseType.valueOf(dto.getPurchaseType()));
 
         // Create and populate the transaction
@@ -72,15 +89,52 @@ public class TransactionService {
         item.setQuantity(item.getQuantity() - dto.getQuantity());
         itemRepository.save(item);
 
+        // Save transaction
         Transaction savedTransaction = transactionRepository.save(transaction);
         return transactionMapper.fromTransactiontoTransactionResponseDTO(savedTransaction);
     }
 
     public TransactionResponseDTO createTopUpTransaction(TopUpTransactionDTO dto) {
-        // TODO: Handle gift card and credit card top-up types
-        walletService.handleTopUp(dto.getUserId(), BigDecimal.valueOf(dto.getTopUpAmount()));
+        BigDecimal topUpAmount;
+
+        if (Transaction.TopUpType.GIFT_CARD.equals(Transaction.TopUpType.valueOf(dto.getTopUpType()))) {
+            GiftCard giftCard;
+            try {
+                giftCard = giftCardService.validateGiftCard(dto.getGiftCardCode());
+            } catch (InvalidGiftCardException | AlreadyUsedGiftCardException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+            // Retrieve the gift card value
+            topUpAmount = BigDecimal.valueOf(giftCard.getValue());
+            // Mark the gift card as used
+            giftCardService.markGiftCardAsUsed(giftCard);
+            dto.setTopUpAmount(giftCard.getValue());
+        } else {
+            topUpAmount = BigDecimal.valueOf(dto.getTopUpAmount());
+        }
+
+        walletService.handleTopUp(dto.getUserId(), topUpAmount);
         Transaction transaction = transactionMapper.fromDTOtoTransaction(dto);
         transaction.setTransactionDate(LocalDateTime.now());
+
+        // For ease of querying transactions by buyer/seller profile ID
+        User user = commonValidationAndGetService.validateAndGetUser(dto.getUserId());
+        if (user.getRoles().contains(User.Role.ROLE_BUYER)) {
+            transaction.setBuyerProfileId(user.getBuyerProfile().getId());
+            transaction.setSellerProfileId(null);
+        } else if (user.getRoles().contains(User.Role.ROLE_SELLER)) {
+            transaction.setBuyerProfileId(null);
+            transaction.setSellerProfileId(user.getSellerProfile().getId());
+        }
+
+        // Manually set the topUpAmount and giftCardCode in the transaction
+        transaction.setTopUpAmount(dto.getTopUpAmount());
+        if (Transaction.TopUpType.GIFT_CARD.equals(Transaction.TopUpType.valueOf(dto.getTopUpType()))) {
+            transaction.setGiftCardCode(dto.getGiftCardCode());
+        } else {
+            transaction.setGiftCardCode(null);
+        }
+
         Transaction savedTransaction = transactionRepository.save(transaction);
         return transactionMapper.fromTransactiontoTransactionResponseDTO(savedTransaction);
     }
@@ -88,12 +142,15 @@ public class TransactionService {
     public TransactionResponseDTO createConversionTransaction(ConversionTransactionDTO dto) {
         BigDecimal amount = BigDecimal.ZERO;
         BigDecimal convertedAmount = BigDecimal.ZERO;
+        float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
+        float inverseConversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getInverseRate();
+
         if (dto.getConversionType().equals("CASH_TO_TOKTOKEN")) {
-            amount = BigDecimal.valueOf(dto.getCashBalance());
-            convertedAmount = amount.multiply(BigDecimal.valueOf(dto.getConversionRate()));
+            amount = BigDecimal.valueOf(dto.getCashToConvert());
+            convertedAmount = amount.multiply(BigDecimal.valueOf(conversionRate));
         } else if (dto.getConversionType().equals("TOKTOKEN_TO_CASH")) {
-            amount = BigDecimal.valueOf(dto.getTokTokenBalance());
-            convertedAmount = amount.multiply(BigDecimal.valueOf(dto.getConversionRate()));
+            amount = BigDecimal.valueOf(dto.getTokTokenToConvert());
+            convertedAmount = amount.multiply(BigDecimal.valueOf(inverseConversionRate));
         }
 
         // Pass both original and converted amounts to handleConvert
@@ -102,13 +159,27 @@ public class TransactionService {
         Transaction transaction = transactionMapper.fromDTOtoTransaction(dto);
         transaction.setTransactionDate(LocalDateTime.now());
 
-        // Setting the balances correctly based on conversion type
+        // Setting the balances based on conversion type
         if (dto.getConversionType().equals("CASH_TO_TOKTOKEN")) {
-            transaction.setCashBalance(dto.getCashBalance());
-            transaction.setTokTokenBalance(convertedAmount.floatValue());
+            transaction.setConversionRate(conversionRate);
+            transaction.setCashToConvert(dto.getCashToConvert());
+            transaction.setTokTokenToConvert(null);
+            transaction.setConvertedAmount(convertedAmount.floatValue());
         } else if (dto.getConversionType().equals("TOKTOKEN_TO_CASH")) {
-            transaction.setTokTokenBalance(dto.getTokTokenBalance());
-            transaction.setCashBalance(convertedAmount.floatValue());
+            transaction.setConversionRate(inverseConversionRate);
+            transaction.setCashToConvert(null);
+            transaction.setTokTokenToConvert(dto.getTokTokenToConvert());
+            transaction.setConvertedAmount(convertedAmount.floatValue());
+        }
+
+        // For ease of querying transactions by buyer/seller profile ID
+        User user = commonValidationAndGetService.validateAndGetUser(dto.getUserId());
+        if (user.getRoles().contains(User.Role.ROLE_BUYER)) {
+            transaction.setBuyerProfileId(user.getBuyerProfile().getId());
+            transaction.setSellerProfileId(null);
+        } else if (user.getRoles().contains(User.Role.ROLE_SELLER)) {
+            transaction.setBuyerProfileId(null);
+            transaction.setSellerProfileId(user.getSellerProfile().getId());
         }
 
         Transaction savedTransaction = transactionRepository.save(transaction);

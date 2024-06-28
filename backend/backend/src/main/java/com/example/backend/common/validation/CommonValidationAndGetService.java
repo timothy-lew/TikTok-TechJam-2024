@@ -3,6 +3,9 @@ package com.example.backend.common.validation;
 import com.example.backend.common.exception.ResourceNotFoundException;
 import com.example.backend.item.model.Item;
 import com.example.backend.item.repository.ItemRepository;
+import com.example.backend.rate.model.ConversionRate;
+import com.example.backend.rate.repository.ConversionRateRepository;
+import com.example.backend.transaction.repository.TransactionRepository;
 import com.example.backend.user.model.BuyerProfile;
 import com.example.backend.user.model.SellerProfile;
 import com.example.backend.user.model.User;
@@ -13,7 +16,10 @@ import com.example.backend.wallet.model.Wallet;
 import com.example.backend.wallet.repository.WalletRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,29 +31,55 @@ public class CommonValidationAndGetService {
     private final SellerProfileRepository sellerProfileRepository;
     private final ItemRepository itemRepository;
     private final WalletRepository walletRepository;
+    private final TransactionRepository transactionRepository;
+    private final ConversionRateRepository conversionRateRepository;
 
     public User validateAndGetUser(String userId) throws ResourceNotFoundException {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with userId " + userId));
     }
 
-    public BuyerProfile validateAndGetBuyerProfile(String userId) throws ResourceNotFoundException {
+    public User validateAndGetUserByBuyerProfileId(String buyerProfileId) throws ResourceNotFoundException {
+        return userRepository.findByBuyerProfileId(buyerProfileId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with buyerProfileId " + buyerProfileId));
+    }
+
+    public BuyerProfile validateAndGetBuyerProfile(String buyerProfileId) {
+        return buyerProfileRepository.findById(buyerProfileId)
+                .orElseThrow(() -> new IllegalArgumentException("Buyer profile not found with id: " + buyerProfileId));
+    }
+
+    public BuyerProfile validateAndGetBuyerProfileByUserId(String userId) throws ResourceNotFoundException {
         return buyerProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Buyer profile not found with userId " + userId));
     }
 
-    public SellerProfile validateAndGetSellerProfile(String userId) throws ResourceNotFoundException {
+    public SellerProfile validateAndGetSellerProfile(String sellerProfileId) {
+        return sellerProfileRepository.findById(sellerProfileId)
+                .orElseThrow(() -> new IllegalArgumentException("Seller profile not found with id: " + sellerProfileId));
+    }
+
+    public SellerProfile validateAndGetSellerProfileByUserId(String userId) throws ResourceNotFoundException {
         return sellerProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Seller profile not found with userId " + userId));
     }
 
-    public Item validateAndGetItem(String itemId) {
+    public Item validateAndGetItem(String itemId) throws ResourceNotFoundException {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Item not found with id: " + itemId));
     }
 
-    public Wallet validateAndGetWallet(String userId) {
+    public Wallet validateAndGetWallet(String userId) throws ResourceNotFoundException {
         return walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Wallet not found with userId: " + userId));
     }
+
+    public ConversionRate validateAndGetCurrentConversionRate() throws ResourceNotFoundException {
+        List<ConversionRate> rates = conversionRateRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp"));
+        if (rates.isEmpty()) {
+            throw new RuntimeException("Conversion rate not set");
+        }
+        return rates.get(0); // Return the latest conversion rate
+    }
+
 }

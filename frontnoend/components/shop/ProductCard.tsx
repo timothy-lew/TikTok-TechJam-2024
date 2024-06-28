@@ -14,6 +14,7 @@ type ProductCardProps = {
   id: string
   name: string
   priceInCents: number
+  tokTokenPrice: number
   description: string
   imagePath: string
 }
@@ -22,6 +23,7 @@ export function ProductCard({
   id,
   name,
   priceInCents,
+  tokTokenPrice,
   description,
   imagePath,
 }: ProductCardProps) {
@@ -33,7 +35,7 @@ export function ProductCard({
       </div>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>${priceInCents} or {Math.round(priceInCents*100)} TikTok Coins</CardDescription>
+        <CardDescription>${priceInCents} or {tokTokenPrice} TikTok Coins</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="line-clamp-4">{description}</p>

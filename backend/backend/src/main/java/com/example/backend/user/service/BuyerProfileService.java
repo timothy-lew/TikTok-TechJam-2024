@@ -48,7 +48,7 @@ public class BuyerProfileService {
     }
 
     public BuyerProfileResponseDTO getBuyerProfile(String userId) {
-        return buyerProfileMapper.fromBuyerProfiletoBuyerProfileResponseDTO(commonValidationAndGetService.validateAndGetBuyerProfile(userId));
+        return buyerProfileMapper.fromBuyerProfiletoBuyerProfileResponseDTO(commonValidationAndGetService.validateAndGetBuyerProfileByUserId(userId));
     }
 
 //    public BuyerProfileResponseDTO updateBuyerProfile(String userId, BuyerProfileDTO buyerProfileDTO) {

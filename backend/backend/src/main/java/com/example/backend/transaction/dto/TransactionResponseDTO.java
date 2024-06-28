@@ -25,9 +25,12 @@ public class TransactionResponseDTO {
     @AllArgsConstructor
     public static class PurchaseDetails {
         private String buyerProfileId;
+        private String buyerUserName;
         private String sellerProfileId;
+        private String sellerBusinessName;
         private String itemId;
         private Integer quantity;
+        private Float purchaseAmount;
         private String purchaseType;
     }
 
@@ -44,8 +47,9 @@ public class TransactionResponseDTO {
     @AllArgsConstructor
     public static class ConversionDetails {
         private Float conversionRate;
-        private Float cashBalance;
-        private Float tokTokenBalance;
+        private Float cashToConvert;
+        private Float tokTokenToConvert;
+        private Float convertedAmount;
         private String conversionType;
     }
 }
