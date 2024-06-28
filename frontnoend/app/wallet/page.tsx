@@ -21,6 +21,7 @@ import {
 import { type Wallet } from "@/hooks/useFetchWallet";
 
 import { useWallet } from "@/hooks/wallet-provider";
+import { Progress } from "@/components/ui/progress"
 
 
 const WalletPage: React.FC = () => {
@@ -69,191 +70,183 @@ const WalletPage: React.FC = () => {
   //   );
   // }
 
+
+  
   return (
+    <section className="text-gray-800 flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8 flex-grow">
 
-    <section className="bg-gray-100 text-gray-800 flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
-      <div className="bg-white rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-cyan">
-        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl">
-          Hello! Good to see you{" "}
-          <span className="capitalize text-tiktok-cyan">{user?.firstName}</span>
-        </h1>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
-        {/* Your Tiktok Card Section */}
-        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md flex flex-col justify-start items-center border border-tiktok-cyan">
-          <h2 className="text-tiktok-cyan text-center w-full text-xl sm:text-2xl md:text-3xl font-bold mb-4">
-            Your TikTok Card
+        <div className="bg-white shadow-md w-full flex justify-center items-start border border-tiktok-red">
+        {/* Combined Wallet and Card Section */}
+        <div className=" rounded-xl p-4 sm:p-6 w-full flex_col_center gap-4">
+          <h2 className="text-tiktok-red text-center w-full text-xl sm:text-2xl md:text-3xl font-bold mb-4">
+            Your <Image src="/tiktokIconNoBg.svg" alt="icon" width={42} height={42} className="inline rotate-6"/> Wallet
           </h2>
-          <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-evenly items-center gap-3 mb-6">
-            <button
-              className="flex items-center justify-center gap-2 bg-tiktok-cyan hover:bg-[#00D2CA] text-white rounded-md px-4 py-2 transition duration-300 w-full sm:w-auto"
-              onClick={() => setHideDetails((prev) => !prev)}
-            >
-              <Image
-                src={hideDetails ? "/icons/eyeOpen.svg" : "/icons/eyeClose.svg"}
-                alt="icon"
-                height={22}
-                width={22}
-              />
-              <p className="font-medium">{hideDetails ? "Show" : "Hide"} Details</p>
-            </button>
-            <button
-              className="flex items-center justify-center gap-2 bg-tiktok-red hover:bg-[#E0004A] text-white rounded-md px-4 py-2 transition duration-300 w-full sm:w-auto"
-              onClick={() => {}}
-            >
-              <Image
-                src="/icons/freeze.svg"
-                alt="icon"
-                height={20}
-                width={20}
-              />
-              <p className="font-medium">Freeze Card</p>
-            </button>
+          <div className="flex_col_center gap-3">
+            <h3 className="text-slate-900 font-semibold text-xl">Available in Wallet:</h3>
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
+              <p className="text-slate-800 text-xl">${walletData?.fiatAmount} <span className="text-lg">SGD</span></p>
+              
+              <p className="text-slate-800 text-xl">{walletData?.tiktokCoins} <span className="text-lg">Tok Coins</span></p>
+            </div>
           </div>
-          {tiktokCardDetails && (
-            <TiktokCard
-              number={tiktokCardDetails.number}
-              cardName={tiktokCardDetails.cardName}
-              cvc={tiktokCardDetails.cvc}
-              expiryDate={tiktokCardDetails.expiryDate}
-              hideDetails={hideDetails}
-            />
-          )}
+            
+          {tiktokCardDetails ? (
+            <div className="flex_center gap-4 w-full">
+              <TiktokCard
+                number={tiktokCardDetails.number}
+                cardName={tiktokCardDetails.cardName}
+                cvc={tiktokCardDetails.cvc}
+                expiryDate={tiktokCardDetails.expiryDate}
+                hideDetails={hideDetails}
+                variant="blue"
+              />
+              <div className="flex_col_center gap-2">
+                <div className="flex justify-start items-center gap-2 w-full">
+                  <button
+                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-300 w-full sm:w-auto"
+                    onClick={() => setHideDetails((prev) => !prev)}
+                  >
+                    <Image
+                      src={hideDetails ? "/icons/eyeOpen.svg" : "/icons/eyeClose.svg"}
+                      alt="icon"
+                      height={32}
+                      width={32}
+                    />
+                  </button>
+                  <p className="hidden md:inline font-medium text-xs md:text-sm">{hideDetails ? "Show" : "Hide"} Details</p>
+                </div>
+                <div className="flex justify-start items-center gap-2 w-full">
+                  <button
+                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-300 w-full sm:w-auto"
+                    onClick={() => {}}
+                  >
+                    <Image
+                      src="/icons/freeze.svg"
+                      alt="icon"
+                      height={30}
+                      width={30}
+                    />
+                  </button>
+                  <p className="hidden md:inline font-medium md:text-sm">Freeze Card</p>
+                </div>
+                <div className="flex justify-start items-center gap-2 w-full">
+                  <Link
+                    href="/wallet/topup"
+                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-300 w-full sm:w-auto"
+                  >
+                    <Image
+                      src="/icons/topup.svg"
+                      alt="icon"
+                      height={30}
+                      width={30}
+                    />
+                  </Link>
+                  <p className="hidden md:inline font-medium md:text-sm">Top Up</p>
+              </div>
+              <div className="flex justify-start items-center gap-2 w-full">
+                  <Link
+                    href="/wallet/exchange"
+                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-300 w-full sm:w-auto"
+                  >
+                    <Image
+                      src="/icons/exchange.svg"
+                      alt="icon"
+                      height={30}
+                      width={30}
+                    />
+                  </Link>
+                  <p className="hidden md:inline font-medium md:text-sm">Convert Currency</p>
+              </div>
+              </div>
+            </div>
+            ): <p>Loading...</p>}
+
+            
+            
         </div>
 
-        {/* Your Tiktok Wallet Section */}
-        <div className="bg-white rounded-xl p-4 sm:p-6 flex flex-col justify-start items-center relative border border-tiktok-cyan shadow-md">
-          <h2 className="text-tiktok-cyan text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-center">
-            Your TikTok Wallet
-          </h2>
-
-          <div className="flex justify-center items-baseline gap-3 mb-4">
-            <Image
-              src="/icons/fiatCoins.svg"
-              alt="fiat"
-              height={24}
-              width={36}
-              className="-rotate-3 relative top-1"
-            />
-            <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">
-              {hideDetails ? '****' : `${walletData?.fiatAmount}`} {walletData?.currency}
-            </p>
-          </div>
-
-          <div className="flex justify-center items-baseline gap-3 mb-6 sm:mb-8">
-            <Image
-              src="/icons/tiktokCoins.svg"
-              alt="fiat"
-              height={24}
-              width={36}
-              className="-rotate-3 relative top-1"
-            />
-            <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">
-              {hideDetails ? '****' : `${walletData?.tiktokCoins}`} TikTok Coins
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 sm:gap-6 w-full">
-            <div className="flex flex-col items-center justify-center">
-              <Link
-                href="/wallet/topup"
-                className="text-tiktok-cyan hover:text-[#00D2CA] font-medium text-lg sm:text-xl inline-flex items-center transition duration-300"
-              >
-                Top Up
-                <svg
-                  className="w-4 h-4 ms-2 rtl:rotate-180"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                  />
-                </svg>
-              </Link>
-              <p className="max-w-[150px] text-sm font-normal text-center text-gray-600 mt-2">
-                Use credit or gift cards in one click!
-              </p>
+          <div className="hidden xl:flex flex-col justify-center items-center w-[390px]">
+            <div className="flex_col_center py-4 px-1">
+              <TiktokCard
+                number={["***", "***", "***", "***"]}
+                cardName={"Your Name"}
+                cvc={"123"}
+                expiryDate={"99/99"}
+                hideDetails={false}
+                variant="red"
+              />
+              <div className="flex_col_center mt-2 w-full gap-2">
+                <div className="w-4/5 h-2">
+                  <Progress value={60} className="" />
+                </div>
+                <p className="text-sm text-center mt-1">Spend <span className="underline">$500</span> more to reach <span className="capitalize text-red-500 font-medium">red</span> tier!</p>
+              </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center">
-              <Link
-                href="/wallet/exchange"
-                className="text-tiktok-cyan hover:text-[#00D2CA] font-medium text-lg sm:text-xl inline-flex items-center transition duration-300"
-              >
-                Exchange
-                <svg
-                  className="w-4 h-4 ms-2 rtl:rotate-180"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 10"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                  />
-                </svg>
-              </Link>
-              <p className="max-w-[150px] text-sm font-normal text-center text-gray-600 mt-2">
-                Exchange Cash / Tiktok Coins
-              </p>
+            <div className="flex_col_center py-4 px-1">
+              <TiktokCard
+                number={["***", "***", "***", "***"]}
+                cardName={"Your Name"}
+                cvc={"123"}
+                expiryDate={"99/99"}
+                hideDetails={false}
+                variant="black"
+              />
+              <div className="flex_col_center mt-2 w-full gap-2">
+                <div className="w-4/5 h-2">
+                  <Progress value={60} className="" />
+                </div>
+                <p className="text-sm text-center mt-1">Spend <span className="underline">$2000</span> more to reach <span className="capitalize text-black font-medium">black</span> tier!</p>
+              </div>
             </div>
 
+
           </div>
+
         </div>
 
-        {/* Your Summary Section */}
-        <div className="bg-white p-4 sm:p-6 flex flex-col justify-start items-center gap-6 sm:gap-8 rounded-xl border border-tiktok-cyan shadow-md">
-          <h2 className="text-tiktok-cyan text-xl sm:text-2xl md:text-3xl font-bold mb-2">
-            Your Summary
+        {/* Transaction Summary Section */}
+        <div className="bg-white rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
+          <h2 className="text-tiktok-red text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center">
+            Your Transactions
           </h2>
-
-          <div className="flex-1 w-full h-full flex flex-col justify-center items-center gap-4">
-            <div className="flex items-center gap-4">
-              <Image
-                src="/icons/incomingTransactions.svg"
-                alt="icon"
-                height={48}
-                width={48}
-              />
-              <h2 className="font-bold text-xl sm:text-2xl md:text-3xl text-green-600">
-                Incoming:
-              </h2>
+          <div className="flex justify-around items-center">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-4">
+                <Image
+                  src="/icons/incomingTransactions.svg"
+                  alt="icon"
+                  height={48}
+                  width={48}
+                />
+                <h2 className="font-bold text-lg sm:text-xl md:text-3xl text-green-600">
+                  Incoming:
+                </h2>
+              </div>
+              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">+${incoming}</p>
             </div>
-            <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">+${hideDetails ? '****' : `${incoming}`}</p>
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-4">
+                <Image
+                  src="/icons/outgoingTransactions.svg"
+                  alt="icon"
+                  height={48}
+                  width={48}
+                />
+                <h2 className="font-bold text-lg sm:text-xl md:text-3xl text-tiktok-red">
+                  Outgoing:
+                </h2>
+              </div>
+              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-{outgoing}</p>
+            </div>
           </div>
 
-          <div className="flex-1 w-full h-full flex flex-col justify-center items-center gap-4">
-            <div className="flex items-center gap-4">
-              <Image
-                src="/icons/outgoingTransactions.svg"
-                alt="icon"
-                height={48}
-                width={48}
-              />
-              <h2 className="font-bold text-xl sm:text-2xl md:text-3xl text-tiktok-red">
-                Outgoing:
-              </h2>
-            </div>
-            <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-${hideDetails ? '****' : `${outgoing}`}</p>
-          </div>
+          <DataTable columns={columns} data={transactionData} />
         </div>
-      </div>
 
-      <div className="w-full bg-white rounded-xl p-4 sm:p-6 border border-tiktok-cyan shadow-md">
-        <DataTable columns={columns} data={transactionData} />
-      </div>
-    </section>
+      </section>
+
+
   );
 };
 

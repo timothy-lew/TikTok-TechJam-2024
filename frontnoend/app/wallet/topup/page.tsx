@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/hooks/auth-provider";
 import Image from "next/image";
 import Link from "next/link";
 
 import { useWallet } from "@/hooks/wallet-provider";
 import { useTopUpWallet } from "@/hooks/useTopUpWallet";
 import { ReceiptRussianRuble } from "lucide-react";
+import { useAuth } from "@/hooks/auth-provider";
 
 type TopUpMethod = "creditCard" | "giftCard";
 
@@ -15,6 +15,7 @@ const TopUpPage: React.FC = () => {
   const auth = useAuth();
   
   const user = auth?.user || null;
+  
   const {walletData, setWalletData} = useWallet();
   const { topUpWallet, success, isToppingUp, error } = useTopUpWallet();
 

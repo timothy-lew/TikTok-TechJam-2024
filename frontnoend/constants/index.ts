@@ -38,6 +38,27 @@ export const displayAccounts : DisplayAccount[] = [
   },
   {
     userId: "Test",
+    username: "timo",
+    name: "Timothy",
+    profilePic: "/images/profilepics/timothy.jpg",
+    verified: false
+  },
+  {
+    userId: "Test",
+    username: "johnn",
+    name: "John",
+    profilePic: "/images/profilepics/john.jpg",
+    verified: false
+  },
+  {
+    userId: "Test",
+    username: "GrumpyGreg",
+    name: "Greg",
+    profilePic: "/images/profilepics/greg.jpg",
+    verified: false
+  },
+  {
+    userId: "Test",
     username: "ji4e4rn",
     name: "Jiaearn",
     profilePic: "/images/profilepics/ji4e4rn.jpeg",

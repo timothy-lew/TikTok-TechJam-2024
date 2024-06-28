@@ -21,13 +21,6 @@ export function useConvertCurrency() {
     setSuccess(false);
     setError(null);
 
-    console.log('Inside convert Currency with');
-    console.log(`Access Token: ${accessToken}`);
-    console.log(`userId: ${userId}`);
-    console.log(`cashToConvert: ${cashToConvert}`);
-    console.log(`tokTokenToConvert: ${tokTokenToConvert}`);
-    console.log(`conversionType: ${conversionType}`);
-
 
     try{
 

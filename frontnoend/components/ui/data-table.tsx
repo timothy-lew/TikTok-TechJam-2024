@@ -102,6 +102,7 @@ export function DataTable<TData, TValue>({
 
         </Select>
       </div>
+      
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
