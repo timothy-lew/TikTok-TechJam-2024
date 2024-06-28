@@ -5,6 +5,7 @@ type TopUpWalletProps = {
   userId: string,
   topUpTransactionType: string, // CREDIT_CARD
   topUpAmount: number,
+  giftCardCode : string,
 }
 
 export function useTopUpWallet() {
@@ -13,7 +14,7 @@ export function useTopUpWallet() {
   const [isToppingUp, setIsToppingUp] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const topUpWallet = async ({accessToken, userId, topUpTransactionType, topUpAmount}: TopUpWalletProps) => {
+  const topUpWallet = async ({accessToken, userId, topUpTransactionType, topUpAmount, giftCardCode}: TopUpWalletProps) => {
     try {
       setIsToppingUp(true);
       setSuccess(null);
@@ -29,18 +30,27 @@ export function useTopUpWallet() {
           userId,
           topUpTransactionType,
           topUpAmount,
+          giftCardCode,
         })
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      
+      // TODO: handle case where we get a true response from server that gift card is invalid/redeemed
       const result = await response.json();
+
+
       setSuccess(true);
+
+      return result;
+
     } catch (error) {
       setError(error instanceof Error ? error : new Error('An error occurred'));
       setSuccess(false);
+      return null;
+
     } finally {
       setIsToppingUp(false);
     }

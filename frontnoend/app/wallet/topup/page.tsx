@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useFetchWallet } from "@/hooks/useFetchWallet";
+import { useWallet } from "@/hooks/wallet-provider";
 import { useTopUpWallet } from "@/hooks/useTopUpWallet";
 import { ReceiptRussianRuble } from "lucide-react";
 
@@ -15,7 +15,7 @@ const TopUpPage: React.FC = () => {
   const auth = useAuth();
   
   const user = auth?.user || null;
-  const walletDetails = useFetchWallet(user?.id || "");
+  const {walletData, setWalletData} = useWallet();
   const { topUpWallet, success, isToppingUp, error } = useTopUpWallet();
 
   const [amount, setAmount] = useState<string>("");
@@ -29,36 +29,40 @@ const TopUpPage: React.FC = () => {
   // Gift Card State
   const [giftCardCode, setGiftCardCode] = useState<string>("");
 
-  const handleCreditCardTopUp = async () => {
-    const accessToken = await auth?.obtainAccessToken();
-    const userId = user?.id || null;
-
-    if (!userId || !accessToken) return;
-
-
-    await topUpWallet({
-      accessToken: accessToken,
-      userId: userId,
-      topUpTransactionType: 'CREDIT_CARD',
-      topUpAmount: Number(amount)
-    });
-  };
+  const [toppedUpAmount, setToppedUpAmount] = useState<number | null>(null);
 
   const handleGiftCardTopUp = async () => {
-    const accessToken = await auth?.obtainAccessToken();
-    const userId = user?.id || null;
+    // const accessToken = await auth?.obtainAccessToken();
+    // const userId = user?.id || null;
 
-    if (!userId || !accessToken) return;
+    // if (!userId || !accessToken) return;
 
-    // const accessToken = "HARDCODE";
-    // const userId = "HARDCODE";
+    const accessToken = "HARDCODE";
+    const userId = "HARDCODE";
 
-    await topUpWallet({
+    const result = await topUpWallet({
       accessToken: accessToken,
       userId: userId,
       topUpTransactionType: 'GIFT_CARD',
       topUpAmount: 0,
+      giftCardCode
     });
+    
+    // failed
+    if (!result) return;
+
+    const toppedUpAmount = result.topUpDetails.topUpAmount
+
+    setToppedUpAmount(toppedUpAmount);
+    setWalletData((prev)=>{
+      if (!prev) return null;
+
+      return {
+        ...prev,
+        fiatAmount: prev.fiatAmount + toppedUpAmount,
+      }
+    })
+
   };
 
   return (
@@ -72,8 +76,8 @@ const TopUpPage: React.FC = () => {
       <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-cyan">
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Current Balance</h2>
-          <p className="text-muted-foreground">Fiat: ${walletDetails?.fiatAmount}</p>
-          <p className="text-muted-foreground">TikTok Coins: {walletDetails?.tiktokCoins}</p>
+          <p className="text-muted-foreground">Fiat: ${walletData?.fiatAmount}</p>
+          <p className="text-muted-foreground">TikTok Coins: {walletData?.tiktokCoins}</p>
         </div>
 
         <div className="mb-6">
@@ -136,7 +140,7 @@ const TopUpPage: React.FC = () => {
             <div className="flex space-x-4">
               <div className="flex-1">
                 <label htmlFor="expiryDate" className="block text-sm font-medium text-foreground mb-2">
-                  Expiry Date
+                  Expiry
                 </label>
                 <input
                   type="text"
@@ -160,6 +164,7 @@ const TopUpPage: React.FC = () => {
                   placeholder="123"
                 />
               </div>
+              </div>
               <button
                 onClick={handleGiftCardTopUp}
                 disabled={isToppingUp}
@@ -167,7 +172,7 @@ const TopUpPage: React.FC = () => {
               >
               {isToppingUp ? 'Processing...' : 'Top Up Wallet'}
               </button>
-            </div>
+            
           </div>
         ) : (
           <div className="space-y-6">
@@ -195,9 +200,12 @@ const TopUpPage: React.FC = () => {
         )}
 
         <div className="space-y-6">
-          {error && <p style={{ color: 'red' }}>
+          {error && <p className="text-red-600">
           Error occurred: {error.message}
-        </p>}
+          </p>}
+          {success && <p className="text-green-600">
+          Topped up ${toppedUpAmount} into your wallet. Enjoy!
+          </p>}
         </div>
 
       </div>
