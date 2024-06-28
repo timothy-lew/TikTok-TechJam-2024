@@ -35,10 +35,12 @@ const TopUpPage: React.FC = () => {
     const accessToken = await auth?.obtainAccessToken();
     const userId = user?.id || null;
 
+    
+    // const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NjdjMWI0MWQyNjg3ZTc2YzJiZmNhMDkiLCJpYXQiOjE3MTk1NzUyMTgsImV4cCI6MTcxOTY2MTYxOH0.RaW3VQyTPION8PycNtoToxGKn0DDFA6g516Kehsu0Vs";
     if (!userId || !accessToken) return;
-
-    // const accessToken = "HARDCODE";
     // const userId = "HARDCODE";
+
+    console.log(`Obtained access token: ${accessToken}`)
 
     const result = await topUpWallet({
       accessToken: accessToken,

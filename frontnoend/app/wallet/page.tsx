@@ -27,7 +27,7 @@ const WalletPage: React.FC = () => {
   const auth = useAuth();
   const user = auth?.user || null;
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(user === null);
-  const [hideDetails, setHideDetails] = useState<boolean>(true);
+  const [hideDetails, setHideDetails] = useState<boolean>(false);
 
   const handleClosePopup = () => setLoginPopupOpen(false);
 

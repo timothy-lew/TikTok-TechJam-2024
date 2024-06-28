@@ -19,7 +19,7 @@ export function useTopUpWallet() {
       setIsToppingUp(true);
       setSuccess(null);
       setError(null);
-
+      console.log("Sending to top up API")
       const response = await fetch('http://localhost:8080/api/transactions/topup', {
         method: 'POST',
         headers: {
@@ -28,7 +28,7 @@ export function useTopUpWallet() {
         },
         body: JSON.stringify({
           userId,
-          topUpTransactionType,
+          topUpType: topUpTransactionType,
           topUpAmount,
           giftCardCode,
         })

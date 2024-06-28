@@ -8,13 +8,14 @@ export async function getAccessToken(): Promise<string|undefined>{
 
   const accessToken = cookies().get('accessToken');
 
-  const debug = cookies().get('dveqwad');
+  
 
-  if (!debug){
+  if (!accessToken){
     console.log("No access token, use refresh token to get new accessToken!");
     const refreshToken = await getRefreshToken();
 
     if (!refreshToken){
+      // TODO
       throw new Error('No tokens stored!');
     }
 
