@@ -18,7 +18,10 @@ import {
   type TiktokCardDetails,
   useFetchTiktokCard,
 } from "@/hooks/useFetchTiktokCard";
-import { type Wallet, useFetchWallet } from "@/hooks/useFetchWallet";
+import { type Wallet } from "@/hooks/useFetchWallet";
+
+import { useWallet } from "@/hooks/wallet-provider";
+
 
 const WalletPage: React.FC = () => {
   const auth = useAuth();
@@ -30,14 +33,28 @@ const WalletPage: React.FC = () => {
 
   const transactionData: Transaction[] = useFetchTransactions(user?.id || "");
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
-  const walletDetails = useFetchWallet(user?.id || "");
+  
+  const { walletData } = useWallet();
 
   let incoming: number = 0;
   let outgoing: number = 0;
 
+  // Conversion is excluded
   transactionData.forEach((transaction) => {
-    if (transaction.type === "incoming") incoming += transaction.amount;
-    else outgoing += transaction.amount;
+    
+    switch(transaction.transactionType){
+
+      case 'PURCHASE':
+        outgoing += transaction.purchaseDetails?.purchaseAmount || 0;
+        break;
+      case 'TOPUP':
+        incoming += transaction.topUpDetails?.topUpAmount || 0;
+        break;        
+
+    } 
+
+
+    
   });
 
   // if (!user) {
@@ -53,6 +70,7 @@ const WalletPage: React.FC = () => {
   // }
 
   return (
+
     <section className="bg-gray-100 text-gray-800 flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
       <div className="bg-white rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-cyan">
         <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl">
@@ -119,7 +137,7 @@ const WalletPage: React.FC = () => {
               className="-rotate-3 relative top-1"
             />
             <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">
-              {hideDetails ? '****' : `${walletDetails?.fiatAmount}`} {walletDetails?.currency}
+              {hideDetails ? '****' : `${walletData?.fiatAmount}`} {walletData?.currency}
             </p>
           </div>
 
@@ -132,7 +150,7 @@ const WalletPage: React.FC = () => {
               className="-rotate-3 relative top-1"
             />
             <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">
-              {hideDetails ? '****' : `${walletDetails?.tiktokCoins}`} TikTok Coins
+              {hideDetails ? '****' : `${walletData?.tiktokCoins}`} TikTok Coins
             </p>
           </div>
 
