@@ -13,8 +13,8 @@ const HomePage = () => {
 
   // HARDCODE
   const userDetails = {
-    username: "alex2",
-    password: "password2",
+    username: "buyer",
+    password: "password",
   }
   
   return (
