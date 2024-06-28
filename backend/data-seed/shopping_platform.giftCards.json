@@ -1,0 +1,135 @@
+[{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a1"
+  },
+  "code": "GC50-001",
+  "value": 50,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a2"
+  },
+  "code": "GC50-002",
+  "value": 50,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a3"
+  },
+  "code": "GC50-003",
+  "value": 50,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a4"
+  },
+  "code": "GC100-001",
+  "value": 100,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a5"
+  },
+  "code": "GC100-002",
+  "value": 100,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a6"
+  },
+  "code": "GC100-003",
+  "value": 100,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a7"
+  },
+  "code": "GC150-001",
+  "value": 150,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a8"
+  },
+  "code": "GC150-002",
+  "value": 150,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5a9"
+  },
+  "code": "GC150-003",
+  "value": 150,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5aa"
+  },
+  "code": "GC200-001",
+  "value": 200,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5ab"
+  },
+  "code": "GC200-002",
+  "value": 200,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5ac"
+  },
+  "code": "GC200-003",
+  "value": 200,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5ad"
+  },
+  "code": "GC250-001",
+  "value": 250,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5ae"
+  },
+  "code": "GC250-002",
+  "value": 250,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+},
+{
+  "_id": {
+    "$oid": "667e4182da6fbe37e57df5af"
+  },
+  "code": "GC250-003",
+  "value": 250,
+  "used": false,
+  "_class": "com.example.backend.transaction.model.GiftCard"
+}]

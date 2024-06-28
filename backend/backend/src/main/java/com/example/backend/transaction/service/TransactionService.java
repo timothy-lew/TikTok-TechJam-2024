@@ -1,5 +1,7 @@
 package com.example.backend.transaction.service;
 
+import com.example.backend.common.exception.AlreadyUsedGiftCardException;
+import com.example.backend.common.exception.InvalidGiftCardException;
 import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.item.model.Item;
 import com.example.backend.item.repository.ItemRepository;
@@ -8,6 +10,7 @@ import com.example.backend.transaction.dto.PurchaseTransactionDTO;
 import com.example.backend.transaction.dto.TopUpTransactionDTO;
 import com.example.backend.transaction.dto.TransactionResponseDTO;
 import com.example.backend.transaction.mapper.TransactionMapper;
+import com.example.backend.transaction.model.GiftCard;
 import com.example.backend.transaction.model.Transaction;
 import com.example.backend.transaction.repository.TransactionRepository;
 import com.example.backend.user.model.User;
@@ -26,13 +29,15 @@ public class TransactionService {
     private final ItemRepository itemRepository;
     private final WalletService walletService;
     private final CommonValidationAndGetService commonValidationAndGetService;
+    private final GiftCardService giftCardService;
 
-    public TransactionService(TransactionRepository transactionRepository, TransactionMapper transactionMapper, ItemRepository itemRepository, WalletService walletService, CommonValidationAndGetService commonValidationAndGetService) {
+    public TransactionService(TransactionRepository transactionRepository, TransactionMapper transactionMapper, ItemRepository itemRepository, WalletService walletService, CommonValidationAndGetService commonValidationAndGetService, GiftCardService giftCardService) {
         this.transactionRepository = transactionRepository;
         this.transactionMapper = transactionMapper;
         this.itemRepository = itemRepository;
         this.walletService = walletService;
         this.commonValidationAndGetService = commonValidationAndGetService;
+        this.giftCardService = giftCardService;
     }
 
     public List<TransactionResponseDTO> getBuyerTransactions(String buyerProfileId) {
@@ -89,10 +94,26 @@ public class TransactionService {
         return transactionMapper.fromTransactiontoTransactionResponseDTO(savedTransaction);
     }
 
-
     public TransactionResponseDTO createTopUpTransaction(TopUpTransactionDTO dto) {
-        // TODO: Handle gift card and credit card top-up types (credit card one just simplify it)
-        walletService.handleTopUp(dto.getUserId(), BigDecimal.valueOf(dto.getTopUpAmount()));
+        BigDecimal topUpAmount;
+
+        if (Transaction.TopUpType.GIFT_CARD.equals(Transaction.TopUpType.valueOf(dto.getTopUpType()))) {
+            GiftCard giftCard;
+            try {
+                giftCard = giftCardService.validateGiftCard(dto.getGiftCardCode());
+            } catch (InvalidGiftCardException | AlreadyUsedGiftCardException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+            // Retrieve the gift card value
+            topUpAmount = BigDecimal.valueOf(giftCard.getValue());
+            // Mark the gift card as used
+            giftCardService.markGiftCardAsUsed(giftCard);
+            dto.setTopUpAmount(giftCard.getValue());
+        } else {
+            topUpAmount = BigDecimal.valueOf(dto.getTopUpAmount());
+        }
+
+        walletService.handleTopUp(dto.getUserId(), topUpAmount);
         Transaction transaction = transactionMapper.fromDTOtoTransaction(dto);
         transaction.setTransactionDate(LocalDateTime.now());
 
@@ -104,6 +125,14 @@ public class TransactionService {
         } else if (user.getRoles().contains(User.Role.ROLE_SELLER)) {
             transaction.setBuyerProfileId(null);
             transaction.setSellerProfileId(user.getSellerProfile().getId());
+        }
+
+        // Manually set the topUpAmount and giftCardCode in the transaction
+        transaction.setTopUpAmount(dto.getTopUpAmount());
+        if (Transaction.TopUpType.GIFT_CARD.equals(Transaction.TopUpType.valueOf(dto.getTopUpType()))) {
+            transaction.setGiftCardCode(dto.getGiftCardCode());
+        } else {
+            transaction.setGiftCardCode(null);
         }
 
         Transaction savedTransaction = transactionRepository.save(transaction);

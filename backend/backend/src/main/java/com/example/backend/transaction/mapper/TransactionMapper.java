@@ -79,6 +79,8 @@ public abstract class TransactionMapper {
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.TOPUP)")
     @Mapping(target = "topUpType", source = "topUpType", qualifiedByName = "toTopUpType")
+    @Mapping(target = "topUpAmount", ignore = true)
+    @Mapping(target = "giftCardCode", ignore = true)
     public abstract Transaction fromDTOtoTransaction(TopUpTransactionDTO dto);
 
     @Mapping(target = "transactionDate", ignore = true)

@@ -35,6 +35,7 @@ public class Transaction {
     // Top-up transaction details
     private TopUpType topUpType;
     private Float topUpAmount;
+    private String giftCardCode;
     // Conversion transaction details
     private Float conversionRate;
     private Float cashToConvert;
