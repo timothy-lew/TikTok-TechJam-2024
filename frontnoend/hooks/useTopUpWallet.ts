@@ -34,8 +34,14 @@ export function useTopUpWallet() {
         })
       });
 
+      if (response.status === 400){
+        console.log("Inside 400")
+        
+        throw new Error('Invalid Gift Card or Gift Card has been redeemed')
+      }
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`An Unknown Error has occured`);
       }
       
       // TODO: handle case where we get a true response from server that gift card is invalid/redeemed

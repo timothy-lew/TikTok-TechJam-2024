@@ -20,7 +20,7 @@ export type BuyerInfo = {
   roles: string[];
   buyerProfile: BuyerProfile;
   sellerProfile: SellerProfile;
-  wallet: Wallet;
+  wallet: UserWallet | null;
 };
 
 export type BuyerProfile = {

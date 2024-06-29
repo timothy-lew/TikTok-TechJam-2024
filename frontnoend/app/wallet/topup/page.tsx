@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 // import { useWallet } from "@/hooks/wallet-provider";
@@ -39,10 +38,10 @@ const TopUpPage: React.FC = () => {
     const accessToken = await auth?.obtainAccessToken();
     const userId = user?.id || null;
 
-    
     // const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NjdjMWI0MWQyNjg3ZTc2YzJiZmNhMDkiLCJpYXQiOjE3MTk1NzUyMTgsImV4cCI6MTcxOTY2MTYxOH0.RaW3VQyTPION8PycNtoToxGKn0DDFA6g516Kehsu0Vs";
-    if (!userId || !accessToken) return;
     // const userId = "HARDCODE";
+
+    if (!userId || !accessToken) return;
 
     console.log(`Obtained access token: ${accessToken}`)
 
@@ -207,7 +206,7 @@ const TopUpPage: React.FC = () => {
 
         <div className="space-y-6">
           {error && <p className="text-red-600">
-          Error occurred: {error.message}
+          {error.message}
           </p>}
           {success && <p className="text-green-600">
           Topped up ${toppedUpAmount} into your wallet. Enjoy!

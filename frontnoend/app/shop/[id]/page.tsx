@@ -141,7 +141,8 @@ export default function ProductDetailsPage({ params }: PageProps) {
             businessName: "",
             businessDescription: "",
           },
-          wallet: user.wallet || { id: "", cashBalance: 0, coinBalance: 0 },
+          // wallet: user.wallet || { id: "", cashBalance: 0, coinBalance: 0 }, - OLD
+          wallet: user.wallet || null,
         };
         setBuyerInfo(transformedBuyerInfo);
       }
