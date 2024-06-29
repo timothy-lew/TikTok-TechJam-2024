@@ -17,8 +17,10 @@ interface SellerProfile {
 // Cross checked
 interface UserWallet {
   id: string,
+  userId: string,
   cashBalance: number,
-  coinBalance: number,
+  walletAddress: string,
+  tokTokenBalance: number,
 }
 
 // Cross checked

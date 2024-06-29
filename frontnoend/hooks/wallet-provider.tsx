@@ -1,40 +1,41 @@
-"use client"
-import { ReactNode } from "react";
+// "use client"
 
-import { useState, useContext, createContext, useEffect } from 'react';
+// import { ReactNode } from "react";
 
-import { Wallet, useFetchWallet } from '@/hooks/useFetchWallet';
+// import { useState, useContext, createContext, useEffect } from 'react';
 
-interface WalletContextType {
-  walletData : Wallet | null;
-  setWalletData : React.Dispatch<React.SetStateAction<Wallet | null>>;
-}
+// import { Wallet, useFetchWallet } from '@/hooks/useFetchWallet';
 
-const WalletContext = createContext<WalletContextType | undefined>(undefined);
+// interface WalletContextType {
+//   walletData : Wallet | null;
+//   setWalletData : React.Dispatch<React.SetStateAction<Wallet | null>>;
+// }
 
-export const WalletProvider = ( {children, userId} : {children: ReactNode, userId: string}) => {
+// const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
-  const [walletData, setWalletData] = useState<Wallet | null>(null);
-  const {walletData: fetchWalletData, setWalletData: setFetchedWalletData } = useFetchWallet(userId);
+// export const WalletProvider = ( {children, userId} : {children: ReactNode, userId: string}) => {
+
+//   const [walletData, setWalletData] = useState<Wallet | null>(null);
+//   const {walletData: fetchWalletData, setWalletData: setFetchedWalletData } = useFetchWallet(userId);
 
 
-  useEffect(()=>{
+//   useEffect(()=>{
 
-    if (fetchWalletData) setWalletData(fetchWalletData);
+//     if (fetchWalletData) setWalletData(fetchWalletData);
 
-  }, [fetchWalletData])
+//   }, [fetchWalletData])
 
-  return(
-    <WalletContext.Provider value = {{walletData, setWalletData}}>
-      {children}
-    </WalletContext.Provider>
-  )
-}
+//   return(
+//     <WalletContext.Provider value = {{walletData, setWalletData}}>
+//       {children}
+//     </WalletContext.Provider>
+//   )
+// }
 
-export const useWallet = () => {
-  const context = useContext(WalletContext);
-  if (context === undefined) {
-    throw new Error('useWallet must be used within a WalletProvider');
-  }
-  return context;
-};
+// export const useWallet = () => {
+//   const context = useContext(WalletContext);
+//   if (context === undefined) {
+//     throw new Error('useWallet must be used within a WalletProvider');
+//   }
+//   return context;
+// };

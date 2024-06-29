@@ -18,9 +18,9 @@ import {
   type TiktokCardDetails,
   useFetchTiktokCard,
 } from "@/hooks/useFetchTiktokCard";
-import { type Wallet } from "@/hooks/useFetchWallet";
+// import { type Wallet } from "@/hooks/useFetchWallet";
 
-import { useWallet } from "@/hooks/wallet-provider";
+// import { useWallet } from "@/hooks/wallet-provider";
 import { Progress } from "@/components/ui/progress"
 
 
@@ -35,7 +35,9 @@ const WalletPage: React.FC = () => {
   const transactionData: Transaction[] = useFetchTransactions(user?.buyerProfile?.id || "");
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   
-  const { walletData } = useWallet();
+  // const { walletData } = useWallet();
+
+  const walletData = auth?.userWallet;
 
   let incoming: number = 0;
   let outgoing: number = 0;
@@ -82,9 +84,9 @@ const WalletPage: React.FC = () => {
           <div className="flex_col_center gap-3">
             <h3 className="text-slate-900 font-semibold text-xl">Available in Wallet:</h3>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
-              <p className="text-slate-800 text-xl">${walletData?.fiatAmount} <span className="text-lg">SGD</span></p>
+              <p className="text-slate-800 text-xl">${walletData?.cashBalance.toFixed(2)} <span className="text-lg">SGD</span></p>
               
-              <p className="text-slate-800 text-xl">{walletData?.tiktokCoins} <span className="text-lg">Tok Coins</span></p>
+              <p className="text-slate-800 text-xl">{walletData?.tokTokenBalance} <span className="text-lg">Tok Coins</span></p>
             </div>
           </div>
             

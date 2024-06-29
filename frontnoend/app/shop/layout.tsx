@@ -2,10 +2,10 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Wallet | TikTok',
+  title: 'Shop | TikTok',
 }
 
-export default function WalletLayout({
+export default function ShopLayout({
   children,
 }: {
   children: React.ReactNode

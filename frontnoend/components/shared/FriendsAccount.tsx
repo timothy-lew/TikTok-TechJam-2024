@@ -8,7 +8,7 @@ import {
 const FriendsAccount= ({ friendAccount } : {friendAccount: DisplayAccount}) => {
 
   return (
-    <div className="flex_center gap-2 mb-2">
+    <div className="flex_center gap-2 mb-2 cursor-pointer">
       <Avatar>
         <AvatarImage src={friendAccount.profilePic} alt="dp" />
         <AvatarFallback>{friendAccount.username[0]}</AvatarFallback>

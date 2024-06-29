@@ -4,15 +4,21 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/auth-provider";
 import Image from "next/image";
 import Link from "next/link";
-import { useWallet } from "@/hooks/wallet-provider";
+// import { useWallet } from "@/hooks/wallet-provider";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 
 
 const CurrencyExchangePage: React.FC = () => {
   const auth = useAuth();
+
+  if (!auth) return 
+
   const user = auth?.user || null;
   
-  const {walletData, setWalletData} = useWallet();
+  // const {walletData, setWalletData} = useWallet();
+
+  const walletData = auth.userWallet;
+
   const { convertCurrency, success, isConverting, error } = useConvertCurrency();
 
   const [amount, setAmount] = useState<string>("");
@@ -41,12 +47,12 @@ const CurrencyExchangePage: React.FC = () => {
       conversionType
     });
 
-    setWalletData((prev)=>{
+    auth.setUserWallet((prev)=>{
       if (!prev) return null;
       return({
         ...prev,
-        fiatAmount: prev.fiatAmount + convertedResult.cashConverted,
-        tiktokCoins: prev.tiktokCoins + convertedResult.coinsConverted,
+        cashBalance: prev.cashBalance + convertedResult.cashConverted,
+        tokTokenBalance: prev.tokTokenBalance + convertedResult.coinsConverted,
     })})
 
 
@@ -66,12 +72,12 @@ const CurrencyExchangePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <div className="mb-4 sm:mb-0">
             <h2 className="text-lg font-semibold mb-2">Your Balance</h2>
-            <p className="text-muted-foreground">Fiat: ${walletData?.fiatAmount}</p>
-            <p className="text-muted-foreground">TikTok Coins: {walletData?.tiktokCoins}</p>
+            <p className="text-muted-foreground">Fiat: ${walletData?.cashBalance}</p>
+            <p className="text-muted-foreground">TikTok Coins: {walletData?.tokTokenBalance}</p>
           </div>
           <div>
             <h2 className="text-lg font-semibold mb-2">Exchange Rate</h2>
-            <p className="text-muted-foreground">1 {walletData?.currency} = {EXCHANGE_RATE} TikTok Coins</p>
+            <p className="text-muted-foreground">1 SGD = {EXCHANGE_RATE} TikTok Coins</p>
           </div>
         </div>
 
@@ -114,7 +120,7 @@ const CurrencyExchangePage: React.FC = () => {
               placeholder="Enter amount"
             />
             <span className="bg-muted text-muted-foreground px-4 py-2 rounded-r-md">
-              {conversionType === "CASH_TO_TOKTOKEN" ? walletData?.currency : "TikTok Coins"}
+              {conversionType === "CASH_TO_TOKTOKEN" ? 'SGD' : "TikTok Coins"}
             </span>
           </div>
         </div>
@@ -123,7 +129,7 @@ const CurrencyExchangePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2">You will receive:</h3>
           <p className="text-2xl font-bold text-tiktok-red">
             {isNaN(calculatedAmount) ? "0" : calculatedAmount.toFixed(2)}{" "}
-            {conversionType === "CASH_TO_TOKTOKEN" ? "TikTok Coins" : walletData?.currency}
+            {conversionType === "CASH_TO_TOKTOKEN" ? "TikTok Coins" : 'SGD'}
           </p>
         </div>
 

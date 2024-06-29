@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useWallet } from "@/hooks/wallet-provider";
+// import { useWallet } from "@/hooks/wallet-provider";
 import { useTopUpWallet } from "@/hooks/useTopUpWallet";
 import { ReceiptRussianRuble } from "lucide-react";
 import { useAuth } from "@/hooks/auth-provider";
@@ -13,10 +13,13 @@ type TopUpMethod = "creditCard" | "giftCard";
 
 const TopUpPage: React.FC = () => {
   const auth = useAuth();
+
+  if (!auth) return;
   
   const user = auth?.user || null;
   
-  const {walletData, setWalletData} = useWallet();
+  const walletData : UserWallet | null = auth.userWallet;
+
   const { topUpWallet, success, isToppingUp, error } = useTopUpWallet();
 
   const [amount, setAmount] = useState<string>("");
@@ -57,12 +60,12 @@ const TopUpPage: React.FC = () => {
     const toppedUpAmount = result.topUpDetails.topUpAmount
 
     setToppedUpAmount(toppedUpAmount);
-    setWalletData((prev)=>{
+    auth.setUserWallet((prev)=>{
       if (!prev) return null;
 
       return {
         ...prev,
-        fiatAmount: prev.fiatAmount + toppedUpAmount,
+        cashBalance: prev.cashBalance + toppedUpAmount,
       }
     })
 
@@ -79,8 +82,8 @@ const TopUpPage: React.FC = () => {
       <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-red">
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Current Balance</h2>
-          <p className="text-muted-foreground">Fiat: ${walletData?.fiatAmount}</p>
-          <p className="text-muted-foreground">TikTok Coins: {walletData?.tiktokCoins}</p>
+          <p className="text-muted-foreground">Fiat: ${walletData?.cashBalance}</p>
+          <p className="text-muted-foreground">TikTok Coins: {walletData?.tokTokenBalance}</p>
         </div>
 
         <div className="mb-6">

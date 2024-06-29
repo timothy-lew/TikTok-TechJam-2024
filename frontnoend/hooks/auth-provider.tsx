@@ -4,12 +4,15 @@ import { login, logout, signup, getAccessToken } from "@/lib/auth";
 import { createContext, useContext, useState } from "react";
 import { ReactNode } from "react";
 
+
 type Auth = {
   user : UserDetails | null;
   signIn: (user: UserSignInDetails) => void;
   signUp: (user: UserSignUpDetails) => void;
   signOut: () => void;
   obtainAccessToken: () => Promise<string | undefined>;
+  userWallet: UserWallet | null;
+  setUserWallet: React.Dispatch<React.SetStateAction<UserWallet | null>>;
 }
 
 
@@ -19,6 +22,9 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
 
   const [user, setUser] = useState<UserDetails | null>(null);
 
+  const [userWallet, setUserWallet] = useState<UserWallet | null>(null);
+
+
 
   const signIn = async (userSignInDetails : UserSignInDetails) => {
     try{
@@ -26,6 +32,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
       console.log("Inside sign in auth provider:");
       console.log(userDetails);
       setUser(userDetails);
+      setUserWallet(userDetails.wallet || null);
     }
     catch(error){
       console.log(`Error in sign in: ${error}`)
@@ -39,6 +46,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
       console.log("Inside sign up auth provider:");
       console.log(userDetails);
       setUser(userDetails);
+      setUserWallet(userDetails.wallet || null);
     }
     catch(error){
       console.log("Error in auth provider");
@@ -64,8 +72,9 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
   };
 
 
+
   return(
-    <AuthContext.Provider value={{user, signIn, signUp, signOut, obtainAccessToken}}>
+    <AuthContext.Provider value={{user, signIn, signUp, signOut, obtainAccessToken, userWallet, setUserWallet}}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,44 +1,44 @@
-"use client"
+// "use client"
 
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 
-export type Wallet = {
-  id: string
-  fiatAmount: number
-  currency: string
-  tiktokCoins: number
-}
+// export type Wallet = {
+//   id: string
+//   fiatAmount: number
+//   currency: string
+//   tiktokCoins: number
+// }
 
-export function useFetchWallet( userId: string){
+// export function useFetchWallet( userId: string){
 
-  const [walletData, setWalletData] = useState<Wallet | null>(null);
+//   const [walletData, setWalletData] = useState<Wallet | null>(null);
 
-  useEffect(()=>{
+//   useEffect(()=>{
 
-    const fetchWalletData = async () => {
+//     const fetchWalletData = async () => {
 
-      try{
-        // const response = await fetch('');
-        // const data = await response.json();
+//       try{
+//         // const response = await fetch('');
+//         // const data = await response.json();
 
-        // Mock Data
-        const data: Wallet = {
-          id: "",
-          fiatAmount: 1000.78,
-          currency: "SGD",
-          tiktokCoins: 5000
-        }
+//         // Mock Data
+//         const data: Wallet = {
+//           id: "",
+//           fiatAmount: 1000.78,
+//           currency: "SGD",
+//           tiktokCoins: 5000
+//         }
 
-        setWalletData(data);
-      }
-      catch(e){
-        console.log(e);
-      }
+//         setWalletData(data);
+//       }
+//       catch(e){
+//         console.log(e);
+//       }
 
-    }
+//     }
 
-    fetchWalletData();
-  }, [userId])
+//     fetchWalletData();
+//   }, [userId])
 
-  return { walletData, setWalletData};
-}
+//   return { walletData, setWalletData};
+// }
