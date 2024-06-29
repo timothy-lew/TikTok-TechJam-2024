@@ -32,7 +32,6 @@ public class BuyerProfileService {
             buyerProfile.setUserId(userId);
             buyerProfile.setShippingAddress(userDTO.getShippingAddress());
             buyerProfile.setBillingAddress(userDTO.getBillingAddress());
-            buyerProfile.setDefaultPaymentMethod(userDTO.getDefaultPaymentMethod());
             return buyerProfileRepository.save(buyerProfile);
         }
         return null;

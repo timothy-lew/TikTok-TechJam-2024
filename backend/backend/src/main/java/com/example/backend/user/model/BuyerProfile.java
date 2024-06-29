@@ -20,5 +20,4 @@ public class BuyerProfile {
     private String userId;
     private String shippingAddress;
     private String billingAddress;
-    private String defaultPaymentMethod;
 }

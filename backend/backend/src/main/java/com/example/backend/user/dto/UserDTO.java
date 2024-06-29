@@ -33,7 +33,6 @@ public class UserDTO {
     // Buyer profile fields indicated once in sign up form, if any.
     private String shippingAddress;
     private String billingAddress;
-    private String defaultPaymentMethod;
     // Seller profile fields indicated once in sign up form, if any.
     private String businessName;
     private String businessDescription;
