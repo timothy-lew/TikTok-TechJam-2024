@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UserRolesValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidUserRoles {
-    String message() default "Invalid user roles or profile fields";
+public @interface ValidProfileFields {
+    String message() default "Profile fields associated with buyer/seller cannot be empty";
 
     Class<?>[] groups() default {};
 
