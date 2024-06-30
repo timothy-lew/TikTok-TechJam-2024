@@ -81,7 +81,11 @@ public class TransactionService {
         transaction.setTransactionDate(LocalDateTime.now());
         transaction.setPrice(item.getPrice());
         transaction.setTotalAmount(totalAmount);
-        transaction.setIsPaid(false);
+        if (transaction.getPurchaseType() == Transaction.PurchaseType.CASH) {
+            transaction.setIsPaid(null);
+        } else {
+            transaction.setIsPaid(false);
+        }
 
         // Update item balance
         item.setQuantity(item.getQuantity() - dto.getQuantity());

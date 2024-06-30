@@ -1,0 +1,27 @@
+[{
+  "_id": {
+    "$oid": "66813c7ef8bd211375579160"
+  },
+  "userId": "66813c7ef8bd21137557915f",
+  "cashBalance": "10000",
+  "walletAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "_class": "com.example.backend.wallet.model.Wallet"
+},
+{
+  "_id": {
+    "$oid": "66813c81f8bd211375579163"
+  },
+  "userId": "66813c81f8bd211375579162",
+  "cashBalance": "15000",
+  "walletAddress": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+  "_class": "com.example.backend.wallet.model.Wallet"
+},
+{
+  "_id": {
+    "$oid": "66813c84f8bd211375579166"
+  },
+  "userId": "66813c84f8bd211375579165",
+  "cashBalance": "5000",
+  "walletAddress": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+  "_class": "com.example.backend.wallet.model.Wallet"
+}]

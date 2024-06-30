@@ -1,40 +1,106 @@
 [{
   "_id": {
-    "$oid": "667e4bd8ec01a3445898e0df"
+    "$oid": "668143cee1ef8f2783a98c62"
   },
-  "transactionType": "WITHDRAW",
+  "transactionType": "CONVERSION",
   "transactionDate": {
-    "$date": "2024-06-28T05:36:24.063Z"
+    "$date": "2024-06-30T11:38:54.887Z"
   },
-  "userId": "667c1b41d2687e76c2bfca09",
-  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
-  "withdrawAmount": 200,
+  "userId": "66813c7ef8bd21137557915f",
+  "buyerProfileId": "66813c7ef8bd211375579161",
+  "conversionRate": 10,
+  "cashToConvert": 15,
+  "convertedAmount": 150,
+  "conversionType": "CASH_TO_TOKTOKEN",
   "_class": "com.example.backend.transaction.model.Transaction"
 },
 {
   "_id": {
-    "$oid": "667e4be7ec01a3445898e0e0"
+    "$oid": "668143d5e1ef8f2783a98c63"
+  },
+  "transactionType": "CONVERSION",
+  "transactionDate": {
+    "$date": "2024-06-30T11:39:01.155Z"
+  },
+  "isPaid": true,
+  "userId": "66813c7ef8bd21137557915f",
+  "buyerProfileId": "66813c7ef8bd211375579161",
+  "conversionRate": 0.10000000149011612,
+  "tokTokenToConvert": 200,
+  "convertedAmount": 20,
+  "conversionType": "TOKTOKEN_TO_CASH",
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "668143e3e1ef8f2783a98c64"
   },
   "transactionType": "WITHDRAW",
   "transactionDate": {
-    "$date": "2024-06-28T05:36:39.158Z"
+    "$date": "2024-06-30T11:39:15.025Z"
   },
-  "userId": "667c1b41d2687e76c2bfca09",
-  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
+  "userId": "66813c7ef8bd21137557915f",
+  "buyerProfileId": "66813c7ef8bd211375579161",
   "withdrawAmount": 2200,
   "_class": "com.example.backend.transaction.model.Transaction"
 },
 {
   "_id": {
-    "$oid": "667e4c14ec01a3445898e0e1"
+    "$oid": "668143f8e1ef8f2783a98c65"
+  },
+  "transactionType": "TOPUP",
+  "transactionDate": {
+    "$date": "2024-06-30T11:39:36.485Z"
+  },
+  "userId": "66813c7ef8bd21137557915f",
+  "buyerProfileId": "66813c7ef8bd211375579161",
+  "topUpType": "CREDIT_CARD",
+  "topUpAmount": 4000,
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "668143ffe1ef8f2783a98c66"
+  },
+  "transactionType": "TOPUP",
+  "transactionDate": {
+    "$date": "2024-06-30T11:39:42.990Z"
+  },
+  "userId": "66813c7ef8bd21137557915f",
+  "buyerProfileId": "66813c7ef8bd211375579161",
+  "topUpType": "GIFT_CARD",
+  "topUpAmount": 250,
+  "giftCardCode": "GC250-001",
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "6681478f79e7cb3b061bbb8c"
+  },
+  "transactionType": "CONVERSION",
+  "transactionDate": {
+    "$date": "2024-06-30T11:54:55.541Z"
+  },
+  "isPaid": true,
+  "userId": "66813c7ef8bd21137557915f",
+  "buyerProfileId": "66813c7ef8bd211375579161",
+  "conversionRate": 0.10000000149011612,
+  "tokTokenToConvert": 200,
+  "convertedAmount": 20,
+  "conversionType": "TOKTOKEN_TO_CASH",
+  "_class": "com.example.backend.transaction.model.Transaction"
+},
+{
+  "_id": {
+    "$oid": "66814ab8d0da564326b0ceea"
   },
   "transactionType": "PURCHASE",
   "transactionDate": {
-    "$date": "2024-06-28T05:37:23.982Z"
+    "$date": "2024-06-30T12:08:24.255Z"
   },
   "userId": "null",
-  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
-  "sellerProfileId": "667c1c55d2687e76c2bfca11",
+  "buyerProfileId": "66813c7ef8bd211375579161",
+  "sellerProfileId": "66813c81f8bd211375579164",
   "itemId": "667c203ffe08ec33cf32e737",
   "price": 34.900001525878906,
   "quantity": 3,
@@ -44,80 +110,20 @@
 },
 {
   "_id": {
-    "$oid": "667e4c19ec01a3445898e0e2"
+    "$oid": "66814acfd0da564326b0ceeb"
   },
   "transactionType": "PURCHASE",
   "transactionDate": {
-    "$date": "2024-06-28T05:37:29.616Z"
+    "$date": "2024-06-30T12:08:47.470Z"
   },
+  "isPaid": true,
   "userId": "null",
-  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
-  "sellerProfileId": "667c1c55d2687e76c2bfca11",
+  "buyerProfileId": "66813c7ef8bd211375579161",
+  "sellerProfileId": "66813c81f8bd211375579164",
   "itemId": "667c2069fe08ec33cf32e738",
   "price": 20.5,
   "quantity": 2,
   "totalAmount": 410,
   "purchaseType": "TOK_TOKEN",
-  "_class": "com.example.backend.transaction.model.Transaction"
-},
-{
-  "_id": {
-    "$oid": "667e4c1bec01a3445898e0e3"
-  },
-  "transactionType": "CONVERSION",
-  "transactionDate": {
-    "$date": "2024-06-28T05:37:31.642Z"
-  },
-  "userId": "667c1b41d2687e76c2bfca09",
-  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
-  "conversionRate": 10,
-  "cashToConvert": 15,
-  "convertedAmount": 150,
-  "conversionType": "CASH_TO_TOKTOKEN",
-  "_class": "com.example.backend.transaction.model.Transaction"
-},
-{
-  "_id": {
-    "$oid": "667e4c1eec01a3445898e0e4"
-  },
-  "transactionType": "CONVERSION",
-  "transactionDate": {
-    "$date": "2024-06-28T05:37:34.795Z"
-  },
-  "userId": "667c1b41d2687e76c2bfca09",
-  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
-  "conversionRate": 0.10000000149011612,
-  "tokTokenToConvert": 2000,
-  "convertedAmount": 200,
-  "conversionType": "TOKTOKEN_TO_CASH",
-  "_class": "com.example.backend.transaction.model.Transaction"
-},
-{
-  "_id": {
-    "$oid": "667e4c22ec01a3445898e0e5"
-  },
-  "transactionType": "TOPUP",
-  "transactionDate": {
-    "$date": "2024-06-28T05:37:38.640Z"
-  },
-  "userId": "667c1b41d2687e76c2bfca09",
-  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
-  "topUpType": "CREDIT_CARD",
-  "topUpAmount": 4000,
-  "_class": "com.example.backend.transaction.model.Transaction"
-},
-{
-  "_id": {
-    "$oid": "667e4c69ec01a3445898e0e6"
-  },
-  "transactionType": "TOPUP",
-  "transactionDate": {
-    "$date": "2024-06-28T05:38:49.940Z"
-  },
-  "userId": "667c1b41d2687e76c2bfca09",
-  "buyerProfileId": "667c1b41d2687e76c2bfca0b",
-  "topUpType": "GIFT_CARD",
-  "topUpAmount": 250,
-  "giftCardCode": "GC250-001",
   "_class": "com.example.backend.transaction.model.Transaction"
 }]

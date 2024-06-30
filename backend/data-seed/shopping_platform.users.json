@@ -1,0 +1,85 @@
+[{
+  "_id": {
+    "$oid": "66813c7ef8bd21137557915f"
+  },
+  "username": "buyer",
+  "email": "buyer@gmail.com",
+  "firstName": "Jack",
+  "lastName": "Daniel",
+  "password": "$2a$10$jptJYCPJ0.BOMXLXN6sIcuOUMPAjTVnPuLZY/86L/H9TaiOTF2Bz6",
+  "roles": [
+    "ROLE_BUYER"
+  ],
+  "buyerProfile": {
+    "$ref": "buyer_profiles",
+    "$id": {
+      "$oid": "66813c7ef8bd211375579161"
+    }
+  },
+  "wallet": {
+    "$ref": "wallets",
+    "$id": {
+      "$oid": "66813c7ef8bd211375579160"
+    }
+  },
+  "_class": "com.example.backend.user.model.User"
+},
+{
+  "_id": {
+    "$oid": "66813c81f8bd211375579162"
+  },
+  "username": "seller",
+  "email": "seller@gmail.com",
+  "firstName": "Baileys",
+  "lastName": "Lee",
+  "password": "$2a$10$urJpEjHDaCgp5SwQ8MNsOux8zy/7BL1B7RmTNQlYH6l2x.K6RPc/6",
+  "roles": [
+    "ROLE_SELLER"
+  ],
+  "sellerProfile": {
+    "$ref": "seller_profiles",
+    "$id": {
+      "$oid": "66813c81f8bd211375579164"
+    }
+  },
+  "wallet": {
+    "$ref": "wallets",
+    "$id": {
+      "$oid": "66813c81f8bd211375579163"
+    }
+  },
+  "_class": "com.example.backend.user.model.User"
+},
+{
+  "_id": {
+    "$oid": "66813c84f8bd211375579165"
+  },
+  "username": "user",
+  "email": "user@gmail.com",
+  "firstName": "Chivas",
+  "lastName": "Regal",
+  "password": "$2a$10$.ZiaqqPfx2rGTwM.s/yi6OpMF2GfD3Jwei685c6MfC5iptnvD5u0.",
+  "roles": [
+    "ROLE_SELLER",
+    "ROLE_BUYER"
+  ],
+  "buyerProfile": {
+    "$ref": "buyer_profiles",
+    "$id": {
+      "$oid": "66813c84f8bd211375579167"
+    }
+  },
+  "sellerProfile": {
+    "$ref": "seller_profiles",
+    "$id": {
+      "$oid": "66813c84f8bd211375579168"
+    }
+  },
+  "wallet": {
+    "$ref": "wallets",
+    "$id": {
+      "$oid": "66813c84f8bd211375579166"
+    }
+  },
+  "_class": "com.example.backend.user.model.User"
+}]
