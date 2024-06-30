@@ -59,43 +59,86 @@ export default function ProductDetailsPage({ params }: PageProps) {
 
     setIsAlertDialogOpen(true); // Open the AlertDialog to show the address and countdown
 
-    setTimeout(async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:8080/api/transactions/purchase",
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/transactions/purchase",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      const transactionID = data.id;
+      console.log("Transaction initiated:", data);
+      console.log("Transaction ID: " + data.id);
+
+      if (!transactionID) {
+        throw new Error("Transaction ID is null");
+      }
+
+      const checkTransactionStatus = async () => {
+        const statusResponse = await fetch(
+          `http://localhost:8080/api/transactions/status/${transactionID}`,
           {
-            method: "POST",
             headers: {
-              "Content-Type": "application/json",
               Authorization: `Bearer ${accessToken}`,
             },
-            body: JSON.stringify(payload),
           }
         );
-
-        if (!response.ok) {
+      
+        if (!statusResponse.ok) {
           throw new Error("Network response was not ok");
         }
+      
+        const statusText = await statusResponse.text();
+        console.log("Status text:", statusText);
+      
+        const success = statusText.trim() === "true";
+      
+        return success;
+      };
+      
 
-        const data = await response.json();
-        console.log("Purchase successful:", data);
-        setAlertDialogContent(
-          "Purchase successful! Redirecting to home page..."
-        );
-      } catch (error) {
-        console.error("Error during purchase:", error);
-        setAlertDialogContent("Error during purchase. Please try again.");
-      } finally {
-        setTimeout(() => {
-          if (!transactionTOKCancelled) {
+      const startTime = Date.now();
+      const timeout = 5 * 60 * 1000; // 5 minutes in milliseconds
+      const interval = 5000; // 5 seconds in milliseconds
+
+      const pollTransactionStatus = async () => {
+        if (Date.now() - startTime >= timeout) {
+          throw new Error("Transaction timed out");
+        }
+
+        const status = await checkTransactionStatus();
+        console.log("Status to close modal fail or success: " + status)
+        if (status) {
+          setAlertDialogContent(
+            "Purchase successful! Redirecting to home page..."
+          );
+          setTimeout(() => {
             setIsAlertDialogOpen(false); // Close the alert dialog
             closeModal();
-            console.log("redirecting to homepage...");
+            console.log("Redirecting to homepage...");
             router.push("/shop");
-          }
-        }, 3000); // 3 second delay to show redirect to shop home
-      }
-    }, 5000); // 10 seconds delay before making the purchase API call
+          }, 3000); // 3-second delay to show redirect to shop home
+        } else {
+          setTimeout(pollTransactionStatus, interval);
+        }
+      };
+
+      pollTransactionStatus();
+    } catch (error) {
+      console.error("Error during purchase:", error);
+      setAlertDialogContent("Error during purchase. Please try again.");
+    }
   };
 
   const auth = useAuth();
