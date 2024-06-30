@@ -1,30 +1,18 @@
 "use client";
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Gift } from "lucide-react";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { useAuth } from "@/hooks/auth-provider";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { ArrowLeft, Terminal } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ProductCardDetails, ProductDetailsSkeleton } from "@/components/shop/ProductCard";
-import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
+import { ArrowLeft, Gift } from "lucide-react";
+import { useAuth } from "@/hooks/auth-provider";
+import {
+  ProductCardDetails,
+  ProductDetailsSkeleton,
+} from "@/components/shop/ProductCard";
+import { MdOutlineShoppingCart } from "react-icons/md";
+
+import TOKTransactionAlertDialog from "@/components/shop/TOKTransactionAlertDialog";
 import { BuyerInfo, Product } from "@/types/ShopTypes";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 interface PageProps {
   params: {
@@ -36,9 +24,8 @@ export default function ProductDetailsPage({ params }: PageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [sellerId, setSellerId] = useState<string | null>(null);
   const [sellerBusinessName, setBusinessName] = useState<string | null>(null);
-  const [sellerWalletAddress, setSellerWalletAddress] = useState<string | null>(
-    null
-  );
+  const [transactionTOKCancelled, setTransactionTOKCancelled] = useState(false);
+
   const [buyerInfo, setBuyerInfo] = useState<BuyerInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -52,7 +39,6 @@ export default function ProductDetailsPage({ params }: PageProps) {
 
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [alertDialogContent, setAlertDialogContent] = useState("");
-  const [countdown, setCountdown] = useState(300);
   const router = useRouter();
 
   const confirmPurchaseTiktokCoin = async () => {
@@ -101,17 +87,23 @@ export default function ProductDetailsPage({ params }: PageProps) {
         setAlertDialogContent("Error during purchase. Please try again.");
       } finally {
         setTimeout(() => {
-          setIsAlertDialogOpen(false); // Close the alert dialog
-          closeModal();
-          console.log("redirecting to homepage...");
-          router.push("/shop");
+          if (!transactionTOKCancelled) {
+            setIsAlertDialogOpen(false); // Close the alert dialog
+            closeModal();
+            console.log("redirecting to homepage...");
+            router.push("/shop");
+          }
         }, 3000); // 3 second delay to show redirect to shop home
       }
-    }, 10000); // 10 seconds delay before making the purchase API call
+    }, 5000); // 10 seconds delay before making the purchase API call
   };
 
   const auth = useAuth();
   const user = auth?.user || null;
+
+  useEffect(() => {
+    console.log("transactionTOKCancelled" + transactionTOKCancelled);
+  });
 
   useEffect(() => {
     const getAccessToken = async () => {
@@ -137,7 +129,6 @@ export default function ProductDetailsPage({ params }: PageProps) {
             businessName: "",
             businessDescription: "",
           },
-          // wallet: user.wallet || { id: "", cashBalance: 0, coinBalance: 0 }, - OLD
           wallet: user?.wallet || null,
         };
         setBuyerInfo(transformedBuyerInfo);
@@ -172,7 +163,6 @@ export default function ProductDetailsPage({ params }: PageProps) {
         setProduct(data);
         setSellerId(data.sellerProfileId);
         setBusinessName(data.businessName);
-        setSellerWalletAddress(data.sellerWalletAddress);
         console.log("seller wallet address: " + data.sellerWalletAddress);
         console.log("seller id: " + data.sellerProfileId);
         console.log("Business Name" + data.businessName);
@@ -185,37 +175,13 @@ export default function ProductDetailsPage({ params }: PageProps) {
     fetchProducts();
   }, [params.id, accessToken]);
 
-  useEffect(() => {
-    if (isAlertDialogOpen) {
-      const timer = setInterval(() => {
-        setCountdown((prevCountdown) => {
-          if (prevCountdown <= 0) {
-            clearInterval(timer);
-            onCloseAlert();
-            return 0;
-          }
-          return prevCountdown - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [isAlertDialogOpen]);
-
-  const onCloseAlert = () => {
+  const cancelTransaction = () => {
     setIsAlertDialogOpen(false);
-    closeModal();
-    router.push("/shop");
-  };
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    setAlertDialogContent("");
   };
 
   if (loading) {
-    return <ProductDetailsSkeleton></ProductDetailsSkeleton>;
+    return <ProductDetailsSkeleton />;
   }
 
   return (
@@ -242,54 +208,17 @@ export default function ProductDetailsPage({ params }: PageProps) {
             onConfirmTiktokCoin={confirmPurchaseTiktokCoin}
             shippingAddress={user?.buyerProfile?.shippingAddress || ""}
           />
-          {/* Handle purchase logic using TOK coin */}
-          <AlertDialog
-            open={isAlertDialogOpen}
-            onOpenChange={setIsAlertDialogOpen}
-          >
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Transaction Status</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {alertDialogContent}
-                  {alertDialogContent === "" && (
-                    <>
-                      <p>
-                        Please make your payment of{" "}
-                        <strong>
-                          {product.tokTokenPrice * quantity} TOK Coins
-                        </strong>{" "}
-                        to the following
-                      </p>
-                      <p>
-                        Seller's Wallet Address:
-                        <WalletAddressBar
-                          wallet_address={product?.sellerWalletAddress}
-                        ></WalletAddressBar>
-                      </p>
-                      <p className="font-medium text-red-600">
-                        Time left to complete the transaction:{" "}
-                        {formatTime(countdown)}
-                      </p>
-                    </>
-                  )}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                {alertDialogContent === "" && (
-                  <AlertDialogAction
-                    onClick={confirmPurchaseTiktokCoin}
-                    className="bg-red-500 hover:bg-red-600 text-white"
-                  >
-                    Confirm Purchase
-                  </AlertDialogAction>
-                )}
-                {/* <AlertDialogCancel onClick={onCloseAlert}>
-                  Cancel
-                </AlertDialogCancel> */}
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <TOKTransactionAlertDialog
+            isOpen={isAlertDialogOpen}
+            onClose={() => {
+              setIsAlertDialogOpen(false);
+              setTransactionTOKCancelled(true);
+            }}
+            alertDialogContent={alertDialogContent}
+            product={product}
+            quantity={quantity}
+            onCancelTransaction={cancelTransaction}
+          />
         </>
       )}
     </>
