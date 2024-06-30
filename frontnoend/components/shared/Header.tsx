@@ -59,7 +59,7 @@ const Header: React.FC = () => {
           {/* Logo */}
             <Link href='/' className="flex_center gap-1 px-4">
               <Image
-                src="tiktokIconNoBg.svg"
+                src="/tiktokIconNoBg.svg"
                 alt="Logo"
                 width={30}
                 height={30}
