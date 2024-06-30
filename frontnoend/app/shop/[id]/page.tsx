@@ -18,13 +18,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Gift } from "lucide-react";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/hooks/auth-provider";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Terminal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ProductDetailsSkeleton } from "@/components/shop/ProductCard";
 import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
@@ -258,9 +261,11 @@ export default function ProductDetailsPage({ params }: PageProps) {
                   {alertDialogContent === "" && (
                     <>
                       <p>
-                        Please make your payment of <strong>
-                           {product.tokTokenPrice * quantity} TikTok Coins
-                        </strong> to the following 
+                        Please make your payment of{" "}
+                        <strong>
+                          {product.tokTokenPrice * quantity} TikTok Coins
+                        </strong>{" "}
+                        to the following
                       </p>
                       <p>
                         Seller's Wallet Address:
@@ -325,6 +330,7 @@ function ProductCardDetails({
           <CardDescription>
             ${price} or {product.tokTokenPrice} TikTok Coins
           </CardDescription>
+
           <CardDescription>
             Sold by{" "}
             <Link
@@ -398,41 +404,58 @@ const Modal = ({
         <h3 className="text-2xl leading-6 font-medium text-gray-900 text-center mb-4">
           Confirm Purchase
         </h3>
-        <div className="text-sm px-4 py-3 text-gray-700 space-y-2">
-          <p className="font-semibold">Please review your purchase details:</p>
-          <p className="p-1">Seller: {product.businessName}</p>
-          <p className="p-1">Seller ID: {product.sellerProfileId}</p>
-          <p className="p-1">Product: {product.name}</p>
-          <p className="p-1">
-            Recipient: {buyer.firstName + " " + buyer.lastName}
-          </p>
-          <p className="p-1">Shipping Address: {shippingAddress}</p>
-          <p className="p-1 ">
-            Price: ${(product.price * quantity).toFixed(2)} or{" "}
-            {product.tokTokenPrice * quantity} TikTok Coins
-          </p>
-          <div className="p-1 flex items-center space-x-2">
-            <span>Quantity:</span>
-            <button
-              onClick={decreaseQuantity}
-              className="px-2 py-1 border rounded"
-            >
-              -
-            </button>
-            <input
-              type="number"
-              min="1"
-              max={product.quantity}
-              value={quantity}
-              onChange={handleQuantityChange}
-              className="w-12 text-center border rounded"
-            />
-            <button
-              onClick={increaseQuantity}
-              className="px-2 py-1 border rounded"
-            >
-              +
-            </button>
+        <Alert className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+          <div className="flex items-center">
+            <Gift className="h-5 w-5 mr-2" />
+            <div className="text-m">
+              <AlertTitle className="font-bold">Enjoy 10% Off!</AlertTitle>
+              <AlertDescription className="text-m">
+                Checkout using TikTok Coin as your payment method to enjoy 10%
+                savings!
+              </AlertDescription>
+            </div>
+          </div>
+        </Alert>
+        <div className="border border-gray-300 rounded-lg p-4">
+          <div className="text-sm text-gray-900 space-y-2">
+            <p className="font-bold">Please review your purchase details:</p>
+            <p className="p-1">Seller: {product.businessName}</p>
+            <p className="p-1">Seller ID: {product.sellerProfileId}</p>
+            <p className="p-1">Product: {product.name}</p>
+            <p className="p-1">
+              Recipient: {buyer.firstName + " " + buyer.lastName}
+            </p>
+            <p className="p-1">Shipping Address: {shippingAddress}</p>
+            <p className="p-1">
+              Price:{" "}
+              <strong>
+                ${(product.price * quantity).toFixed(2)} or{" "}
+                {product.tokTokenPrice * quantity} TikTok Coins
+              </strong>
+            </p>
+            <div className="p-1 flex items-center space-x-2">
+              <span>Quantity:</span>
+              <button
+                onClick={decreaseQuantity}
+                className="px-2 py-1 border rounded"
+              >
+                -
+              </button>
+              <input
+                type="number"
+                min="1"
+                max={product.quantity}
+                value={quantity}
+                onChange={handleQuantityChange}
+                className="w-12 text-center border rounded"
+              />
+              <button
+                onClick={increaseQuantity}
+                className="px-2 py-1 border rounded"
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
         <div className="px-3 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
