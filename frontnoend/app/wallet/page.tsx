@@ -74,8 +74,8 @@ const WalletPage: React.FC = () => {
 
   
   return (
-    <section className="text-gray-800 flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8 flex-grow">
-        <div className="bg-white shadow-md w-full flex justify-center items-start border border-tiktok-red">
+    <section className="text-gray-800 flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8 flex-grow max-w-[1200px] mx-auto">
+        <div className="bg-white shadow-md w-full flex justify-center items-start border border-tiktok-red rounded-xl">
         {/* Combined Wallet and Card Section */}
         <div className=" rounded-xl p-4 sm:p-6 w-full flex_col_center gap-4">
           <h2 className="text-tiktok-red text-center w-full text-xl sm:text-2xl md:text-3xl font-bold mb-4">
@@ -109,8 +109,8 @@ const WalletPage: React.FC = () => {
                     <Image
                       src={hideDetails ? "/icons/eyeOpen.svg" : "/icons/eyeClose.svg"}
                       alt="icon"
-                      height={32}
-                      width={32}
+                      height={22}
+                      width={22}
                     />
                   </button>
                   <p className="hidden md:inline font-medium text-xs md:text-sm">{hideDetails ? "Show" : "Hide"} Details</p>
@@ -123,8 +123,8 @@ const WalletPage: React.FC = () => {
                     <Image
                       src="/icons/freeze.svg"
                       alt="icon"
-                      height={30}
-                      width={30}
+                      height={22}
+                      width={22}
                     />
                   </button>
                   <p className="hidden md:inline font-medium md:text-sm">Freeze Card</p>
@@ -137,8 +137,8 @@ const WalletPage: React.FC = () => {
                     <Image
                       src="/icons/topup.svg"
                       alt="icon"
-                      height={30}
-                      width={30}
+                      height={22}
+                      width={22}
                     />
                   </Link>
                   <p className="hidden md:inline font-medium md:text-sm">Top Up</p>
@@ -151,8 +151,8 @@ const WalletPage: React.FC = () => {
                     <Image
                       src="/icons/exchange.svg"
                       alt="icon"
-                      height={30}
-                      width={30}
+                      height={22}
+                      width={22}
                     />
                   </Link>
                   <p className="hidden md:inline font-medium md:text-sm">Convert Currency</p>

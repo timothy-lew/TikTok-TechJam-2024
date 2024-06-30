@@ -28,7 +28,7 @@ const HomePage = () => {
   }
   
   return (
-    <div className="flex_col_center">
+    <div className="flex_col_center gap-4">
       {user?
       <div>
         <p>Signed in with {user.email}, {user.firstName}</p>
@@ -47,10 +47,6 @@ const HomePage = () => {
         </button>
       </div>
       }
-
-      <Link href="/testing">
-        Test Page
-      </Link>
       
       <Post
         image="/images/homePost.png"
