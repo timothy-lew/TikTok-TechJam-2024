@@ -36,7 +36,7 @@ export function ProductCard({
       </div>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>${priceInCents} or {tokTokenPrice} TikTok Coins</CardDescription>
+        <CardDescription>${priceInCents} or {tokTokenPrice} TOK Coins</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="line-clamp-4">{description}</p>
@@ -136,7 +136,7 @@ export function ProductCardDetails({
         <CardHeader>
           <CardTitle>{name}</CardTitle>
           <CardDescription>
-            ${price} or {product.tokTokenPrice} TikTok Coins
+            ${price} or {product.tokTokenPrice} TOK Coins
           </CardDescription>
 
           <CardDescription>

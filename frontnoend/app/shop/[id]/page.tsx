@@ -138,7 +138,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
             businessDescription: "",
           },
           // wallet: user.wallet || { id: "", cashBalance: 0, coinBalance: 0 }, - OLD
-          wallet: user.wallet || null,
+          wallet: user?.wallet || null,
         };
         setBuyerInfo(transformedBuyerInfo);
       }
@@ -242,6 +242,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
             onConfirmTiktokCoin={confirmPurchaseTiktokCoin}
             shippingAddress={user?.buyerProfile?.shippingAddress || ""}
           />
+          {/* Handle purchase logic using TOK coin */}
           <AlertDialog
             open={isAlertDialogOpen}
             onOpenChange={setIsAlertDialogOpen}
@@ -256,7 +257,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                       <p>
                         Please make your payment of{" "}
                         <strong>
-                          {product.tokTokenPrice * quantity} TikTok Coins
+                          {product.tokTokenPrice * quantity} TOK Coins
                         </strong>{" "}
                         to the following
                       </p>
@@ -347,7 +348,7 @@ const ConfirmPurchaseModal = ({
             <div className="text-m">
               <AlertTitle className="font-bold">Enjoy 10% Off!</AlertTitle>
               <AlertDescription className="text-m">
-                Checkout using TikTok Coin as your payment method to enjoy 10%
+                Checkout using TOK Coin as your payment method to enjoy 10%
                 savings!
               </AlertDescription>
             </div>
@@ -367,7 +368,7 @@ const ConfirmPurchaseModal = ({
               Price:{" "}
               <strong>
                 ${(product.price * quantity).toFixed(2)} or{" "}
-                {product.tokTokenPrice * quantity} TikTok Coins
+                {product.tokTokenPrice * quantity} TOK Coins
               </strong>
             </p>
             <div className="p-1 flex items-center space-x-2">
@@ -407,7 +408,7 @@ const ConfirmPurchaseModal = ({
             className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:w-auto sm:text-sm"
             onClick={onConfirmTiktokCoin}
           >
-            Buy with TikTok Coin
+            Buy with TOK Coin
           </button>
           <button
             type="button"
