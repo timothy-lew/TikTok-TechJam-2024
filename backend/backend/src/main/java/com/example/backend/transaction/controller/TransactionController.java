@@ -84,6 +84,12 @@ public class TransactionController extends BaseController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/status/{transactionId}")
+    public ResponseEntity<Boolean> checkTransactionStatus(@PathVariable String transactionId) {
+        Boolean isPaid = transactionService.checkTransactionStatus(transactionId);
+        return ResponseEntity.ok(isPaid);
+    }
+
     // Sole purpose to just provide a way to create gift cards, not required in application
     @PostMapping("/giftcard")
     public ResponseEntity<List<GiftCard>> createGiftCards(@RequestBody List<GiftCardDTO> giftCardDTOs) {

@@ -19,7 +19,9 @@ public class Transaction {
     private String id;
     private TransactionType transactionType;
     private LocalDateTime transactionDate;
-    // Needed by top-up and conversion transactions, not needed by purchase transactions
+    // Needed by purchase and conversion transaction
+    private Boolean isPaid;
+    // Needed by top-up and conversion transactions
     private String userId;
     // Needed only by purchase transactions, but we still store it for all transaction types.
     // For top-up and conversion transactions, these fields will store the user's respective profile IDs.

@@ -77,6 +77,7 @@ public abstract class TransactionMapper {
 
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.CONVERSION)")
+    @Mapping(target = "isPaid", ignore = true)
     @Mapping(target = "conversionRate", ignore = true)
     @Mapping(target = "cashToConvert", ignore = true)
     @Mapping(target = "tokTokenToConvert", ignore = true)
@@ -86,6 +87,7 @@ public abstract class TransactionMapper {
 
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.TOPUP)")
+    @Mapping(target = "isPaid", ignore = true)
     @Mapping(target = "topUpType", source = "topUpType", qualifiedByName = "toTopUpType")
     @Mapping(target = "topUpAmount", ignore = true)
     @Mapping(target = "giftCardCode", ignore = true)
@@ -93,6 +95,7 @@ public abstract class TransactionMapper {
 
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.PURCHASE)")
+    @Mapping(target = "isPaid", ignore = true)
     @Mapping(target = "userId", constant = "null")
     @Mapping(target = "price", ignore = true)
     @Mapping(target = "totalAmount", ignore = true)
@@ -101,6 +104,7 @@ public abstract class TransactionMapper {
 
     @Mapping(target = "transactionDate", ignore = true)
     @Mapping(target = "transactionType", expression = "java(com.example.backend.transaction.model.Transaction.TransactionType.WITHDRAW)")
+    @Mapping(target = "isPaid", ignore = true)
     public abstract Transaction fromDTOtoTransaction(WithdrawTransactionDTO dto);
 
     @Named("toConversionType")
