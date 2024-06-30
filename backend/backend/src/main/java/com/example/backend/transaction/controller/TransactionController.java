@@ -57,7 +57,6 @@ public class TransactionController extends BaseController {
         return ResponseEntity.ok(response);
     }
 
-
     @PostMapping("/topup")
     public ResponseEntity<?> createTopUpTransaction(@RequestBody TopUpTransactionDTO dto) {
         try {
@@ -82,6 +81,12 @@ public class TransactionController extends BaseController {
     public ResponseEntity<TransactionResponseDTO> createWithdrawTransaction(@RequestBody WithdrawTransactionDTO dto) {
         TransactionResponseDTO response = transactionService.createWithdrawTransaction(dto);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/status/{transactionId}")
+    public ResponseEntity<Boolean> checkTransactionStatus(@PathVariable String transactionId) {
+        Boolean isPaid = transactionService.checkTransactionStatus(transactionId);
+        return ResponseEntity.ok(isPaid);
     }
 
     // Sole purpose to just provide a way to create gift cards, not required in application

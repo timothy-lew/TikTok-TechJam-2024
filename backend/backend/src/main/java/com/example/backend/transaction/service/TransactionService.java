@@ -81,6 +81,11 @@ public class TransactionService {
         transaction.setTransactionDate(LocalDateTime.now());
         transaction.setPrice(item.getPrice());
         transaction.setTotalAmount(totalAmount);
+        if (transaction.getPurchaseType() == Transaction.PurchaseType.CASH) {
+            transaction.setIsPaid(null);
+        } else {
+            transaction.setIsPaid(false);
+        }
 
         // Update item balance
         item.setQuantity(item.getQuantity() - dto.getQuantity());
@@ -115,6 +120,7 @@ public class TransactionService {
         walletService.handleTopUp(dto.getUserId(), topUpAmount);
         Transaction transaction = transactionMapper.fromDTOtoTransaction(dto);
         transaction.setTransactionDate(LocalDateTime.now());
+        transaction.setIsPaid(null);
 
         // For ease of querying transactions by buyer/seller profile ID
         User user = commonValidationAndGetService.validateAndGetUser(dto.getUserId());
@@ -164,11 +170,13 @@ public class TransactionService {
             transaction.setCashToConvert(dto.getCashToConvert());
             transaction.setTokTokenToConvert(null);
             transaction.setConvertedAmount(convertedAmount.floatValue());
+            transaction.setIsPaid(null);
         } else if (dto.getConversionType().equals("TOKTOKEN_TO_CASH")) {
             transaction.setConversionRate(inverseConversionRate);
             transaction.setCashToConvert(null);
             transaction.setTokTokenToConvert(dto.getTokTokenToConvert());
             transaction.setConvertedAmount(convertedAmount.floatValue());
+            transaction.setIsPaid(false);
         }
 
         // For ease of querying transactions by buyer/seller profile ID
@@ -192,6 +200,7 @@ public class TransactionService {
         // Create the transaction object
         Transaction transaction = transactionMapper.fromDTOtoTransaction(dto);
         transaction.setTransactionDate(LocalDateTime.now());
+        transaction.setIsPaid(null);
 
         // For ease of querying transactions by buyer/seller profile ID
         User user = commonValidationAndGetService.validateAndGetUser(dto.getUserId());
@@ -208,6 +217,12 @@ public class TransactionService {
 
         // Map and return the response DTO
         return transactionMapper.fromTransactiontoTransactionResponseDTO(savedTransaction);
+    }
+
+    public Boolean checkTransactionStatus(String transactionId) {
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+        return transaction.getIsPaid();
     }
 
 }

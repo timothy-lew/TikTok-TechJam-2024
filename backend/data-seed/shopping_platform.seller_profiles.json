@@ -1,0 +1,18 @@
+[{
+  "_id": {
+    "$oid": "66813c81f8bd211375579164"
+  },
+  "userId": "66813c81f8bd211375579162",
+  "businessName": "Vintage Closet",
+  "businessDescription": "Look no further for your everyday wears!",
+  "_class": "com.example.backend.user.model.SellerProfile"
+},
+{
+  "_id": {
+    "$oid": "66813c84f8bd211375579168"
+  },
+  "userId": "66813c84f8bd211375579165",
+  "businessName": "Summer Wears",
+  "businessDescription": "The name speaks for itself; we're your one stop destination for everything summer.",
+  "_class": "com.example.backend.user.model.SellerProfile"
+}]

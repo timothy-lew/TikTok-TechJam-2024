@@ -2,11 +2,15 @@ package com.example.backend.contract.service;
 
 import com.example.backend.contract.TOKToken;
 import com.example.backend.contract.dto.SendCryptoDTO;
+import com.example.backend.transaction.model.Transaction;
+import com.example.backend.transaction.repository.TransactionRepository;
+import com.example.backend.user.model.BuyerProfile;
+import com.example.backend.user.repository.BuyerProfileRepository;
+import com.example.backend.wallet.repository.WalletRepository;
 import io.reactivex.disposables.Disposable;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.EventEncoder;
@@ -25,6 +29,7 @@ import org.web3j.utils.Convert;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,9 +49,16 @@ public class ContractService {
 
     private final Web3j web3j;
     private final TOKToken contract;
+    @Autowired
+    private WalletRepository walletRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
+    @Autowired
+    private BuyerProfileRepository buyerProfileRepository;
 
     private Disposable tikTokSubscription;
     private Disposable sellerSubscription;
+
 
     public ContractService() {
         this.web3j = Web3j.build(new HttpService(rpcUrl));
@@ -83,10 +95,29 @@ public class ContractService {
                 BigInteger amountReceivedInEth = Convert.fromWei(weiAmount.toString(), Convert.Unit.ETHER).toBigInteger();
 
                 String cleanReceiverAddress = receiverAddress.substring(2).toLowerCase();
+
+                // Remove the '0x' prefix and convert to lowercase
+                String cleanSenderAddress = senderAddress.substring(2).toLowerCase();
+                System.out.println("cleanSenderAddress = " + cleanSenderAddress);
+                // Remove leading zeros and add the '0x' prefix back, required for MongoDB query
+                String processedSenderAddress = "0x" + cleanSenderAddress.replaceFirst("^0+(?!$)", "");
+                System.out.println("Processed sender address = " + processedSenderAddress);
+
                 String cleanTikTokAddress = tikTokAddress.substring(2).toLowerCase();
                 if (cleanReceiverAddress.contains(cleanTikTokAddress)) {
                     System.out.println(cleanReceiverAddress + " received " + amountReceivedInEth + " tokens from " + senderAddress);
                     stopListenToTikTokAddress();
+                    Optional<WalletRepository.UserIdOnly> userId = walletRepository.findUserIdByWalletAddressCaseInsensitive(processedSenderAddress);
+                    if (userId.isPresent()) {
+                        Transaction tx = transactionRepository.findFirstByUserIdOrderByTransactionDateDesc(userId.get().getUserId());
+                        tx.setIsPaid(true);
+                        transactionRepository.save(tx);
+                        System.out.println("Transaction ID = " + tx.getId() + " is paid the due amount in TokToken.");
+                        System.out.println("USER ID = " + userId.get().getUserId());
+                    } else {
+                        System.out.println("No user found with this wallet address.");
+
+                    }
                 }
             }
         });
@@ -117,10 +148,39 @@ public class ContractService {
                 BigInteger amountReceivedInEth = Convert.fromWei(weiAmount.toString(), Convert.Unit.ETHER).toBigInteger();
 
                 String cleanReceiverAddress = receiverAddress.substring(2).toLowerCase();
+
+                // Remove the '0x' prefix and convert to lowercase
+                String cleanSenderAddress = senderAddress.substring(2).toLowerCase();
+                System.out.println("cleanSenderAddress = " + cleanSenderAddress);
+                // Remove leading zeros and add the '0x' prefix back, required for MongoDB query
+                String processedSenderAddress = "0x" + cleanSenderAddress.replaceFirst("^0+(?!$)", "");
+                System.out.println("Processed sender address = " + processedSenderAddress);
+
                 String cleanTikTokAddress = address.substring(2).toLowerCase();
                 if (cleanReceiverAddress.contains(cleanTikTokAddress)) {
                     System.out.println(cleanReceiverAddress + " received " + amountReceivedInEth + " tokens from " + senderAddress);
                     stopListenToSellerAddress();
+                    Optional<WalletRepository.UserIdOnly> userId = walletRepository.findUserIdByWalletAddressCaseInsensitive(processedSenderAddress);
+                    if (userId.isPresent()) {
+                        System.out.println("User ID = " + userId.get().getUserId());
+                        Optional<BuyerProfile> buyerProfile = buyerProfileRepository.findByUserId(userId.get().getUserId());
+                        if (buyerProfile.isPresent()) {
+                            Transaction tx = transactionRepository.findFirstByBuyerProfileIdOrderByTransactionDateDesc(buyerProfile.get().getId());
+                            System.out.println("**Transaction ID: " + tx.getId());
+                            tx.setIsPaid(true);
+                            System.out.println(tx.getIsPaid());
+                            System.out.println(tx.getTransactionType());
+                            System.out.println(tx.getPurchaseType());
+                            System.out.printf("is paid = %s\n", tx.getIsPaid() ? "true" : "false");
+                            System.out.println("Transaction ID = " + tx.getId() + " is paid the due amount in TokToken.");
+                            System.out.println("USER ID = " + userId.get().getUserId());
+                            transactionRepository.save(tx);
+                        } else {
+                            System.out.println("No buyer found with this wallet address.");
+                        }
+                    } else {
+                        System.out.println("No user found with this wallet address.");
+                    }
                 }
             }
         });

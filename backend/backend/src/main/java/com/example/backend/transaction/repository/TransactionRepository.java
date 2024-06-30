@@ -11,4 +11,11 @@ public interface TransactionRepository extends MongoRepository<Transaction, Stri
     List<Transaction> findByBuyerProfileId(String buyerProfileId);
 
     List<Transaction> findBySellerProfileId(String sellerProfileId);
+
+    // for conversion
+    Transaction findFirstByUserIdOrderByTransactionDateDesc(String userId);
+
+    // for purchase
+    Transaction findFirstByBuyerProfileIdOrderByTransactionDateDesc(String buyerProfileId);
+
 }
