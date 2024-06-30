@@ -109,6 +109,14 @@ const SideBar = () => {
         </svg>
         <p className={`hidden md:flex_col_center ${pathname.startsWith('/live') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>LIVE</p>
       </Link>
+        
+      {user?.sellerProfile && 
+      <Link href="/seller" className="flex justify-center items-center gap-2">
+        <FaShop className={`${pathname.startsWith('/seller') ? "text-tiktok-black" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
+        <div className="flex_center gap-1.5">
+          <p className={`hidden md:flex_col_center ${pathname.startsWith('/shop') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Seller Studio</p>
+        </div>
+      </Link>}
 
       <Link href="/profile" className="flex justify-center items-center gap-2">
         <svg fill={`${pathname.startsWith('/profile') ? "rgba(254, 44, 85, 1)" : "rgba(22, 24, 35, 1)"}`} width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">

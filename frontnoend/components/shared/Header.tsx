@@ -26,6 +26,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { FaShop } from "react-icons/fa6";
 
 const Header: React.FC = () => {
 
@@ -40,6 +41,16 @@ const Header: React.FC = () => {
   const handleCloseLoginPopup = () => setLoginPopupOpen(false);
 
   const handleToggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+
+  const sellerOption = (
+    user?.sellerProfile &&
+    <DropdownMenuItem className="hover:bg-slate-200">
+      <Link href="/seller" className="flex_center gap-2 mb-2 hover:cursor-pointer">
+        <FaShop className="w-6 h-6 cursor-pointer" />
+        <span className="font-medium">Seller Studio</span>
+      </Link>
+    </DropdownMenuItem>
+  )
 
   return (
     <>
@@ -106,6 +117,7 @@ const Header: React.FC = () => {
                         <span className="font-medium">View Profile</span>
                       </Link>
                     </DropdownMenuItem>
+                    {sellerOption}
                     <DropdownMenuItem className="hover:bg-slate-200">
                       <Link href="/wallet" className="flex_center gap-2 mb-2 hover:cursor-pointer">
                         <FaWallet className='text-tiktok-gray w-5 h-5 cursor-pointer' />

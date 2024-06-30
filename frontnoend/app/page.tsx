@@ -12,8 +12,18 @@ const HomePage = () => {
 
 
   // HARDCODE
-  const userDetails = {
+  const buyerDetails = {
     username: "buyer",
+    password: "password",
+  }
+
+  const sellerDetails = {
+    username: "seller",
+    password: "password",
+  }
+
+  const userDetails = {
+    username: "user",
     password: "password",
   }
   
@@ -26,9 +36,15 @@ const HomePage = () => {
       </div>
       :
       <div>
-        <button className="bg-green-400 px-4 py-2 rounded-lg" onClick={()=>{auth?.signIn(userDetails)}}>
-        Quick Log In (Hardcode)
-      </button>
+        <button className="bg-green-400 px-4 p-2 m-2 rounded-lg" onClick={()=>{auth?.signIn(buyerDetails)}}>
+        Quick Buyer Log In (Hardcode)
+        </button>
+        <button className="bg-green-400 px-4 p-2 m-2 rounded-lg" onClick={()=>{auth?.signIn(sellerDetails)}}>
+        Quick Seller Log In (Hardcode)
+        </button>
+        <button className="bg-green-400 px-4 p-2 m-2 rounded-lg" onClick={()=>{auth?.signIn(userDetails)}}>
+        Quick User Log In (Hardcode)
+        </button>
       </div>
       }
 
