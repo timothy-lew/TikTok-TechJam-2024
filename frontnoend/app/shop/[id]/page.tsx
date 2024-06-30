@@ -1,12 +1,5 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,7 +22,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { ArrowLeft, Terminal } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ProductDetailsSkeleton } from "@/components/shop/ProductCard";
+import { ProductCardDetails, ProductDetailsSkeleton } from "@/components/shop/ProductCard";
 import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
 import { BuyerInfo, Product } from "@/types/ShopTypes";
 
@@ -240,7 +233,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
       )}
       {isModalOpen && product && buyerInfo && (
         <>
-          <Modal
+          <ConfirmPurchaseModal
             product={product}
             quantity={quantity}
             buyer={buyerInfo}
@@ -302,63 +295,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
   );
 }
 
-function ProductCardDetails({
-  product,
-  sellerBusinessName,
-  openModal,
-}: {
-  product: Product;
-  sellerBusinessName: string | null;
-  openModal: () => void;
-}) {
-  const { id, name, description, price, quantity, imageUrl } = product;
-  return (
-    <div className="w-full sm:w-1/2 mx-auto">
-      <Card className="flex overflow-hidden flex-col">
-        <div className="relative w-full h-auto aspect-video">
-          {imageUrl && (
-            <Image
-              src={`data:image/png;base64,${imageUrl}`}
-              fill
-              alt={name}
-              className="object-contain w-full h-full"
-            />
-          )}
-        </div>
-        <CardHeader>
-          <CardTitle>{name}</CardTitle>
-          <CardDescription>
-            ${price} or {product.tokTokenPrice} TikTok Coins
-          </CardDescription>
-
-          <CardDescription>
-            Sold by{" "}
-            <Link
-              className="underline"
-              href={`/shop/seller/${product.sellerProfileId}`}
-            >
-              {sellerBusinessName}
-            </Link>
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <h3 className="line-clamp-4">{description}</h3>
-          <p>Quantity available: {quantity}</p>
-        </CardContent>
-        <CardFooter>
-          <Button
-            onClick={openModal}
-            size="lg"
-            className="w-full bg-red-500 hover:bg-red-600"
-          >
-            Buy Now
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
-  );
-}
-type ModalProps = {
+type ConfirmPurchaseModalProps = {
   product: Product;
   quantity: number;
   buyer: BuyerInfo;
@@ -368,7 +305,7 @@ type ModalProps = {
   shippingAddress: string;
 };
 
-const Modal = ({
+const ConfirmPurchaseModal = ({
   product,
   quantity,
   buyer,
@@ -376,7 +313,7 @@ const Modal = ({
   onClose,
   onConfirmTiktokCoin,
   shippingAddress,
-}: ModalProps) => {
+}: ConfirmPurchaseModalProps) => {
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuantity(parseInt(event.target.value, 10));
   };
