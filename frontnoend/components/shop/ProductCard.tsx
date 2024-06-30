@@ -9,6 +9,7 @@ import {
 import { Button } from "../ui/button"
 import Link from "next/link"
 import Image from "next/image"
+import { Product } from "@/types/ShopTypes"
 
 type ProductCardProps = {
   id: string
@@ -107,4 +108,61 @@ export function ProductDetailsSkeleton() {
       </Card>
     </div>
   )
+}
+
+export function ProductCardDetails({
+  product,
+  sellerBusinessName,
+  openModal,
+}: {
+  product: Product;
+  sellerBusinessName: string | null;
+  openModal: () => void;
+}) {
+  const { id, name, description, price, quantity, imageUrl } = product;
+  return (
+    <div className="w-full sm:w-1/2 mx-auto">
+      <Card className="flex overflow-hidden flex-col">
+        <div className="relative w-full h-auto aspect-video">
+          {imageUrl && (
+            <Image
+              src={`data:image/png;base64,${imageUrl}`}
+              fill
+              alt={name}
+              className="object-contain w-full h-full"
+            />
+          )}
+        </div>
+        <CardHeader>
+          <CardTitle>{name}</CardTitle>
+          <CardDescription>
+            ${price} or {product.tokTokenPrice} TikTok Coins
+          </CardDescription>
+
+          <CardDescription>
+            Sold by{" "}
+            <Link
+              className="underline"
+              href={`/shop/seller/${product.sellerProfileId}`}
+            >
+              {sellerBusinessName}
+            </Link>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <h3 className="line-clamp-4">{description}</h3>
+          <p>Quantity available: {quantity}</p>
+        </CardContent>
+        <CardFooter>
+          <Button
+            onClick={openModal}
+            size="lg"
+            className="w-full bg-red-500 hover:bg-red-600"
+          >
+            Buy Now
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
+  );
 }
