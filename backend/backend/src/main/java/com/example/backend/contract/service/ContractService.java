@@ -4,6 +4,8 @@ import com.example.backend.contract.TOKToken;
 import com.example.backend.contract.dto.SendCryptoDTO;
 import com.example.backend.transaction.model.Transaction;
 import com.example.backend.transaction.repository.TransactionRepository;
+import com.example.backend.user.model.BuyerProfile;
+import com.example.backend.user.repository.BuyerProfileRepository;
 import com.example.backend.wallet.repository.WalletRepository;
 import io.reactivex.disposables.Disposable;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +53,8 @@ public class ContractService {
     private WalletRepository walletRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private BuyerProfileRepository buyerProfileRepository;
 
     private Disposable tikTokSubscription;
     private Disposable sellerSubscription;
@@ -144,10 +148,39 @@ public class ContractService {
                 BigInteger amountReceivedInEth = Convert.fromWei(weiAmount.toString(), Convert.Unit.ETHER).toBigInteger();
 
                 String cleanReceiverAddress = receiverAddress.substring(2).toLowerCase();
+
+                // Remove the '0x' prefix and convert to lowercase
+                String cleanSenderAddress = senderAddress.substring(2).toLowerCase();
+                System.out.println("cleanSenderAddress = " + cleanSenderAddress);
+                // Remove leading zeros and add the '0x' prefix back, required for MongoDB query
+                String processedSenderAddress = "0x" + cleanSenderAddress.replaceFirst("^0+(?!$)", "");
+                System.out.println("Processed sender address = " + processedSenderAddress);
+
                 String cleanTikTokAddress = address.substring(2).toLowerCase();
                 if (cleanReceiverAddress.contains(cleanTikTokAddress)) {
                     System.out.println(cleanReceiverAddress + " received " + amountReceivedInEth + " tokens from " + senderAddress);
                     stopListenToSellerAddress();
+                    Optional<WalletRepository.UserIdOnly> userId = walletRepository.findUserIdByWalletAddressCaseInsensitive(processedSenderAddress);
+                    if (userId.isPresent()) {
+                        System.out.println("User ID = " + userId.get().getUserId());
+                        Optional<BuyerProfile> buyerProfile = buyerProfileRepository.findByUserId(userId.get().getUserId());
+                        if (buyerProfile.isPresent()) {
+                            Transaction tx = transactionRepository.findFirstByBuyerProfileIdOrderByTransactionDateDesc(buyerProfile.get().getId());
+                            System.out.println("**Transaction ID: " + tx.getId());
+                            tx.setIsPaid(true);
+                            System.out.println(tx.getIsPaid());
+                            System.out.println(tx.getTransactionType());
+                            System.out.println(tx.getPurchaseType());
+                            System.out.printf("is paid = %s\n", tx.getIsPaid() ? "true" : "false");
+                            System.out.println("Transaction ID = " + tx.getId() + " is paid the due amount in TokToken.");
+                            System.out.println("USER ID = " + userId.get().getUserId());
+                            transactionRepository.save(tx);
+                        } else {
+                            System.out.println("No buyer found with this wallet address.");
+                        }
+                    } else {
+                        System.out.println("No user found with this wallet address.");
+                    }
                 }
             }
         });
