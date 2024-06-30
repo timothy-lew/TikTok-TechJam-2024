@@ -23,8 +23,6 @@ public class BuyerProfileService {
         this.commonValidationAndGetService = commonValidationAndGetService;
     }
 
-    // TODO Incorporate creation of transaction history in createBuyerProfile methods
-
     // Overloaded method for creating buyer profile during sign up process
     public BuyerProfile createBuyerProfile(UserDTO userDTO, String userId) {
         if (userDTO.getRoles().contains(User.Role.ROLE_BUYER.name())) {

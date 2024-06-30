@@ -1,5 +1,6 @@
 package com.example.backend.user.dto;
 
+import com.example.backend.user.validation.ValidProfileFields;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,6 +16,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
+@ValidProfileFields // handles validation for buyer & seller fields
 public class UserDTO {
     private String id;
     @NotBlank(message = "Username is required")
