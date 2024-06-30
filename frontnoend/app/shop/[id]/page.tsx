@@ -94,19 +94,18 @@ export default function ProductDetailsPage({ params }: PageProps) {
             },
           }
         );
-      
+
         if (!statusResponse.ok) {
           throw new Error("Network response was not ok");
         }
-      
+
         const statusText = await statusResponse.text();
         console.log("Status text:", statusText);
-      
+
         const success = statusText.trim() === "true";
-      
+
         return success;
       };
-      
 
       const startTime = Date.now();
       const timeout = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -118,7 +117,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
         }
 
         const status = await checkTransactionStatus();
-        console.log("Status to close modal fail or success: " + status)
+        console.log("Status to close modal fail or success: " + status);
         if (status) {
           setAlertDialogContent(
             "Purchase successful! Redirecting to home page..."
@@ -137,7 +136,14 @@ export default function ProductDetailsPage({ params }: PageProps) {
       pollTransactionStatus();
     } catch (error) {
       console.error("Error during purchase:", error);
-      setAlertDialogContent("Error during purchase. Please try again.");
+      setAlertDialogContent(
+        `Error during purchase. Please try again. ${error}`
+      );
+
+      setTimeout(() => {
+        setIsAlertDialogOpen(false);
+        closeModal();
+      }, 3000);
     }
   };
 
