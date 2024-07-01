@@ -41,9 +41,10 @@ export function ProductCard({ product }: { product: Product }) {
             ${price} or{" "}
             {discountedTokTokenPrice ? (
               <>
-                {discountedTokTokenPrice}{" "}
-                <s className="text-sm text-gray-700">{tokTokenPrice}</s> TOK
-                Coins
+                {discountedTokTokenPrice} TOK Coins{" "}
+                <s className="text-xs text-gray-700">
+                  {tokTokenPrice} TOK Coins
+                </s>
               </>
             ) : (
               `${tokTokenPrice} TOK Coins`
@@ -173,9 +174,10 @@ export function ProductCardDetails({
               ${price} or{" "}
               {discountedTokTokenPrice ? (
                 <>
-                  {discountedTokTokenPrice}{" "}
-                  <s className="text-sm text-gray-700">{tokTokenPrice}</s> TOK
-                  Coins
+                  {discountedTokTokenPrice} TOK Coins{" "}
+                  <s className="text-xs text-gray-700">
+                    {tokTokenPrice} TOK Coins
+                  </s>
                 </>
               ) : (
                 `${tokTokenPrice} TOK Coins`

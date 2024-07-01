@@ -7,7 +7,7 @@ import Link from "next/link";
 import {
   ProductCardSkeleton,
   ProductCard,
-} from "@/components/shop/ProductCard";
+} from "@/components/shop/ProductCards";
 import { useAuth } from "@/hooks/auth-provider";
 import { Product } from "@/types/ShopTypes";
 

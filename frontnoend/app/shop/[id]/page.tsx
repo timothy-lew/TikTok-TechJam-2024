@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import {
   ProductCardDetails,
   ProductDetailsSkeleton,
-} from "@/components/shop/ProductCard";
+} from "@/components/shop/ProductCards";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
 import TOKTransactionAlertDialog from "@/components/shop/TOKTransactionAlertDialog";
