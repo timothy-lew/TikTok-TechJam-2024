@@ -30,7 +30,7 @@ const CurrencyExchangePage: React.FC = () => {
 
   const walletData = auth.userWallet;
 
-  const { convertCurrency, success, isConverting, error } = useConvertCurrency();
+  const { convertCurrency, checkTransactionStatus, success, isConverting, error } = useConvertCurrency();
 
   const [amount, setAmount] = useState<number | null>(null);
   const [conversionType, setConversionType] = useState<"CASH_TO_TOKTOKEN" | "TOKTOKEN_TO_CASH">("TOKTOKEN_TO_CASH");
@@ -39,9 +39,30 @@ const CurrencyExchangePage: React.FC = () => {
   const TIKTOK_WALLET_ADDRESS : string = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
   // Popup dependencies
+  const givenTime = 5 * 60;
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+  const [remainingTime, setRemainingTime] = useState<number>(givenTime);
   const [autoCloseTimer, setAutoCloseTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
-  const AUTO_CANCEL_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+  
+  const formatTime = (time: number): string => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+  const [transactionID, settransactionID] = useState<string | null>(null);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isAlertDialogOpen && remainingTime > 0) {
+      timer = setInterval(() => {
+        setRemainingTime((prevTime) => prevTime - 1);
+      }, 1000);
+    }
+  
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isAlertDialogOpen, remainingTime]);
 
   const { toast } = useToast()
 
@@ -61,20 +82,29 @@ const CurrencyExchangePage: React.FC = () => {
       conversionType,
     });
 
+
     if (convertedResult.status == "success"){
-      auth.setUserWallet((prev) => {
-        if (!prev) return null;
-        return {
-          ...prev,
-          cashBalance: prev.cashBalance + convertedResult.cashConverted,
-          tokTokenBalance: prev.tokTokenBalance + convertedResult.coinsConverted,
-        };
-      });
-  
-      toast({
-        title: "Success!",
-        description: "Your wallet has been updated",
-      })
+
+      if (conversionType==="TOKTOKEN_TO_CASH"){
+        settransactionID(convertedResult.transactionID);
+      }
+      else{
+        auth.setUserWallet((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            cashBalance: prev.cashBalance + convertedResult.cashConverted,
+            tokTokenBalance: prev.tokTokenBalance + convertedResult.coinsConverted,
+          };
+        });
+    
+        toast({
+          title: "Success!",
+          description: "Your wallet has been updated",
+        })
+
+      }
+
     }
     else{
       toast({
@@ -83,13 +113,22 @@ const CurrencyExchangePage: React.FC = () => {
       })
     }
 
-
     setIsAlertDialogOpen(true);
+    setRemainingTime(givenTime); // Reset timer
+    
+    // the first input which is the function will get called after `AUTO_CANCEL_TIMEOUT` milliseconds
     setAutoCloseTimer(
       setTimeout(() => {
         setIsAlertDialogOpen(false);
-      }, AUTO_CANCEL_TIMEOUT)
+        setRemainingTime(givenTime); // Reset timer
+        toast({
+          variant: "destructive",
+          title: "Exchange Aborted",
+          description: "Time out for transaction",
+        })
+      }, givenTime*1000)
     );
+
   };
 
   useEffect(() => {
@@ -99,6 +138,40 @@ const CurrencyExchangePage: React.FC = () => {
       }
     };
   }, [autoCloseTimer]);
+
+  const handleTransferConfirmation = async () => {
+    if (!transactionID) return;
+
+    const accessToken = await auth?.obtainAccessToken();
+    if (!accessToken) return;
+
+    const success = await checkTransactionStatus({ transactionID, accessToken });
+
+    if (success) {
+      // Update wallet balance
+      auth.setUserWallet((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          cashBalance: prev.cashBalance + calculatedAmount!,
+          tokTokenBalance: prev.tokTokenBalance - Number(amount),
+        };
+      });
+
+      toast({
+        title: "Success!",
+        description: "Your wallet has been updated",
+      });
+    } else {
+      toast({
+        title: "Transaction Failed",
+        description: "The transaction was not completed in time",
+      });
+    }
+
+    setIsAlertDialogOpen(false);
+    setRemainingTime(5 * 60); // Reset timer
+  };
   
 
   const calculatedAmount = amount && amount * (conversionType === "CASH_TO_TOKTOKEN" ? EXCHANGE_RATE : 1 / EXCHANGE_RATE);
@@ -204,11 +277,23 @@ const CurrencyExchangePage: React.FC = () => {
                 <p>
                   Transactions can take up to 3 minutes to be processed<br />Your patience is appreciated!
                 </p>
+                <p className="mt-4 font-bold">Time remaining: {formatTime(remainingTime)}</p>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={()=>setIsAlertDialogOpen(false)} className="hover:bg-red-50 hover:text-black">Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={()=>setIsAlertDialogOpen(false)} className="hover:bg-red-600">Transferred</AlertDialogAction>
+              <AlertDialogCancel onClick={() => {
+                setIsAlertDialogOpen(false);
+                setRemainingTime(givenTime); // Reset timer
+              }} className="hover:bg-red-50 hover:text-black">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={() => {
+                setIsAlertDialogOpen(false);
+                handleTransferConfirmation();
+                setRemainingTime(givenTime); // Reset timer
+              }} className="hover:bg-red-600">
+                Transferred
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
