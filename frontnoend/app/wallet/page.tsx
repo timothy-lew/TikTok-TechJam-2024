@@ -103,7 +103,7 @@ const WalletPage: React.FC = () => {
               <div className="flex_col_center gap-2">
                 <div className="flex justify-start items-center gap-2 w-full">
                   <button
-                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-300 w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-100 w-full sm:w-auto"
                     onClick={() => setHideDetails((prev) => !prev)}
                   >
                     <Image
@@ -117,7 +117,7 @@ const WalletPage: React.FC = () => {
                 </div>
                 <div className="flex justify-start items-center gap-2 w-full">
                   <button
-                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-300 w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-100 w-full sm:w-auto"
                     onClick={() => {}}
                   >
                     <Image
@@ -132,7 +132,7 @@ const WalletPage: React.FC = () => {
                 <div className="flex justify-start items-center gap-2 w-full">
                   <Link
                     href="/wallet/topup"
-                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-300 w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-100 w-full sm:w-auto"
                   >
                     <Image
                       src="/icons/topup.svg"
@@ -146,7 +146,7 @@ const WalletPage: React.FC = () => {
               <div className="flex justify-start items-center gap-2 w-full">
                   <Link
                     href="/wallet/exchange"
-                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-300 w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-100 w-full sm:w-auto"
                   >
                     <Image
                       src="/icons/exchange.svg"
