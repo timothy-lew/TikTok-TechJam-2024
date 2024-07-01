@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/auth-provider";
 import Link from "next/link";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
+import { useToast } from "@/components/ui/use-toast"
 
 import {
   AlertDialog,
@@ -42,7 +43,7 @@ const CurrencyExchangePage: React.FC = () => {
   const [autoCloseTimer, setAutoCloseTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
   const AUTO_CANCEL_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 
-
+  const { toast } = useToast()
 
   const handleExchange = async () => {
     const userId = auth?.user?.id || null;
@@ -60,14 +61,28 @@ const CurrencyExchangePage: React.FC = () => {
       conversionType,
     });
 
-    auth.setUserWallet((prev) => {
-      if (!prev) return null;
-      return {
-        ...prev,
-        cashBalance: prev.cashBalance + convertedResult.cashConverted,
-        tokTokenBalance: prev.tokTokenBalance + convertedResult.coinsConverted,
-      };
-    });
+    if (convertedResult.status == "success"){
+      auth.setUserWallet((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          cashBalance: prev.cashBalance + convertedResult.cashConverted,
+          tokTokenBalance: prev.tokTokenBalance + convertedResult.coinsConverted,
+        };
+      });
+  
+      toast({
+        title: "Success!",
+        description: "Your wallet has been updated",
+      })
+    }
+    else{
+      toast({
+        title: "Unsuccessful!",
+        description: "Something went wrong!",
+      })
+    }
+
 
     setIsAlertDialogOpen(true);
     setAutoCloseTimer(
@@ -160,8 +175,16 @@ const CurrencyExchangePage: React.FC = () => {
             {conversionType === "CASH_TO_TOKTOKEN" ? "TikTok Coins" : 'SGD'}
           </p>
         </div>
-
         
+        {conversionType==="CASH_TO_TOKTOKEN" ?
+          <button
+          onClick={handleExchange}
+          disabled={!amount}
+          className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
+        >
+          Exchange Cash
+        </button>
+        :
         <AlertDialog open={isAlertDialogOpen}>
           <AlertDialogTrigger asChild>
             <button
@@ -169,7 +192,7 @@ const CurrencyExchangePage: React.FC = () => {
               disabled={!amount}
               className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
             >
-              Exchange Currency
+              Exchange Tokens
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -189,6 +212,9 @@ const CurrencyExchangePage: React.FC = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        }
+        
+
       </div>
 
       <Link
