@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Gift } from "lucide-react";
@@ -41,6 +41,12 @@ export default function ProductDetailsPage({ params }: PageProps) {
   const [alertDialogContent, setAlertDialogContent] = useState("");
   const router = useRouter();
 
+  const transactionTOKCancelledRef = useRef(transactionTOKCancelled);
+
+  useEffect(() => {
+    transactionTOKCancelledRef.current = transactionTOKCancelled;
+  }, [transactionTOKCancelled]);
+
   const confirmPurchaseTiktokCoin = async () => {
     if (!buyerInfo || !product || !sellerId) {
       console.error("Missing required information for purchase");
@@ -56,6 +62,9 @@ export default function ProductDetailsPage({ params }: PageProps) {
     };
 
     console.log("Payload for purchase:", payload);
+
+    setIsAlertDialogOpen(true); // Open the AlertDialog to show the address and countdown
+    setTransactionTOKCancelled(false); // Reset cancellation status
 
     setIsAlertDialogOpen(true); // Open the AlertDialog to show the address and countdown
 
@@ -86,6 +95,9 @@ export default function ProductDetailsPage({ params }: PageProps) {
       }
 
       const checkTransactionStatus = async () => {
+        if (transactionTOKCancelledRef.current) {
+          return false;
+        }
         const statusResponse = await fetch(
           `http://localhost:8080/api/transactions/status/${transactionID}`,
           {
@@ -112,24 +124,32 @@ export default function ProductDetailsPage({ params }: PageProps) {
       const interval = 5000; // 5 seconds in milliseconds
 
       const pollTransactionStatus = async () => {
-        if (Date.now() - startTime >= timeout) {
-          throw new Error("Transaction timed out");
+        while (Date.now() - startTime < timeout) {
+          if (transactionTOKCancelledRef.current) {
+            return;
+          }
+
+          const status = await checkTransactionStatus();
+
+          console.log("Status to close modal fail or success: " + status);
+          if (status && !transactionTOKCancelledRef.current) {
+            setAlertDialogContent(
+              "Purchase successful! Redirecting to home page..."
+            );
+            setTimeout(() => {
+              setIsAlertDialogOpen(false); // Close the alert dialog
+              closeModal();
+              console.log("Redirecting to homepage...");
+              router.push("/shop");
+            }, 3000); // 3-second delay to show redirect to shop home
+            return;
+          } else {
+            await new Promise((resolve) => setTimeout(resolve, interval));
+          }
         }
 
-        const status = await checkTransactionStatus();
-        console.log("Status to close modal fail or success: " + status);
-        if (status) {
-          setAlertDialogContent(
-            "Purchase successful! Redirecting to home page..."
-          );
-          setTimeout(() => {
-            setIsAlertDialogOpen(false); // Close the alert dialog
-            closeModal();
-            console.log("Redirecting to homepage...");
-            router.push("/shop");
-          }, 3000); // 3-second delay to show redirect to shop home
-        } else {
-          setTimeout(pollTransactionStatus, interval);
+        if (!transactionTOKCancelledRef.current) {
+          throw new Error("Transaction timed out");
         }
       };
 
@@ -151,8 +171,8 @@ export default function ProductDetailsPage({ params }: PageProps) {
   const user = auth?.user || null;
 
   useEffect(() => {
-    console.log("transactionTOKCancelled" + transactionTOKCancelled);
-  });
+    console.log("transactionTOKCancelled status: " + transactionTOKCancelled);
+  }, [transactionTOKCancelled]);
 
   useEffect(() => {
     const getAccessToken = async () => {
@@ -225,6 +245,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
   }, [params.id, accessToken]);
 
   const cancelTransaction = () => {
+    setTransactionTOKCancelled(true);
     setIsAlertDialogOpen(false);
     setAlertDialogContent("");
   };
