@@ -17,6 +17,7 @@ import {
     alertDialogContent: string;
     product: Product;
     quantity: number;
+    unitTOKTokenCost: number;
     onCancelTransaction: () => void;
   }
   
@@ -26,6 +27,7 @@ import {
     alertDialogContent,
     product,
     quantity,
+    unitTOKTokenCost,
     onCancelTransaction,
   }: TOKTransactionAlertDialogProps) => {
     const [countdown, setCountdown] = useState(300); // Set initial countdown time  5 mins
@@ -74,7 +76,7 @@ import {
                 alertDialogContent === "" && (
                   <>
                     <p>
-                      <strong>{product.tokTokenPrice * quantity} TOK Coins</strong>{" "}
+                      <strong>{unitTOKTokenCost * quantity} TOK Coins</strong>{" "}
                       Please make your payment of{" "}
                       to the following
                     </p>

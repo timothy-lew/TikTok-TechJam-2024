@@ -287,6 +287,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
             alertDialogContent={alertDialogContent}
             product={product}
             quantity={quantity}
+            unitTOKTokenCost={product.discountedTokTokenPrice? product.discountedTokTokenPrice: product.tokTokenPrice}
             onCancelTransaction={cancelTransaction}
           />
         </>
@@ -341,18 +342,25 @@ const ConfirmPurchaseModal = ({
         <h3 className="text-2xl leading-6 font-medium text-gray-900 text-center mb-4">
           Confirm Purchase
         </h3>
-        <Alert className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-          <div className="flex items-center">
-            <Gift className="h-5 w-5 mr-2" />
-            <div className="text-m">
-              <AlertTitle className="font-bold">Enjoy 10% Off!</AlertTitle>
-              <AlertDescription className="text-m">
-                Checkout using TOK Coin as your payment method to enjoy 10%
-                savings!
-              </AlertDescription>
+        {product.discountedTokTokenPrice ? (
+          <Alert className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+            <div className="flex items-center">
+              <Gift className="h-5 w-5 mr-2" />
+              <div className="text-m">
+                <AlertTitle className="font-bold">
+                  Enjoy {product.discountRate} Off!
+                </AlertTitle>
+                <AlertDescription className="text-m">
+                  Checkout using TOK Coin as your payment method to enjoy{" "}
+                  {product.discountRate} savings!
+                </AlertDescription>
+              </div>
             </div>
-          </div>
-        </Alert>
+          </Alert>
+        ) : (
+          ""
+        )}
+
         <div className="border border-gray-300 rounded-lg p-4">
           <div className="text-sm text-gray-900 space-y-2">
             <p className="font-bold">Please review your purchase details:</p>
@@ -365,10 +373,17 @@ const ConfirmPurchaseModal = ({
             <p className="p-1">Shipping Address: {shippingAddress}</p>
             <p className="p-1">
               Price:{" "}
-              <strong>
-                ${(product.price * quantity).toFixed(2)} or{" "}
-                {product.tokTokenPrice * quantity} TOK Coins
-              </strong>
+              {product.discountedTokTokenPrice ? (
+                <strong>
+                  ${(product.price * quantity).toFixed(2)} or{" "}
+                  {product.discountedTokTokenPrice * quantity} TOK Coins
+                </strong>
+              ) : (
+                <strong>
+                  ${(product.price * quantity).toFixed(2)} or{" "}
+                  {product.tokTokenPrice * quantity} TOK Coins
+                </strong>
+              )}
             </p>
             <div className="p-1 flex items-center space-x-2">
               <span>Quantity:</span>
