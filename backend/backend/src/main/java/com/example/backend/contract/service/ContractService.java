@@ -8,9 +8,7 @@ import com.example.backend.user.model.BuyerProfile;
 import com.example.backend.user.repository.BuyerProfileRepository;
 import com.example.backend.wallet.repository.WalletRepository;
 import io.reactivex.disposables.Disposable;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.EventEncoder;
@@ -33,46 +31,53 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ContractService {
-    @Value("${web3.rpc.url}")
-//    private String rpcUrl;
-    private String rpcUrl = "http://127.0.0.1:8545";
-
-    @Value("${web3.contract.address}")
-//    private String contractAddress;
-    private String contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-
-    @Value("${web3.wallet.private-key}")
-//    private String privateKey;
-    private String privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-
+    private final String rpcUrl;
+    private final String contractAddress;
+    private final String tikTokAddress;
+    private final String privateKey;
     private final Web3j web3j;
     private final TOKToken contract;
-    @Autowired
-    private WalletRepository walletRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
-    @Autowired
-    private BuyerProfileRepository buyerProfileRepository;
-
+    private final WalletRepository walletRepository;
+    private final TransactionRepository transactionRepository;
+    private final BuyerProfileRepository buyerProfileRepository;
     private Disposable tikTokSubscription;
     private Disposable sellerSubscription;
 
 
-    public ContractService() {
+    public ContractService(@Value("${web3.rpc.url}") String rpcUrl,
+                           @Value("${web3.contract.address}") String contractAddress,
+                           @Value("${web3.contract.tikTokAddress}") String tikTokAddress,
+                           @Value("${web3.wallet.private-key}") String privateKey,
+                           WalletRepository walletRepository,
+                           TransactionRepository transactionRepository,
+                           BuyerProfileRepository buyerProfileRepository) {
+        this.rpcUrl = rpcUrl;
+        this.contractAddress = contractAddress;
+        this.tikTokAddress = tikTokAddress;
+        this.privateKey = privateKey;
+        this.walletRepository = walletRepository;
+        this.transactionRepository = transactionRepository;
+        this.buyerProfileRepository = buyerProfileRepository;
+
+        log.info("*****rpcUrl = {}, contractAddress = {}, privateKey = {}*****", rpcUrl, contractAddress, privateKey);
+
         this.web3j = Web3j.build(new HttpService(rpcUrl));
         Credentials credentials = Credentials.create(privateKey);
+        log.info("*****Credentials = {}*****", credentials.getAddress());
 
         TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
+        log.info("*****TransactionManager = {}*****", transactionManager.toString());
+
         ContractGasProvider gasProvider = new DefaultGasProvider();
+        log.info("*****GasProvider = {}*****", gasProvider.toString());
+
         this.contract = TOKToken.load(contractAddress, web3j, transactionManager, gasProvider);
+        log.info("*****Contract = {}*****", contract.toString());
     }
 
     public void listenToTikTokAddress() {
         Web3j web3j = Web3j.build(new HttpService(rpcUrl));
-        String tikTokAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
-        String contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
         // Subscribe to token transfer events
         EthFilter filter = new EthFilter(
@@ -125,7 +130,6 @@ public class ContractService {
 
     public void listenToSellerAddress(String address) {
         Web3j web3j = Web3j.build(new HttpService(rpcUrl));
-        String contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
         // Subscribe to token transfer events
         EthFilter filter = new EthFilter(
