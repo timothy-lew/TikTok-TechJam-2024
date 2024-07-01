@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/auth-provider";
-import Image from "next/image";
 import Link from "next/link";
-// import { useWallet } from "@/hooks/wallet-provider";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
 
 const CurrencyExchangePage: React.FC = () => {
   const auth = useAuth();
@@ -21,44 +31,62 @@ const CurrencyExchangePage: React.FC = () => {
 
   const { convertCurrency, success, isConverting, error } = useConvertCurrency();
 
-  const [amount, setAmount] = useState<string>("");
+  const [amount, setAmount] = useState<number | null>(null);
   const [conversionType, setConversionType] = useState<"CASH_TO_TOKTOKEN" | "TOKTOKEN_TO_CASH">("TOKTOKEN_TO_CASH");
 
   const EXCHANGE_RATE = 10;
+  const TIKTOK_WALLET_ADDRESS : string = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+
+  // Popup dependencies
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+  const [autoCloseTimer, setAutoCloseTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const AUTO_CANCEL_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+
+
 
   const handleExchange = async () => {
-
-    const userId = user?.id || null;
-
+    const userId = auth?.user?.id || null;
     const accessToken = await auth?.obtainAccessToken();
-    // const userId = 'HARDCODE'
-    // const accessToken = 'HARDCODE'
 
-
-    if (!walletData || !userId || !accessToken){
-      return
+    if (!auth?.userWallet || !userId || !accessToken) {
+      return;
     }
 
     const convertedResult = await convertCurrency({
       accessToken,
       userId,
-      cashToConvert: conversionType==='CASH_TO_TOKTOKEN' ? Number(amount) : 0,
-      tokTokenToConvert: conversionType==='CASH_TO_TOKTOKEN' ? 0 : Number(amount),
-      conversionType
+      cashToConvert: conversionType === "CASH_TO_TOKTOKEN" ? Number(amount) : 0,
+      tokTokenToConvert: conversionType === "CASH_TO_TOKTOKEN" ? 0 : Number(amount),
+      conversionType,
     });
 
-    auth.setUserWallet((prev)=>{
+    auth.setUserWallet((prev) => {
       if (!prev) return null;
-      return({
+      return {
         ...prev,
         cashBalance: prev.cashBalance + convertedResult.cashConverted,
         tokTokenBalance: prev.tokTokenBalance + convertedResult.coinsConverted,
-    })})
+      };
+    });
 
-
+    setIsAlertDialogOpen(true);
+    setAutoCloseTimer(
+      setTimeout(() => {
+        setIsAlertDialogOpen(false);
+      }, AUTO_CANCEL_TIMEOUT)
+    );
   };
 
-  const calculatedAmount = parseFloat(amount) * (conversionType === "CASH_TO_TOKTOKEN" ? EXCHANGE_RATE : 1 / EXCHANGE_RATE);
+  useEffect(() => {
+    return () => {
+      if (autoCloseTimer) {
+        clearTimeout(autoCloseTimer);
+      }
+    };
+  }, [autoCloseTimer]);
+  
+
+  const calculatedAmount = amount && amount * (conversionType === "CASH_TO_TOKTOKEN" ? EXCHANGE_RATE : 1 / EXCHANGE_RATE);
 
   return (
     <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
@@ -112,10 +140,10 @@ const CurrencyExchangePage: React.FC = () => {
           </label>
           <div className="flex items-center">
             <input
-              type="number"
+              // type="number"
               id="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              value={amount || ""}
+              onChange={(e) => setAmount(Number(e.target.value))}
               className="flex-grow px-3 py-2 border border-input rounded-l-md focus:outline-none focus:ring-2 focus:ring-tiktok-red"
               placeholder="Enter amount"
             />
@@ -128,17 +156,39 @@ const CurrencyExchangePage: React.FC = () => {
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">You will receive:</h3>
           <p className="text-2xl font-bold text-tiktok-red">
-            {isNaN(calculatedAmount) ? "0" : calculatedAmount.toFixed(2)}{" "}
+            {calculatedAmount ?  calculatedAmount.toFixed(2) : ""}{" "}
             {conversionType === "CASH_TO_TOKTOKEN" ? "TikTok Coins" : 'SGD'}
           </p>
         </div>
 
-        <button
-          onClick={handleExchange}
-          className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold"
-        >
-          Exchange Currency
-        </button>
+        
+        <AlertDialog open={isAlertDialogOpen}>
+          <AlertDialogTrigger asChild>
+            <button
+              onClick={handleExchange}
+              disabled={!amount}
+              className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
+            >
+              Exchange Currency
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Initiate your Transfer</AlertDialogTitle>
+              <AlertDialogDescription>
+                <p>Please send {amount} Tok Tokens to this wallet address:</p>
+                <WalletAddressBar wallet_address={TIKTOK_WALLET_ADDRESS}></WalletAddressBar>
+                <p>
+                  Transactions can take up to 3 minutes to be processed<br />Your patience is appreciated!
+                </p>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={()=>setIsAlertDialogOpen(false)} className="hover:bg-red-50 hover:text-black">Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={()=>setIsAlertDialogOpen(false)} className="hover:bg-red-600">Transferred</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       <Link
