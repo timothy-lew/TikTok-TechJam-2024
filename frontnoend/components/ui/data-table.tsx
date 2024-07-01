@@ -66,14 +66,14 @@ export function DataTable<TData, TValue>({
   return (
     <div className="rounded-md border">
       <div className="flex_center gap-4 py-4">
-        <Input
+        {/* <Input
           placeholder="Filter receiver..."
           value={(table.getColumn("receiver")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("receiver")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
-        />
+        /> */}
         <Select
           onValueChange={(value) => {
             if (value === CLEAR_FILTER_VALUE) {
