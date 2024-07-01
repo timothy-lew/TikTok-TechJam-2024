@@ -1,5 +1,6 @@
 package com.example.backend.item.model;
 
+import com.example.backend.rates.model.DiscountRate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,9 @@ public class Item {
     private String description;
     private Float price;
     private Float tokTokenPrice;
+    private DiscountRate discountRate;
+    private Float discountedPrice;
+    private Float discountedTokTokenPrice;
     private Integer quantity;
     private Binary image; // MongoDB requires Binary type for storing images
     private String businessName;

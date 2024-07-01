@@ -1,0 +1,13 @@
+[{
+  "_id": {
+    "$oid": "668289deace6272d1c6168f1"
+  },
+  "rate": 10,
+  "applyTo": [
+    "TOKTOKEN_PRICE"
+  ],
+  "timestamp": {
+    "$date": "2024-07-01T10:50:06.092Z"
+  },
+  "_class": "com.example.backend.rates.model.DiscountRate"
+}]

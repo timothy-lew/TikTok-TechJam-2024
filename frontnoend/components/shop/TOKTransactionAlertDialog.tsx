@@ -63,7 +63,7 @@ import {
   
     return (
       <AlertDialog open={isOpen} onOpenChange={onClose}>
-        <AlertDialogContent>
+        <AlertDialogContent className="w-[1200px]">
           <AlertDialogHeader>
             <AlertDialogTitle>Transaction Status</AlertDialogTitle>
             <AlertDialogDescription>
@@ -74,8 +74,8 @@ import {
                 alertDialogContent === "" && (
                   <>
                     <p>
-                      Please make your payment of{" "}
                       <strong>{product.tokTokenPrice * quantity} TOK Coins</strong>{" "}
+                      Please make your payment of{" "}
                       to the following
                     </p>
                     <p>

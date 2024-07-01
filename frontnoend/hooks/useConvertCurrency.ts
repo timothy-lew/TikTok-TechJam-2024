@@ -1,3 +1,5 @@
+"use client"
+
 import { access } from 'fs';
 import { useState } from 'react';
 
@@ -21,6 +23,10 @@ export function useConvertCurrency() {
     setSuccess(false);
     setError(null);
 
+    console.log(`Exchange in mode: ${conversionType}`);
+    console.log(`userId: ${userId}`);
+    console.log(`cashToConvert: ${cashToConvert}`);
+    console.log(`tokTokenToConvert: ${tokTokenToConvert}`);
 
     try{
 
@@ -40,22 +46,7 @@ export function useConvertCurrency() {
       
       const result = await response.json();
 
-      // const result = {
-      //   "id": "667e5c946a4555794aea0a22",
-      //   "transactionType": "CONVERSION",
-      //   "transactionDate": "2024-06-28T14:47:48.681908",
-      //   "userId": "667c1b41d2687e76c2bfca09",
-      //   "purchaseDetails": null,
-      //   "topUpDetails": null,
-      //   "conversionDetails": {
-      //       "conversionRate": 0.1,
-      //       "cashToConvert": null,
-      //       "tokTokenToConvert": 2000.0,
-      //       "convertedAmount": 200.0,
-      //       "conversionType": "TOKTOKEN_TO_CASH"
-      //   },
-      //   "withdrawDetails": null
-      //  }
+      console.log(result);
 
        if (conversionType==="CASH_TO_TOKTOKEN"){
         return {
@@ -66,6 +57,7 @@ export function useConvertCurrency() {
    
        else{
         return {
+          status: "success",
           cashConverted: Number(result.conversionDetails.convertedAmount),
           coinsConverted: Number(result.conversionDetails.tokTokenToConvert) * -1
         }
@@ -80,6 +72,7 @@ export function useConvertCurrency() {
     }
 
     return {
+      status: "failed",
       cashConverted: 0,
       coinsConverted: 0
     };
