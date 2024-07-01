@@ -52,7 +52,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
       console.error("Missing required information for purchase");
       return;
     }
-
+  
     const payload = {
       buyerProfileId: buyerInfo.buyerProfile.id,
       sellerProfileId: sellerId,
@@ -60,14 +60,12 @@ export default function ProductDetailsPage({ params }: PageProps) {
       quantity: quantity,
       purchaseType: "TOK_TOKEN",
     };
-
+  
     console.log("Payload for purchase:", payload);
-
+  
     setIsAlertDialogOpen(true); // Open the AlertDialog to show the address and countdown
     setTransactionTOKCancelled(false); // Reset cancellation status
-
-    setIsAlertDialogOpen(true); // Open the AlertDialog to show the address and countdown
-
+  
     try {
       const response = await fetch(
         "http://localhost:8080/api/transactions/purchase",
@@ -80,20 +78,20 @@ export default function ProductDetailsPage({ params }: PageProps) {
           body: JSON.stringify(payload),
         }
       );
-
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+  
       const data = await response.json();
       const transactionID = data.id;
       console.log("Transaction initiated:", data);
       console.log("Transaction ID: " + data.id);
-
+  
       if (!transactionID) {
         throw new Error("Transaction ID is null");
       }
-
+  
       const checkTransactionStatus = async () => {
         if (transactionTOKCancelledRef.current) {
           return false;
@@ -106,31 +104,32 @@ export default function ProductDetailsPage({ params }: PageProps) {
             },
           }
         );
-
+  
         if (!statusResponse.ok) {
           throw new Error("Network response was not ok");
         }
-
+  
         const statusText = await statusResponse.text();
         console.log("Status text:", statusText);
-
+  
         const success = statusText.trim() === "true";
-
+  
         return success;
       };
-
+  
       const startTime = Date.now();
       const timeout = 5 * 60 * 1000; // 5 minutes in milliseconds
       const interval = 5000; // 5 seconds in milliseconds
-
+  
       const pollTransactionStatus = async () => {
-        while (Date.now() - startTime < timeout) {
+        let transactionSuccessful = false;
+        do {
           if (transactionTOKCancelledRef.current) {
             return;
           }
-
+  
           const status = await checkTransactionStatus();
-
+  
           console.log("Status to close modal fail or success: " + status);
           if (status && !transactionTOKCancelledRef.current) {
             setAlertDialogContent(
@@ -142,30 +141,31 @@ export default function ProductDetailsPage({ params }: PageProps) {
               console.log("Redirecting to homepage...");
               router.push("/shop");
             }, 3000); // 3-second delay to show redirect to shop home
-            return;
+            transactionSuccessful = true;
           } else {
             await new Promise((resolve) => setTimeout(resolve, interval));
           }
-        }
-
-        if (!transactionTOKCancelledRef.current) {
+        } while (!transactionSuccessful && Date.now() - startTime < timeout);
+  
+        if (!transactionTOKCancelledRef.current && !transactionSuccessful) {
           throw new Error("Transaction timed out");
         }
       };
-
-      pollTransactionStatus();
+  
+      await pollTransactionStatus();
     } catch (error) {
       console.error("Error during purchase:", error);
       setAlertDialogContent(
         `Error during purchase. Please try again. ${error}`
       );
-
+  
       setTimeout(() => {
         setIsAlertDialogOpen(false);
         closeModal();
       }, 3000);
     }
   };
+  
 
   const auth = useAuth();
   const user = auth?.user || null;
