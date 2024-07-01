@@ -52,7 +52,7 @@ public class TransactionService {
     }
 
     public TransactionResponseDTO createPurchaseTransaction(PurchaseTransactionDTO dto) {
-        // Fetch the item to get its price
+        // Fetch the item to get its price and discount information
         Item item = itemRepository.findById(dto.getItemId())
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
@@ -61,14 +61,15 @@ public class TransactionService {
             throw new RuntimeException("Insufficient quantity");
         }
 
-        // Calculate total amount based on purchase type
+        // Calculate total amount based on purchase type and apply discount if available
         float totalAmount;
         if (Transaction.PurchaseType.CASH.equals(Transaction.PurchaseType.valueOf(dto.getPurchaseType()))) {
-            totalAmount = item.getPrice() * dto.getQuantity();
+            float priceToUse = item.getDiscountedPrice() != null ? item.getDiscountedPrice() : item.getPrice();
+            totalAmount = priceToUse * dto.getQuantity();
         } else if (Transaction.PurchaseType.TOK_TOKEN.equals(Transaction.PurchaseType.valueOf(dto.getPurchaseType()))) {
             // Fetch current conversion rate
-            float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
-            totalAmount = item.getPrice() * dto.getQuantity() * conversionRate;
+            float priceToUse = item.getDiscountedTokTokenPrice() != null ? item.getDiscountedTokTokenPrice() : item.getTokTokenPrice();
+            totalAmount = priceToUse * dto.getQuantity();
         } else {
             throw new RuntimeException("Unsupported purchase type");
         }
