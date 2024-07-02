@@ -16,56 +16,78 @@ export function useConvertCurrency() {
   const [success, setSuccess] = useState<boolean>(false);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-
-  const checkTransactionStatus = async ({transactionID, accessToken} : {transactionID: string, accessToken: string}) => {
-
-    const pollInterval = 5000 // poll every 5 seconds
-    const maxAttempts = 66 // window is 5 minutes long, added 30 more seconds of buffer
-
-    return new Promise((resolve)=>{
-      let attempts = 0;
   
-      const poll = () => {
-        setTimeout(async () => {
-          try {
-            const response = await fetch(`http://localhost:8080/api/transactions/status/${transactionID}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-              }
-            });
-      
-            const result = await response.json(); // result is simply a boolean
-      
-            console.log("received transaction status:", result);
+  // no poll, polling done on caller
+  const checkTransactionStatus = async ({transactionID, accessToken}: {transactionID: string, accessToken: string}): Promise<boolean> => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/transactions/status/${transactionID}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+
+      const result = await response.json();
+      console.log("received transaction status:", result);
+
+      return result;
+    } catch (error) {
+      console.log("Error in check status", error);
+      return false;
+    }
+  };
+
+  // old implementation - polling done here
+  // const checkTransactionStatus = async ({transactionID, accessToken} : {transactionID: string, accessToken: string}) => {
+
+  //   const pollInterval = 5000 // poll every 5 seconds
+  //   const maxAttempts = 66 // window is 5 minutes long, added 30 more seconds of buffer
+
+  //   return new Promise((resolve)=>{
+  //     let attempts = 0;
   
-            if (result){
-              console.log("transaction successful");
-              resolve(true);
-            }
-            else if (attempts < maxAttempts){
-              attempts ++;
-              poll();
-            }
-            else{
-              console.log("waitied for 5mins");
-              resolve(false);
-            }
+  //     const poll = () => {
+  //       setTimeout(async () => {
+  //         try {
+  //           const response = await fetch(`http://localhost:8080/api/transactions/status/${transactionID}`, {
+  //             method: 'GET',
+  //             headers: {
+  //               'Content-Type': 'application/json',
+  //               'Authorization': `Bearer ${accessToken}`
+  //             }
+  //           });
+      
+  //           const result = await response.json(); // result is simply a boolean
+      
+  //           console.log("received transaction status:", result);
+  
+  //           if (result){
+  //             console.log("transaction successful");
+  //             resolve(true);
+  //           }
+  //           else if (attempts < maxAttempts){
+  //             attempts ++;
+  //             poll();
+  //           }
+  //           else{
+  //             console.log("waitied for 5mins");
+  //             resolve(false);
+  //           }
             
-          }
-          catch(error){
-            console.log("Error in check status")
-            resolve(false);
-          }
-        })
-      }
+  //         }
+  //         catch(error){
+  //           console.log("Error in check status")
+  //           resolve(false);
+  //         }
+  //       })
+  //     }
   
-      poll();
-    })
+  //     poll();
+  //   })
 
 
-  }
+  // }
 
   const convertCurrency = async ({accessToken, userId, cashToConvert, tokTokenToConvert, conversionType}: ConvertCurrencyProps) => {
 

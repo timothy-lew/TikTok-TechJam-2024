@@ -84,10 +84,12 @@ const CurrencyExchangePage: React.FC = () => {
     });
 
 
-    if (convertedResult.status == "success"){
+    if (convertedResult.status === "success"){
 
       if (conversionType==="TOKTOKEN_TO_CASH"){
         settransactionID(convertedResult.transactionID);
+        setIsAlertDialogOpen(true);
+        setRemainingTime(givenTime);
       }
       else{
         auth.setUserWallet((prev) => {
@@ -131,6 +133,56 @@ const CurrencyExchangePage: React.FC = () => {
     );
 
   };
+
+  // background polling while dialog is open
+  const [isPolling, setIsPolling] = useState(false);
+
+  const handleSuccessfulTransfer = () => {
+    setIsAlertDialogOpen(false);
+    if (autoCloseTimer) {
+      clearTimeout(autoCloseTimer);
+    }
+    
+    // Update wallet balance
+    auth.setUserWallet((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        cashBalance: prev.cashBalance + calculatedAmount!,
+        tokTokenBalance: prev.tokTokenBalance - Number(amount),
+      };
+    });
+
+    toast({
+      title: "Success!",
+      description: "Your wallet has been updated",
+    });
+  };
+
+  useEffect(() => {
+    let pollingInterval: NodeJS.Timeout;
+    
+    // only background poll if alert dialog is open
+    if (isAlertDialogOpen && transactionID) {
+      setIsPolling(true);
+      pollingInterval = setInterval(async () => {
+        const accessToken = await auth?.obtainAccessToken();
+        if (accessToken) {
+          const success = await checkTransactionStatus({ transactionID, accessToken });
+          if (success) {
+            handleSuccessfulTransfer();
+          }
+        }
+      }, 3000); // Poll every 3 seconds
+    }
+
+    return () => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+      setIsPolling(false);
+    };
+  }, [isAlertDialogOpen, transactionID]);
 
   useEffect(() => {
     return () => {
