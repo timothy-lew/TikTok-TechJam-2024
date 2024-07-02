@@ -65,10 +65,10 @@ public class WalletService {
             walletRepository.save(sellerWallet);
         } else if (purchaseType == Transaction.PurchaseType.TOK_TOKEN) {
             if (contractService.getBalance(buyerWallet.getWalletAddress()).compareTo(amount) < 0) {
+                log.info("TokToken balance: {}", contractService.getBalance(buyerWallet.getWalletAddress()));
+                log.info("Amount in TokToken required: {}", amount);
                 throw new RuntimeException("Insufficient TokToken balance");
             }
-            // TODO: Validation if time allows
-            // Assumption: Happy flow; buyer indeed manually sent toktoken through the plugin to seller's address, no validation here
             contractService.listenToSellerAddress(sellerWallet.getWalletAddress());
             // Then manually, through the crypto plugin, send the amount to tiktok's wallet address
         }
@@ -98,8 +98,6 @@ public class WalletService {
             if (tokTokenBalance.compareTo(originalAmount) < 0) {
                 throw new RuntimeException("Insufficient token balance");
             }
-            // TODO: Validation if time allows
-            // Assumption: Happy flow; user indeed manually sent toktoken through the plugin to tiktok's address, no validation here
             contractService.listenToTikTokAddress();
             // Then manually, through the crypto plugin, send the amount to tiktok's wallet address
             wallet.setCashBalance(wallet.getCashBalance().add(convertedAmount));
@@ -121,5 +119,5 @@ public class WalletService {
         wallet.setCashBalance(currentBalance.subtract(amount));
         walletRepository.save(wallet);
     }
-    
+
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Gift } from "lucide-react";
@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import {
   ProductCardDetails,
   ProductDetailsSkeleton,
-} from "@/components/shop/ProductCard";
+} from "@/components/shop/ProductCards";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
 import TOKTransactionAlertDialog from "@/components/shop/TOKTransactionAlertDialog";
@@ -41,12 +41,18 @@ export default function ProductDetailsPage({ params }: PageProps) {
   const [alertDialogContent, setAlertDialogContent] = useState("");
   const router = useRouter();
 
+  const transactionTOKCancelledRef = useRef(transactionTOKCancelled);
+
+  useEffect(() => {
+    transactionTOKCancelledRef.current = transactionTOKCancelled;
+  }, [transactionTOKCancelled]);
+
   const confirmPurchaseTiktokCoin = async () => {
     if (!buyerInfo || !product || !sellerId) {
       console.error("Missing required information for purchase");
       return;
     }
-
+  
     const payload = {
       buyerProfileId: buyerInfo.buyerProfile.id,
       sellerProfileId: sellerId,
@@ -54,11 +60,12 @@ export default function ProductDetailsPage({ params }: PageProps) {
       quantity: quantity,
       purchaseType: "TOK_TOKEN",
     };
-
+  
     console.log("Payload for purchase:", payload);
-
+  
     setIsAlertDialogOpen(true); // Open the AlertDialog to show the address and countdown
-
+    setTransactionTOKCancelled(false); // Reset cancellation status
+  
     try {
       const response = await fetch(
         "http://localhost:8080/api/transactions/purchase",
@@ -71,21 +78,24 @@ export default function ProductDetailsPage({ params }: PageProps) {
           body: JSON.stringify(payload),
         }
       );
-
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+  
       const data = await response.json();
       const transactionID = data.id;
       console.log("Transaction initiated:", data);
       console.log("Transaction ID: " + data.id);
-
+  
       if (!transactionID) {
         throw new Error("Transaction ID is null");
       }
-
+  
       const checkTransactionStatus = async () => {
+        if (transactionTOKCancelledRef.current) {
+          return false;
+        }
         const statusResponse = await fetch(
           `http://localhost:8080/api/transactions/status/${transactionID}`,
           {
@@ -94,65 +104,75 @@ export default function ProductDetailsPage({ params }: PageProps) {
             },
           }
         );
-
+  
         if (!statusResponse.ok) {
           throw new Error("Network response was not ok");
         }
-
+  
         const statusText = await statusResponse.text();
         console.log("Status text:", statusText);
-
+  
         const success = statusText.trim() === "true";
-
+  
         return success;
       };
-
+  
       const startTime = Date.now();
       const timeout = 5 * 60 * 1000; // 5 minutes in milliseconds
       const interval = 5000; // 5 seconds in milliseconds
-
+  
       const pollTransactionStatus = async () => {
-        if (Date.now() - startTime >= timeout) {
+        let transactionSuccessful = false;
+        do {
+          if (transactionTOKCancelledRef.current) {
+            return;
+          }
+  
+          const status = await checkTransactionStatus();
+  
+          console.log("Status to close modal fail or success: " + status);
+          if (status && !transactionTOKCancelledRef.current) {
+            setAlertDialogContent(
+              "Purchase successful! Redirecting to home page..."
+            );
+            setTimeout(() => {
+              setIsAlertDialogOpen(false); // Close the alert dialog
+              closeModal();
+              console.log("Redirecting to homepage...");
+              router.push("/shop");
+            }, 3000); // 3-second delay to show redirect to shop home
+            transactionSuccessful = true;
+          } else {
+            await new Promise((resolve) => setTimeout(resolve, interval));
+          }
+        } while (!transactionSuccessful && Date.now() - startTime < timeout);
+  
+        if (!transactionTOKCancelledRef.current && !transactionSuccessful) {
           throw new Error("Transaction timed out");
         }
-
-        const status = await checkTransactionStatus();
-        console.log("Status to close modal fail or success: " + status);
-        if (status) {
-          setAlertDialogContent(
-            "Purchase successful! Redirecting to home page..."
-          );
-          setTimeout(() => {
-            setIsAlertDialogOpen(false); // Close the alert dialog
-            closeModal();
-            console.log("Redirecting to homepage...");
-            router.push("/shop");
-          }, 3000); // 3-second delay to show redirect to shop home
-        } else {
-          setTimeout(pollTransactionStatus, interval);
-        }
       };
-
-      pollTransactionStatus();
+  
+      await pollTransactionStatus();
     } catch (error) {
       console.error("Error during purchase:", error);
       setAlertDialogContent(
         `Error during purchase. Please try again. ${error}`
       );
-
+  
       setTimeout(() => {
         setIsAlertDialogOpen(false);
         closeModal();
       }, 3000);
     }
   };
+  
 
   const auth = useAuth();
   const user = auth?.user || null;
 
   useEffect(() => {
-    console.log("transactionTOKCancelled" + transactionTOKCancelled);
-  });
+    console.log("transactionTOKCancelled status: " + transactionTOKCancelled);
+  }, [transactionTOKCancelled]);
 
   useEffect(() => {
     const getAccessToken = async () => {
@@ -225,6 +245,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
   }, [params.id, accessToken]);
 
   const cancelTransaction = () => {
+    setTransactionTOKCancelled(true);
     setIsAlertDialogOpen(false);
     setAlertDialogContent("");
   };
@@ -266,6 +287,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
             alertDialogContent={alertDialogContent}
             product={product}
             quantity={quantity}
+            unitTOKTokenCost={product.discountedTokTokenPrice? product.discountedTokTokenPrice: product.tokTokenPrice}
             onCancelTransaction={cancelTransaction}
           />
         </>
@@ -320,18 +342,25 @@ const ConfirmPurchaseModal = ({
         <h3 className="text-2xl leading-6 font-medium text-gray-900 text-center mb-4">
           Confirm Purchase
         </h3>
-        <Alert className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-          <div className="flex items-center">
-            <Gift className="h-5 w-5 mr-2" />
-            <div className="text-m">
-              <AlertTitle className="font-bold">Enjoy 10% Off!</AlertTitle>
-              <AlertDescription className="text-m">
-                Checkout using TOK Coin as your payment method to enjoy 10%
-                savings!
-              </AlertDescription>
+        {product.discountedTokTokenPrice ? (
+          <Alert className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+            <div className="flex items-center">
+              <Gift className="h-5 w-5 mr-2" />
+              <div className="text-m">
+                <AlertTitle className="font-bold">
+                  Enjoy {product.discountRate} Off!
+                </AlertTitle>
+                <AlertDescription className="text-m">
+                  Checkout using TOK Coin as your payment method to enjoy{" "}
+                  {product.discountRate} savings!
+                </AlertDescription>
+              </div>
             </div>
-          </div>
-        </Alert>
+          </Alert>
+        ) : (
+          ""
+        )}
+
         <div className="border border-gray-300 rounded-lg p-4">
           <div className="text-sm text-gray-900 space-y-2">
             <p className="font-bold">Please review your purchase details:</p>
@@ -344,10 +373,17 @@ const ConfirmPurchaseModal = ({
             <p className="p-1">Shipping Address: {shippingAddress}</p>
             <p className="p-1">
               Price:{" "}
-              <strong>
-                ${(product.price * quantity).toFixed(2)} or{" "}
-                {product.tokTokenPrice * quantity} TOK Coins
-              </strong>
+              {product.discountedTokTokenPrice ? (
+                <strong>
+                  ${(product.price * quantity).toFixed(2)} or{" "}
+                  {product.discountedTokTokenPrice * quantity} TOK Coins
+                </strong>
+              ) : (
+                <strong>
+                  ${(product.price * quantity).toFixed(2)} or{" "}
+                  {product.tokTokenPrice * quantity} TOK Coins
+                </strong>
+              )}
             </p>
             <div className="p-1 flex items-center space-x-2">
               <span>Quantity:</span>

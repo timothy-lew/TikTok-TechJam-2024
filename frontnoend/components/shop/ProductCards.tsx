@@ -5,52 +5,75 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card"
-import { Button } from "../ui/button"
-import Link from "next/link"
-import Image from "next/image"
-import { Product } from "@/types/ShopTypes"
+} from "../ui/card";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import Image from "next/image";
+import { Product } from "@/types/ShopTypes";
 
-type ProductCardProps = {
-  id: string
-  name: string
-  priceInCents: number
-  tokTokenPrice: number
-  description: string
-  imagePath: string
-}
-
-export function ProductCard({
-  id,
-  name,
-  priceInCents,
-  tokTokenPrice,
-  description,
-  imagePath,
-}: ProductCardProps) {
+export function ProductCard({ product }: { product: Product }) {
+  const {
+    id,
+    name,
+    description,
+    price,
+    quantity,
+    imageUrl,
+    discountedTokTokenPrice,
+    tokTokenPrice,
+  } = product;
   return (
     <Card className="flex overflow-hidden flex-col">
       <div className="relative w-full h-auto aspect-video">
-        {imagePath && <Image src={`data:image/png;base64,${imagePath}`} fill alt={name} className="object-contain w-full h-full" />}
-
+        {imageUrl && (
+          <Image
+            src={`data:image/png;base64,${imageUrl}`}
+            fill
+            alt={name}
+            className="object-contain w-full h-full"
+          />
+        )}
       </div>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>${priceInCents} or {tokTokenPrice} TOK Coins</CardDescription>
+        <CardDescription>
+          <h3 className="text-lg font-bold  text-red-500">
+            ${price} or{" "}
+            {discountedTokTokenPrice ? (
+              <>
+                {discountedTokTokenPrice} TOK Coins{" "}
+                <s className="text-xs text-gray-700">
+                  {tokTokenPrice} TOK Coins
+                </s>
+              </>
+            ) : (
+              `${tokTokenPrice} TOK Coins`
+            )}
+          </h3>
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
-        <p className="line-clamp-4">{description}</p>
+        Sold by{" "}
+        <Link
+          className="underline"
+          href={`/shop/seller/${product.sellerProfileId}`}
+        >
+          {product.businessName}
+        </Link>
       </CardContent>
+
       <CardFooter>
-      <Button asChild size="lg" className="w-full bg-white text-black border border-gray-400 hover:bg-black hover:text-white focus:bg-black focus:text-white">
+        <Button
+          asChild
+          size="lg"
+          className="w-full bg-white text-black border border-gray-400 hover:bg-black hover:text-white focus:bg-black focus:text-white"
+        >
           <Link href={`/shop/${id}/`}>Purchase</Link>
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
-
-
 
 export function ProductCardSkeleton() {
   return (
@@ -73,10 +96,8 @@ export function ProductCardSkeleton() {
         <Button className="w-full" disabled size="lg"></Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
-
-
 
 export function ProductDetailsSkeleton() {
   return (
@@ -101,13 +122,17 @@ export function ProductDetailsSkeleton() {
           <div className="w-1/4 h-4 rounded-full bg-gray-300" />
         </CardContent>
         <CardFooter>
-          <Button className="w-full bg-gray-300 text-transparent" disabled size="lg">
+          <Button
+            className="w-full bg-gray-300 text-transparent"
+            disabled
+            size="lg"
+          >
             Buy Now
           </Button>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
 
 export function ProductCardDetails({
@@ -119,7 +144,16 @@ export function ProductCardDetails({
   sellerBusinessName: string | null;
   openModal: () => void;
 }) {
-  const { id, name, description, price, quantity, imageUrl } = product;
+  const {
+    id,
+    name,
+    description,
+    price,
+    quantity,
+    imageUrl,
+    discountedTokTokenPrice,
+    tokTokenPrice,
+  } = product;
   return (
     <div className="w-full sm:w-1/2 mx-auto">
       <Card className="flex overflow-hidden flex-col">
@@ -136,9 +170,20 @@ export function ProductCardDetails({
         <CardHeader>
           <CardTitle>{name}</CardTitle>
           <CardDescription>
-            ${price} or {product.tokTokenPrice} TOK Coins
+            <h3 className="text-lg font-bold  text-red-500">
+              ${price} or{" "}
+              {discountedTokTokenPrice ? (
+                <>
+                  {discountedTokTokenPrice} TOK Coins{" "}
+                  <s className="text-xs text-gray-700">
+                    {tokTokenPrice} TOK Coins
+                  </s>
+                </>
+              ) : (
+                `${tokTokenPrice} TOK Coins`
+              )}
+            </h3>
           </CardDescription>
-
           <CardDescription>
             Sold by{" "}
             <Link
@@ -149,6 +194,7 @@ export function ProductCardDetails({
             </Link>
           </CardDescription>
         </CardHeader>
+
         <CardContent className="flex-grow">
           <h3 className="line-clamp-4">{description}</h3>
           <p>Quantity available: {quantity}</p>

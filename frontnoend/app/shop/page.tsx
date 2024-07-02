@@ -7,7 +7,7 @@ import Link from "next/link";
 import {
   ProductCardSkeleton,
   ProductCard,
-} from "@/components/shop/ProductCard";
+} from "@/components/shop/ProductCards";
 import { useAuth } from "@/hooks/auth-provider";
 import { Product } from "@/types/ShopTypes";
 
@@ -27,14 +27,7 @@ const ProductGridSection = ({ products }: { products: Product[] }) => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            priceInCents={product.price}
-            tokTokenPrice={product.tokTokenPrice}
-            description={product.description}
-            imagePath={product.imageUrl}
+          <ProductCard product={product}
           />
         ))}
       </div>

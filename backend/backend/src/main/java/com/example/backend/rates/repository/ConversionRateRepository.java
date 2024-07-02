@@ -1,6 +1,6 @@
-package com.example.backend.rate.repository;
+package com.example.backend.rates.repository;
 
-import com.example.backend.rate.model.ConversionRate;
+import com.example.backend.rates.model.ConversionRate;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;

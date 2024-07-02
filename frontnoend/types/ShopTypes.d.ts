@@ -9,6 +9,10 @@ export type Product = {
   businessName: string;
   sellerWalletAddress: string;
   tokTokenPrice: number;
+  discountRate: number;
+  discountAppliesTo: string[];
+  discountedPrice: number;
+  discountedTokTokenPrice: number;
 };
 
 export type BuyerInfo = {

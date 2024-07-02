@@ -1,4 +1,4 @@
-package com.example.backend.rate.model;
+package com.example.backend.rates.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -17,6 +17,7 @@ import {
     alertDialogContent: string;
     product: Product;
     quantity: number;
+    unitTOKTokenCost: number;
     onCancelTransaction: () => void;
   }
   
@@ -26,9 +27,10 @@ import {
     alertDialogContent,
     product,
     quantity,
+    unitTOKTokenCost,
     onCancelTransaction,
   }: TOKTransactionAlertDialogProps) => {
-    const [countdown, setCountdown] = useState(300); // Set initial countdown time (e.g., 5 minutes)
+    const [countdown, setCountdown] = useState(300); // Set initial countdown time  5 mins
     const [showUnsuccessfulMessage, setShowUnsuccessfulMessage] = useState(false);
   
     const formatTime = (time: number) => {
@@ -63,7 +65,7 @@ import {
   
     return (
       <AlertDialog open={isOpen} onOpenChange={onClose}>
-        <AlertDialogContent>
+        <AlertDialogContent className="w-[1200px]">
           <AlertDialogHeader>
             <AlertDialogTitle>Transaction Status</AlertDialogTitle>
             <AlertDialogDescription>
@@ -74,8 +76,8 @@ import {
                 alertDialogContent === "" && (
                   <>
                     <p>
-                      Please make your payment of{" "}
-                      <strong>{product.tokTokenPrice * quantity} TOK Coins</strong>{" "}
+                      
+                      Please make payment of <strong>{unitTOKTokenCost * quantity} TOK Coins</strong>{" "}
                       to the following
                     </p>
                     <p>
