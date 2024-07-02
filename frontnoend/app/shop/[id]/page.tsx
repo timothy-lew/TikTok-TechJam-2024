@@ -287,7 +287,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
             alertDialogContent={alertDialogContent}
             product={product}
             quantity={quantity}
-            unitTOKTokenCost={product.discountedTokTokenPrice? product.discountedTokTokenPrice: product.tokTokenPrice}
+            unitTOKTokenCost={product.discountedTokTokenPrice? (Math.floor(product.discountedTokTokenPrice)): product.tokTokenPrice}
             onCancelTransaction={cancelTransaction}
           />
         </>
@@ -376,7 +376,7 @@ const ConfirmPurchaseModal = ({
               {product.discountedTokTokenPrice ? (
                 <strong>
                   ${(product.price * quantity).toFixed(2)} or{" "}
-                  {product.discountedTokTokenPrice * quantity} TOK Coins
+                  {(Math.floor(product.discountedTokTokenPrice)) * quantity} TOK Coins
                 </strong>
               ) : (
                 <strong>
