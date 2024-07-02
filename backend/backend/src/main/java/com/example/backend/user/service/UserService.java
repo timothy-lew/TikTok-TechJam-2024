@@ -1,5 +1,6 @@
 package com.example.backend.user.service;
 
+import com.example.backend.common.exception.InvalidPrincipalException;
 import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.user.dto.UserDTO;
 import com.example.backend.user.dto.UserResponseDTO;
@@ -37,6 +38,11 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO createUser(UserDTO userDTO) {
+        // Check if username already exists
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new InvalidPrincipalException("Username already exists");
+        }
+
         User user = userMapper.fromUserDTOtoUserForCreate(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User savedUser = userRepository.save(user);
