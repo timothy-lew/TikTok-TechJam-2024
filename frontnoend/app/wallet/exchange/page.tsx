@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/auth-provider";
 import Link from "next/link";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
+import { useFetchExchangeRate } from "@/hooks/useFetchExchangeRate";
 import { useToast } from "@/components/ui/use-toast"
 
 import {
@@ -26,8 +27,6 @@ const CurrencyExchangePage: React.FC = () => {
 
   const user = auth?.user || null;
   
-  // const {walletData, setWalletData} = useWallet();
-
   const walletData = auth.userWallet;
 
   const { convertCurrency, checkTransactionStatus, success, isConverting, error } = useConvertCurrency();
@@ -35,7 +34,17 @@ const CurrencyExchangePage: React.FC = () => {
   const [amount, setAmount] = useState<number | null>(null);
   const [conversionType, setConversionType] = useState<"CASH_TO_TOKTOKEN" | "TOKTOKEN_TO_CASH">("TOKTOKEN_TO_CASH");
 
-  const EXCHANGE_RATE = 10;
+  const { exchangeRate } = useFetchExchangeRate();
+
+  const [EXCHANGE_RATE, setExchangeRateNow] = useState<null | number>(null);
+
+
+  useEffect(() => {
+    setExchangeRateNow(exchangeRate);
+  
+  }, [exchangeRate])
+  
+
   // const TIKTOK_WALLET_ADDRESS : string = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; - i think this is old wallet
   const TIKTOK_WALLET_ADDRESS : string = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 
@@ -227,7 +236,7 @@ const CurrencyExchangePage: React.FC = () => {
   };
   
 
-  const calculatedAmount = amount && amount * (conversionType === "CASH_TO_TOKTOKEN" ? EXCHANGE_RATE : 1 / EXCHANGE_RATE);
+  const calculatedAmount = amount && amount * (conversionType === "CASH_TO_TOKTOKEN" ? EXCHANGE_RATE || 1 : 1 / (EXCHANGE_RATE || 1));
 
   return (
     <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
@@ -246,7 +255,11 @@ const CurrencyExchangePage: React.FC = () => {
           </div>
           <div>
             <h2 className="text-lg font-semibold mb-2">Exchange Rate</h2>
+            {EXCHANGE_RATE ?
             <p className="text-muted-foreground">1 SGD = {EXCHANGE_RATE} TikTok Coins</p>
+            :
+            <p className="text-muted-foreground">Loading Exchange Rate....</p>  
+            }
           </div>
         </div>
 
@@ -305,7 +318,7 @@ const CurrencyExchangePage: React.FC = () => {
         {conversionType==="CASH_TO_TOKTOKEN" ?
           <button
           onClick={handleExchange}
-          disabled={!amount}
+          disabled={!amount && !EXCHANGE_RATE}
           className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
         >
           Exchange Cash
@@ -315,7 +328,7 @@ const CurrencyExchangePage: React.FC = () => {
           <AlertDialogTrigger asChild>
             <button
               onClick={handleExchange}
-              disabled={!amount}
+              disabled={!amount && !EXCHANGE_RATE}
               className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
             >
               Exchange Tokens

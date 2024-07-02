@@ -28,7 +28,7 @@ const WalletPage: React.FC = () => {
   const auth = useAuth();
   const user = auth?.user || null;
   const [isLoginPopupOpen, setLoginPopupOpen] = useState(user === null);
-  const [hideDetails, setHideDetails] = useState<boolean>(false);
+  const [hideDetails, setHideDetails] = useState<boolean>(true);
 
   const handleClosePopup = () => setLoginPopupOpen(false);
 
@@ -166,7 +166,7 @@ const WalletPage: React.FC = () => {
         </div>
 
           <div className="hidden xl:flex flex-col justify-center items-center w-[390px]">
-
+            {/* TODO: More accurate statuses till next card tier */}
             <div className="flex_col_center py-4 px-1">
               <TiktokCard
                 number={["***", "***", "***", "***"]}
@@ -238,7 +238,7 @@ const WalletPage: React.FC = () => {
                   Outgoing:
                 </h2>
               </div>
-              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-{outgoing.toFixed(2)}</p>
+              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-${outgoing.toFixed(2)}</p>
             </div>
           </div>
 
