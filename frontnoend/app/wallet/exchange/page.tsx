@@ -114,7 +114,7 @@ const CurrencyExchangePage: React.FC = () => {
           title: "Success!",
           description: "Your wallet has been updated",
         })
-
+        return;
       }
 
     }
@@ -317,7 +317,10 @@ const CurrencyExchangePage: React.FC = () => {
         
         {conversionType==="CASH_TO_TOKTOKEN" ?
           <button
-          onClick={handleExchange}
+          onClick={()=>{
+            handleExchange();
+            setAmount(null);
+          }}
           disabled={!amount && !EXCHANGE_RATE}
           className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
         >
@@ -327,7 +330,10 @@ const CurrencyExchangePage: React.FC = () => {
         <AlertDialog open={isAlertDialogOpen}>
           <AlertDialogTrigger asChild>
             <button
-              onClick={handleExchange}
+              onClick={()=>{
+                handleExchange();
+                setAmount(null);
+              }}
               disabled={!amount && !EXCHANGE_RATE}
               className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
             >
