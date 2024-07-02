@@ -11,7 +11,7 @@ import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
 import { useState, useEffect, useRef } from "react";
 import { Product } from "@/types/ShopTypes";
 import { FaCheckCircle } from "react-icons/fa";
-import { MdErrorOutline } from "react-icons/md";
+import { IoTimeOutline } from "react-icons/io5";
 
 interface TOKTransactionAlertDialogProps {
   isOpen: boolean;
@@ -43,9 +43,12 @@ const TOKTransactionAlertDialog = ({
   };
 
   useEffect(() => {
-    if (isOpen && alertDialogContent === "") {
+    if (isOpen) {
       setCountdown(300); // Reset countdown each time the dialog opens
       setShowUnsuccessfulMessage(false);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
       timerRef.current = setInterval(() => {
         setCountdown((prevCountdown) => {
           if (prevCountdown <= 0) {
@@ -63,7 +66,7 @@ const TOKTransactionAlertDialog = ({
     }
 
     return () => clearInterval(timerRef.current as NodeJS.Timeout);
-  }, [isOpen, alertDialogContent, onClose, onCancelTransaction]);
+  }, [isOpen, onClose, onCancelTransaction]);
 
   const handleCancel = () => {
     clearInterval(timerRef.current as NodeJS.Timeout);
@@ -78,23 +81,16 @@ const TOKTransactionAlertDialog = ({
           <AlertDialogDescription>
             {alertDialogContent.includes("Purchase successful") ? (
               <div className="flex items-center">
-                <p>
-                  <FaCheckCircle className="text-green-500 mr-2" size={24} />
-                </p>
+                <FaCheckCircle className="text-green-500 mr-2" size={24} />
                 <p>{alertDialogContent}</p>
               </div>
             ) : (
               <>
                 {alertDialogContent}
                 {showUnsuccessfulMessage ? (
-                  <div>
-                    <p>
-                      <MdErrorOutline
-                        className="text-green-500 mr-2"
-                        size={24}
-                      />
-                    </p>
-                    <p>Transaction unsuccessful. Please try again.</p>
+                  <div className="flex items-center">
+                    <IoTimeOutline className="text-red-500 mr-2" size={24} />
+                    <p>Transaction timed out. Please try again.</p>
                   </div>
                 ) : (
                   alertDialogContent === "" && (
@@ -108,7 +104,7 @@ const TOKTransactionAlertDialog = ({
                         Seller's Wallet Address:
                         <WalletAddressBar
                           wallet_address={product?.sellerWalletAddress}
-                        ></WalletAddressBar>
+                        />
                       </p>
                       <p className="font-medium text-red-600">
                         Time left to complete the transaction:{" "}

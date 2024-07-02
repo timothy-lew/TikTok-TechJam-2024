@@ -71,6 +71,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
 
     setIsAlertDialogOpen(true);
     setTransactionTOKCancelled(false);
+    setAlertDialogContent("");
 
     // Cancel any ongoing transactions
     if (transactionControllerRef.current) {
@@ -137,8 +138,8 @@ export default function ProductDetailsPage({ params }: PageProps) {
           signal,
         }
       );
-      console.log('Status response for ' + transactionID + ': ')
-      console.log(statusResponse)
+      console.log("Status response for " + transactionID + ": ");
+      console.log(statusResponse);
 
       if (!statusResponse.ok) {
         throw new Error("Failed to check transaction status");
