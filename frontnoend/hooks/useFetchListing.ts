@@ -1,11 +1,10 @@
-import { useAuth } from "@/hooks/auth-provider";
-import { access } from "fs";
+
 import { useEffect, useState } from "react";
 
 
 
-type FetchListingsProps = {
-    userId: string, 
+type FetchListingProps = {
+    itemId: string,
     accessToken: string,
 }
 
@@ -22,11 +21,11 @@ export type Listing = {
     sellerWalletAddress: string
 }
 
-export function useFetchListings( {userId, accessToken}: FetchListingsProps) {
-    const [listing, setListing] = useState<Listing[]>([])
+export function useFetchListing( {itemId, accessToken}: FetchListingProps) {
+    const [listing, setListing] = useState<Listing|null>(null)
     useEffect(() => {
         console.log("accessToken", accessToken)
-        fetch(`http://localhost:8080/api/items/user/${userId}`, {
+        fetch(`http://localhost:8080/api/items/${itemId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`
