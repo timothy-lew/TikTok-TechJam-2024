@@ -18,6 +18,5 @@ public class ItemDTO {
     private Float price;
     @NotNull(message = "Item quantity is required")
     private Integer quantity;
-    @NotNull(message = "Item image is required")
     private MultipartFile image;
 }

@@ -74,7 +74,12 @@ public class ItemService {
         existingItem.setDescription(itemDTO.getDescription());
         existingItem.setPrice(itemDTO.getPrice());
         existingItem.setQuantity(itemDTO.getQuantity());
-        existingItem.setImage(itemMapper.multipartFileToBinary(itemDTO.getImage()));
+
+        // Only update the image if a new one is provided
+        if (itemDTO.getImage() != null && !itemDTO.getImage().isEmpty()) {
+            existingItem.setImage(itemMapper.multipartFileToBinary(itemDTO.getImage()));
+        }
+        // If no new image is provided, retain the existing image
 
         float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
         existingItem.setTokTokenPrice(existingItem.getPrice() * conversionRate);
