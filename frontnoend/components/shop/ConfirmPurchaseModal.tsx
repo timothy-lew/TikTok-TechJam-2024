@@ -10,6 +10,7 @@ type ConfirmPurchaseModalProps = {
   setQuantity: (quantity: number) => void;
   onClose: () => void;
   onConfirmTiktokCoin: () => void;
+  onConfirmCash: () => void;
   shippingAddress: string;
 };
 
@@ -20,6 +21,7 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
   setQuantity,
   onClose,
   onConfirmTiktokCoin,
+  onConfirmCash,
   shippingAddress,
 }) => {
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,6 +131,7 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
           <button
             type="button"
             className="w-full sm:w-auto flex-grow inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 mt-2 sm:mt-0 sm:text-sm"
+            onClick={onConfirmCash}
           >
             Buy with Cash
           </button>
