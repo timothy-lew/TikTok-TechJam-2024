@@ -15,9 +15,9 @@ const ProductGridSection = ({ products }: { products: Product[] }) => {
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
-        <h2 className="text-3xl font-bold">Products from Seller</h2>
+        <h2 className="text-3xl font-bold">Products from {products[0].businessName}</h2>
         <Button variant="outline" asChild>
-          <Link href="/products" className="space-x-2">
+          <Link href="/shop" className="space-x-2">
             <span>View More</span>
             <ArrowRight className="size-4" />
           </Link>
@@ -34,11 +34,11 @@ const ProductGridSection = ({ products }: { products: Product[] }) => {
 
 interface PageProps {
   params: {
-    id: string;
+    sellerID: string;
   };
 }
 
-const ShopPage = ({ params }: PageProps) => {
+const SellerShopPage = ({ params }: PageProps) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -62,7 +62,7 @@ const ShopPage = ({ params }: PageProps) => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/${params.id}`,
+          `http://localhost:8080/api/items/seller/${params.sellerID}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -75,6 +75,7 @@ const ShopPage = ({ params }: PageProps) => {
         }
 
         const data = await response.json();
+        console.log(data)
         setProducts(data);
         setLoading(false);
       } catch (err) {
@@ -84,7 +85,7 @@ const ShopPage = ({ params }: PageProps) => {
     };
 
     fetchProducts();
-  }, [params.id, accessToken]);
+  }, [params.sellerID, accessToken]);
 
   if (loading) {
     return (
@@ -107,4 +108,4 @@ const ShopPage = ({ params }: PageProps) => {
   );
 };
 
-export default ShopPage;
+export default SellerShopPage;
