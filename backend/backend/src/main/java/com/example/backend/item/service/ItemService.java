@@ -67,6 +67,13 @@ public class ItemService {
                 .toList();
     }
 
+    public List<ItemResponseDTO> getItemsBySellerProfileId(String sellerProfileId) {
+        List<Item> items = itemRepository.findBySellerProfileId(sellerProfileId);
+        return items.stream()
+                .map(itemMapper::fromItemtoItemResponseDTO)
+                .toList();
+    }
+
     public ItemResponseDTO updateItem(String itemId, ItemDTO itemDTO) throws IOException {
         Item existingItem = commonValidationAndGetService.validateAndGetItem(itemId);
         existingItem.setName(itemDTO.getName());

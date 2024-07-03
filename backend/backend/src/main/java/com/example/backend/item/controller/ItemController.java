@@ -37,7 +37,7 @@ public class ItemController extends BaseController {
         List<ItemResponseDTO> responseDTOs = itemService.getAllItems();
         return ResponseEntity.ok(responseDTOs);
     }
-    
+
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponseDTO> getItemById(@PathVariable String itemId) {
         ItemResponseDTO responseDTO = itemService.getItemById(itemId);
@@ -47,6 +47,12 @@ public class ItemController extends BaseController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ItemResponseDTO>> getItemsByUserId(@PathVariable String userId) {
         List<ItemResponseDTO> responseDTOs = itemService.getItemsByUserId(userId);
+        return ResponseEntity.ok(responseDTOs);
+    }
+
+    @GetMapping("/seller/{sellerProfileId}")
+    public ResponseEntity<List<ItemResponseDTO>> getItemsBySellerProfileId(@PathVariable String sellerProfileId) {
+        List<ItemResponseDTO> responseDTOs = itemService.getItemsBySellerProfileId(sellerProfileId);
         return ResponseEntity.ok(responseDTOs);
     }
 
