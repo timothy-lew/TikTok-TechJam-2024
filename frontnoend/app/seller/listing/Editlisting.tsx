@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 import { useFetchListing } from "@/hooks/useFetchListing";
 import { Listing } from "./table";
-import axios from "axios";
 
 type EditListingProps = {
     itemId: string,
