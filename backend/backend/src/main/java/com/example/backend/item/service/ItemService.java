@@ -9,6 +9,7 @@ import com.example.backend.item.repository.ItemRepository;
 import com.example.backend.user.model.SellerProfile;
 import com.example.backend.user.model.User;
 import com.example.backend.wallet.model.Wallet;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +17,13 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
     private final CommonValidationAndGetService commonValidationAndGetService;
-
-    public ItemService(ItemRepository itemRepository, ItemMapper itemMapper, CommonValidationAndGetService commonValidationAndGetService) {
-        this.itemRepository = itemRepository;
-        this.itemMapper = itemMapper;
-        this.commonValidationAndGetService = commonValidationAndGetService;
-    }
 
     public ItemResponseDTO createItem(ItemDTO itemDTO, String userId) {
         User user = commonValidationAndGetService.validateAndGetUser(userId);
@@ -59,8 +55,7 @@ public class ItemService {
     }
 
     public List<ItemResponseDTO> getItemsByUserId(String userId) {
-        SellerProfile sellerProfile = commonValidationAndGetService.validateAndGetSellerProfileByUserId(userId);
-        List<Item> items = itemRepository.findBySellerProfileId(sellerProfile.getId());
+        List<Item> items = commonValidationAndGetService.validateAndGetItemsByUserId(userId);
         return items.stream()
                 .map(itemMapper::fromItemtoItemResponseDTO)
                 .toList();

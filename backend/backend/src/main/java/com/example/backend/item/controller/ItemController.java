@@ -6,6 +6,7 @@ import com.example.backend.common.exception.ResourceNotFoundException;
 import com.example.backend.item.dto.ItemDTO;
 import com.example.backend.item.service.ItemService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,16 +18,12 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/items")
+@RequiredArgsConstructor
 @Slf4j
 public class ItemController extends BaseController {
 
     private final ItemService itemService;
-
-    public ItemController(ItemService itemService) {
-        this.itemService = itemService;
-    }
-
-
+    
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createItem(@ModelAttribute @Valid ItemDTO itemDTO, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         if (userNotSeller(userPrincipal)) {

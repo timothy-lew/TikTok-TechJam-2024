@@ -1,22 +1,22 @@
 package com.example.backend.transaction.service;
 
 
-import com.example.backend.common.exception.AlreadyUsedGiftCardException;
-import com.example.backend.common.exception.InvalidGiftCardException;
+import com.example.backend.transaction.exception.AlreadyUsedGiftCardException;
+import com.example.backend.transaction.exception.InvalidGiftCardException;
 import com.example.backend.transaction.model.GiftCard;
 import com.example.backend.transaction.repository.GiftCardRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class GiftCardService {
 
     private final GiftCardRepository giftCardRepository;
-
-    public GiftCardService(GiftCardRepository giftCardRepository) {
-        this.giftCardRepository = giftCardRepository;
-    }
 
     public GiftCard validateGiftCard(String code) {
         GiftCard giftCard = giftCardRepository.findByCode(code)

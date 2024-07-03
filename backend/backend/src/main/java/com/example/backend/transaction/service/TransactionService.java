@@ -1,17 +1,18 @@
 package com.example.backend.transaction.service;
 
-import com.example.backend.common.exception.AlreadyUsedGiftCardException;
-import com.example.backend.common.exception.InvalidGiftCardException;
 import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.item.model.Item;
 import com.example.backend.item.repository.ItemRepository;
 import com.example.backend.transaction.dto.*;
+import com.example.backend.transaction.exception.InsufficientItemQuantityException;
 import com.example.backend.transaction.mapper.TransactionMapper;
 import com.example.backend.transaction.model.GiftCard;
 import com.example.backend.transaction.model.Transaction;
 import com.example.backend.transaction.repository.TransactionRepository;
 import com.example.backend.user.model.User;
 import com.example.backend.wallet.service.WalletService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
@@ -28,24 +31,15 @@ public class TransactionService {
     private final CommonValidationAndGetService commonValidationAndGetService;
     private final GiftCardService giftCardService;
 
-    public TransactionService(TransactionRepository transactionRepository, TransactionMapper transactionMapper, ItemRepository itemRepository, WalletService walletService, CommonValidationAndGetService commonValidationAndGetService, GiftCardService giftCardService) {
-        this.transactionRepository = transactionRepository;
-        this.transactionMapper = transactionMapper;
-        this.itemRepository = itemRepository;
-        this.walletService = walletService;
-        this.commonValidationAndGetService = commonValidationAndGetService;
-        this.giftCardService = giftCardService;
-    }
-
     public List<TransactionResponseDTO> getBuyerTransactions(String buyerProfileId) {
-        List<Transaction> transactions = transactionRepository.findByBuyerProfileId(buyerProfileId);
+        List<Transaction> transactions = commonValidationAndGetService.validateAndGetTransactionsByBuyerProfileId(buyerProfileId);
         return transactions.stream()
                 .map(transactionMapper::fromTransactiontoTransactionResponseDTO)
                 .toList();
     }
 
     public List<TransactionResponseDTO> getSellerTransactions(String sellerProfileId) {
-        List<Transaction> transactions = transactionRepository.findBySellerProfileId(sellerProfileId);
+        List<Transaction> transactions = commonValidationAndGetService.validateAndGetTransactionsBySellerProfileId(sellerProfileId);
         return transactions.stream()
                 .map(transactionMapper::fromTransactiontoTransactionResponseDTO)
                 .toList();
@@ -53,12 +47,11 @@ public class TransactionService {
 
     public TransactionResponseDTO createPurchaseTransaction(PurchaseTransactionDTO dto) {
         // Fetch the item to get its price and discount information
-        Item item = itemRepository.findById(dto.getItemId())
-                .orElseThrow(() -> new RuntimeException("Item not found"));
+        Item item = commonValidationAndGetService.validateAndGetItem(dto.getItemId());
 
         // Check that sufficient item quantity is available
         if (item.getQuantity() < dto.getQuantity()) {
-            throw new RuntimeException("Insufficient quantity");
+            throw new InsufficientItemQuantityException("Insufficient quantity for item: " + dto.getItemId());
         }
 
         // Calculate total amount based on purchase type and apply discount if available
@@ -66,12 +59,10 @@ public class TransactionService {
         if (Transaction.PurchaseType.CASH.equals(Transaction.PurchaseType.valueOf(dto.getPurchaseType()))) {
             float priceToUse = item.getDiscountedPrice() != null ? item.getDiscountedPrice() : item.getPrice();
             totalAmount = priceToUse * dto.getQuantity();
-        } else if (Transaction.PurchaseType.TOK_TOKEN.equals(Transaction.PurchaseType.valueOf(dto.getPurchaseType()))) {
+        } else {
             // Fetch current conversion rate
             float priceToUse = item.getDiscountedTokTokenPrice() != null ? item.getDiscountedTokTokenPrice() : item.getTokTokenPrice();
             totalAmount = priceToUse * dto.getQuantity();
-        } else {
-            throw new RuntimeException("Unsupported purchase type");
         }
 
         // Deduct balance from buyer's wallet
@@ -101,14 +92,7 @@ public class TransactionService {
         BigDecimal topUpAmount;
 
         if (Transaction.TopUpType.GIFT_CARD.equals(Transaction.TopUpType.valueOf(dto.getTopUpType()))) {
-            GiftCard giftCard;
-            try {
-                giftCard = giftCardService.validateGiftCard(dto.getGiftCardCode());
-            } catch (InvalidGiftCardException e) {
-                throw new InvalidGiftCardException("Invalid gift card.");
-            } catch (AlreadyUsedGiftCardException e) {
-                throw new AlreadyUsedGiftCardException("Gift card has already been used");
-            }
+            GiftCard giftCard = giftCardService.validateGiftCard(dto.getGiftCardCode());
             // Retrieve the gift card value
             topUpAmount = BigDecimal.valueOf(giftCard.getValue());
             // Mark the gift card as used
@@ -221,8 +205,7 @@ public class TransactionService {
     }
 
     public Boolean checkTransactionStatus(String transactionId) {
-        Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+        Transaction transaction = commonValidationAndGetService.validateAndGetTransaction(transactionId);
         return transaction.getIsPaid();
     }
 
