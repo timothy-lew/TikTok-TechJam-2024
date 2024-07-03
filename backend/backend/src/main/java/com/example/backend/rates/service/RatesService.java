@@ -10,6 +10,8 @@ import com.example.backend.rates.model.ConversionRate;
 import com.example.backend.rates.model.DiscountRate;
 import com.example.backend.rates.repository.ConversionRateRepository;
 import com.example.backend.rates.repository.DiscountRateRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class RatesService {
 
     private final CommonValidationAndGetService commonValidationAndGetService;
@@ -25,21 +29,13 @@ public class RatesService {
     private final DiscountRateRepository discountRateRepository;
     private final DiscountRateMapper discountRateMapper;
 
-    public RatesService(CommonValidationAndGetService commonValidationAndGetService, ConversionRateRepository conversionRateRepository, ItemRepository itemRepository, DiscountRateRepository discountRateRepository, DiscountRateMapper discountRateMapper) {
-        this.commonValidationAndGetService = commonValidationAndGetService;
-        this.conversionRateRepository = conversionRateRepository;
-        this.itemRepository = itemRepository;
-        this.discountRateRepository = discountRateRepository;
-        this.discountRateMapper = discountRateMapper;
-    }
-
     public ConversionRate getCurrentConversionRate() {
         return commonValidationAndGetService.validateAndGetCurrentConversionRate();
     }
 
     public ConversionRate setConversionRate(float rate) {
         if (rate == 0) {
-            throw new RuntimeException("Conversion rate cannot be 0");
+            throw new IllegalArgumentException("Conversion rate cannot be 0");
         }
         ConversionRate conversionRate = new ConversionRate();
         conversionRate.setRate(rate);
@@ -60,7 +56,7 @@ public class RatesService {
     }
 
     public List<ConversionRate> getAllConversionRates() {
-        return conversionRateRepository.findAll();
+        return commonValidationAndGetService.validateAndGetAllConversionRates();
     }
 
     @Transactional
@@ -78,8 +74,8 @@ public class RatesService {
 
     private void applyDiscountToItems(DiscountRate discountRate) {
         List<Item> items = discountRate.getSellerProfileId() == null ?
-                itemRepository.findAll() :
-                itemRepository.findBySellerProfileId(discountRate.getSellerProfileId());
+                commonValidationAndGetService.validateAndGetAllItems() :
+                commonValidationAndGetService.validateAndGetItemsBySellerProfileId(discountRate.getSellerProfileId());
 
         for (Item item : items) {
             applyDiscountToItem(item, discountRate);
@@ -106,16 +102,14 @@ public class RatesService {
     }
 
     public DiscountRateResponseDTO getDiscountRate(String sellerProfileId) {
-        DiscountRate discountRate = sellerProfileId == null ?
-                discountRateRepository.findBySellerProfileIdIsNull().orElse(null) :
-                discountRateRepository.findBySellerProfileId(sellerProfileId).orElse(null);
-
-        return discountRate != null ? discountRateMapper.fromDiscountRatetoDiscountRateResponseDTO(discountRate) : null;
+        DiscountRate discountRate = commonValidationAndGetService.validateAndGetDiscountRate(sellerProfileId);
+        return discountRateMapper.fromDiscountRatetoDiscountRateResponseDTO(discountRate);
     }
 
     public List<DiscountRateResponseDTO> getAllDiscountRates() {
-        List<DiscountRate> discountRates = discountRateRepository.findAll();
-        return discountRateMapper.fromDiscountRateListtoDiscountRateResponseDTOList(discountRates);
+        return commonValidationAndGetService.validateAndGetAllDiscountRates().stream()
+                .map(discountRateMapper::fromDiscountRatetoDiscountRateResponseDTO)
+                .toList();
     }
 
     @Transactional
@@ -124,11 +118,11 @@ public class RatesService {
         if (sellerProfileId == null) {
             // Remove global discount
             discountRateRepository.deleteBySellerProfileIdIsNull();
-            items = itemRepository.findAll();
+            items = commonValidationAndGetService.validateAndGetAllItems();
         } else {
             // Remove seller-specific discount
             discountRateRepository.deleteBySellerProfileId(sellerProfileId);
-            items = itemRepository.findBySellerProfileId(sellerProfileId);
+            items = commonValidationAndGetService.validateAndGetItemsBySellerProfileId(sellerProfileId);
         }
 
         for (Item item : items) {

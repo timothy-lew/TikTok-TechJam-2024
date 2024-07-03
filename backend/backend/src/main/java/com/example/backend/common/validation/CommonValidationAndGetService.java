@@ -4,7 +4,9 @@ import com.example.backend.common.exception.ResourceNotFoundException;
 import com.example.backend.item.model.Item;
 import com.example.backend.item.repository.ItemRepository;
 import com.example.backend.rates.model.ConversionRate;
+import com.example.backend.rates.model.DiscountRate;
 import com.example.backend.rates.repository.ConversionRateRepository;
+import com.example.backend.rates.repository.DiscountRateRepository;
 import com.example.backend.transaction.model.Transaction;
 import com.example.backend.transaction.repository.TransactionRepository;
 import com.example.backend.user.model.BuyerProfile;
@@ -34,6 +36,7 @@ public class CommonValidationAndGetService {
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
     private final ConversionRateRepository conversionRateRepository;
+    private final DiscountRateRepository discountRateRepository;
 
     public User validateAndGetUser(String userId) throws ResourceNotFoundException {
         return userRepository.findById(userId)
@@ -136,13 +139,41 @@ public class CommonValidationAndGetService {
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found with sellerProfileId: " + sellerProfileId));
     }
 
-    // Conversion rate
+    // Rates
     public ConversionRate validateAndGetCurrentConversionRate() throws ResourceNotFoundException {
         List<ConversionRate> rates = conversionRateRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp"));
         if (rates.isEmpty()) {
-            throw new RuntimeException("Conversion rate not set");
+            throw new ResourceNotFoundException("Conversion rate not set");
         }
         return rates.get(0); // Return the latest conversion rate
+    }
+
+    public List<ConversionRate> validateAndGetAllConversionRates() throws ResourceNotFoundException {
+        List<ConversionRate> rates = conversionRateRepository.findAll();
+        if (rates.isEmpty()) {
+            throw new ResourceNotFoundException("Conversion rate not set");
+        }
+        return rates;
+    }
+
+    public DiscountRate validateAndGetDiscountRate(String sellerProfileId) {
+        DiscountRate discountRate = sellerProfileId == null ?
+                discountRateRepository.findBySellerProfileIdIsNull().orElse(null) :
+                discountRateRepository.findBySellerProfileId(sellerProfileId).orElse(null);
+
+        if (discountRate == null) {
+            throw new ResourceNotFoundException("Discount rate not found for " +
+                    (sellerProfileId == null ? "global discount" : "sellerProfileId: " + sellerProfileId));
+        }
+        return discountRate;
+    }
+
+    public List<DiscountRate> validateAndGetAllDiscountRates() throws ResourceNotFoundException {
+        List<DiscountRate> rates = discountRateRepository.findAll();
+        if (rates.isEmpty()) {
+            throw new ResourceNotFoundException("Discount rate not set");
+        }
+        return rates;
     }
 
 }
