@@ -46,7 +46,7 @@ public class CommonValidationAndGetService {
 
     public BuyerProfile validateAndGetBuyerProfile(String buyerProfileId) {
         return buyerProfileRepository.findById(buyerProfileId)
-                .orElseThrow(() -> new IllegalArgumentException("Buyer profile not found with id: " + buyerProfileId));
+                .orElseThrow(() -> new ResourceNotFoundException("Buyer profile not found with id: " + buyerProfileId));
     }
 
     public BuyerProfile validateAndGetBuyerProfileByUserId(String userId) throws ResourceNotFoundException {
@@ -56,7 +56,7 @@ public class CommonValidationAndGetService {
 
     public SellerProfile validateAndGetSellerProfile(String sellerProfileId) {
         return sellerProfileRepository.findById(sellerProfileId)
-                .orElseThrow(() -> new IllegalArgumentException("Seller profile not found with id: " + sellerProfileId));
+                .orElseThrow(() -> new ResourceNotFoundException("Seller profile not found with id: " + sellerProfileId));
     }
 
     public SellerProfile validateAndGetSellerProfileByUserId(String userId) throws ResourceNotFoundException {
@@ -64,14 +64,32 @@ public class CommonValidationAndGetService {
                 .orElseThrow(() -> new ResourceNotFoundException("Seller profile not found with userId " + userId));
     }
 
+
+    // Items
+    public List<Item> validateAndGetAllItems() throws ResourceNotFoundException {
+        List<Item> items = itemRepository.findAll();
+        if (items.isEmpty()) {
+            throw new ResourceNotFoundException("No items found");
+        }
+        return items;
+    }
+
     public Item validateAndGetItem(String itemId) throws ResourceNotFoundException {
         return itemRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("Item not found with id: " + itemId));
+                .orElseThrow(() -> new ResourceNotFoundException("Item not found with id: " + itemId));
+    }
+
+    public List<Item> validateAndGetItemsBySellerProfileId(String sellerProfileId) throws ResourceNotFoundException {
+        List<Item> items = itemRepository.findBySellerProfileId(sellerProfileId);
+        if (items.isEmpty()) {
+            throw new ResourceNotFoundException("No items found for sellerProfileId: " + sellerProfileId);
+        }
+        return items;
     }
 
     public Wallet validateAndGetWallet(String userId) throws ResourceNotFoundException {
         return walletRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Wallet not found with userId: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("Wallet not found with userId: " + userId));
     }
 
     public ConversionRate validateAndGetCurrentConversionRate() throws ResourceNotFoundException {

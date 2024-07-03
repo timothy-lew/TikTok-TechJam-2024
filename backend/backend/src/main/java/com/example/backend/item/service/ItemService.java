@@ -39,7 +39,6 @@ public class ItemService {
         item.setBusinessName(sellerProfile.getBusinessName());
         item.setSellerWalletAddress(sellerWallet.getWalletAddress());
 
-        // Set tokTokenPrice based on current conversion rate
         float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
         item.setTokTokenPrice(item.getPrice() * conversionRate);
 
@@ -48,7 +47,7 @@ public class ItemService {
     }
 
     public List<ItemResponseDTO> getAllItems() {
-        List<Item> items = itemRepository.findAll();
+        List<Item> items = commonValidationAndGetService.validateAndGetAllItems();
         return items.stream()
                 .map(itemMapper::fromItemtoItemResponseDTO)
                 .toList();
@@ -68,7 +67,7 @@ public class ItemService {
     }
 
     public List<ItemResponseDTO> getItemsBySellerProfileId(String sellerProfileId) {
-        List<Item> items = itemRepository.findBySellerProfileId(sellerProfileId);
+        List<Item> items = commonValidationAndGetService.validateAndGetItemsBySellerProfileId(sellerProfileId);
         return items.stream()
                 .map(itemMapper::fromItemtoItemResponseDTO)
                 .toList();
@@ -81,6 +80,10 @@ public class ItemService {
         existingItem.setPrice(itemDTO.getPrice());
         existingItem.setQuantity(itemDTO.getQuantity());
         existingItem.setImage(itemMapper.multipartFileToBinary(itemDTO.getImage()));
+
+        float conversionRate = commonValidationAndGetService.validateAndGetCurrentConversionRate().getRate();
+        existingItem.setTokTokenPrice(existingItem.getPrice() * conversionRate);
+
         Item updatedItem = itemRepository.save(existingItem);
         return itemMapper.fromItemtoItemResponseDTO(updatedItem);
     }
@@ -88,7 +91,6 @@ public class ItemService {
     public void deleteItem(String itemId) {
         Item existingItem = commonValidationAndGetService.validateAndGetItem(itemId);
         itemRepository.delete(existingItem);
-        // TODO: Ensure transaction persist even after deleting item.
     }
 
 }
