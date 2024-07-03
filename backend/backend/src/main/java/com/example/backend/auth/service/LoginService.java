@@ -9,6 +9,7 @@ import com.example.backend.user.dto.UserResponseDTO;
 import com.example.backend.user.mapper.UserMapper;
 import com.example.backend.user.model.User;
 import com.example.backend.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +17,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Slf4j
+
 @Service
-@Transactional
+@RequiredArgsConstructor
+@Slf4j
 public class LoginService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
@@ -30,16 +31,8 @@ public class LoginService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public LoginService(PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider, UserRepository userRepository, UserMapper userMapper) {
-        this.passwordEncoder = passwordEncoder;
-        this.tokenProvider = tokenProvider;
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
-
     public LoginResponse login(LoginRequest loginRequest) throws InvalidPrincipalException {
         try {
-            log.info("Try to login: {}", loginRequest.getUsername());
             Optional<User> userOptional = this.userRepository.findByUsername(loginRequest.getUsername());
             User user = userOptional.orElseThrow(() -> new InvalidPrincipalException("Empty or unknown login credentials."));
 

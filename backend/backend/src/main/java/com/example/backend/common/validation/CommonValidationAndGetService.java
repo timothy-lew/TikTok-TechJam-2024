@@ -38,6 +38,7 @@ public class CommonValidationAndGetService {
     private final ConversionRateRepository conversionRateRepository;
     private final DiscountRateRepository discountRateRepository;
 
+    // User
     public User validateAndGetUser(String userId) throws ResourceNotFoundException {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with userId " + userId));

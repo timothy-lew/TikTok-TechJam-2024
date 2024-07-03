@@ -11,8 +11,9 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
-@Slf4j
+
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
     @Value("${security.secret-key}")

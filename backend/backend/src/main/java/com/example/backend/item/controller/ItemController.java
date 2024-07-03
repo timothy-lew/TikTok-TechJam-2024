@@ -23,14 +23,14 @@ import java.io.IOException;
 public class ItemController extends BaseController {
 
     private final ItemService itemService;
-    
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createItem(@ModelAttribute @Valid ItemDTO itemDTO, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         if (userNotSeller(userPrincipal)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not a seller");
         }
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(itemService.createItem(itemDTO, userPrincipal.getId()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(itemService.createItem(itemDTO, getLoginUserId(userPrincipal)));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {

@@ -4,16 +4,18 @@ import com.example.backend.common.exception.InvalidPrincipalException;
 import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.user.dto.UserDTO;
 import com.example.backend.user.dto.UserResponseDTO;
+import com.example.backend.user.dto.UserUpdateDTO;
 import com.example.backend.user.mapper.UserMapper;
 import com.example.backend.user.model.User;
 import com.example.backend.user.repository.UserRepository;
 import com.example.backend.wallet.service.WalletService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class UserService {
 
@@ -25,18 +27,6 @@ public class UserService {
     private final SellerProfileService sellerProfileService;
     private final CommonValidationAndGetService commonValidationAndGetService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper,
-                       WalletService walletService, BuyerProfileService buyerProfileService, SellerProfileService sellerProfileService, CommonValidationAndGetService commonValidationAndGetService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
-        this.walletService = walletService;
-        this.buyerProfileService = buyerProfileService;
-        this.sellerProfileService = sellerProfileService;
-        this.commonValidationAndGetService = commonValidationAndGetService;
-    }
-
-    @Transactional
     public UserResponseDTO createUser(UserDTO userDTO) {
         // Check if username already exists
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
@@ -64,29 +54,24 @@ public class UserService {
         return commonValidationAndGetService.validateAndGetUser(userId);
     }
 
-    @Transactional
-    public UserResponseDTO updateUser(String userId, UserDTO userDTO) {
+    public UserResponseDTO updateUser(String userId, UserUpdateDTO userDTO) {
         User existingUser = commonValidationAndGetService.validateAndGetUser(userId);
-        User updatedUser = userMapper.fromUserDTOtoUserForUpdate(userDTO);
-        updatedUser.setId(existingUser.getId());
-        updatedUser.setPassword(existingUser.getPassword()); // Avoid updating password here
-        updatedUser.setWallet(existingUser.getWallet()); // Retain existing wallet
-        updatedUser.setBuyerProfile(existingUser.getBuyerProfile()); // Retain existing buyer profile
-        updatedUser.setSellerProfile(existingUser.getSellerProfile()); // Retain existing seller profile
+        existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        existingUser.setFirstName(userDTO.getFirstName());
+        existingUser.setLastName(userDTO.getLastName());
 
-        User savedUser = userRepository.save(updatedUser);
-        return userMapper.fromUsertoUserResponseDTO(savedUser);
+        return userMapper.fromUsertoUserResponseDTO(userRepository.save(existingUser));
     }
 
-    // TODO: Cascade of deletions by calling respective delete methods in BuyerProfileService, SellerProfileService, WalletService
-    // TODO: SellerProfileService subsequently need to delete all items listed by the seller
-    @Transactional
     public void deleteUser(String userId) {
+        User deletingUser = commonValidationAndGetService.validateAndGetUser(userId);
+        if (deletingUser.getRoles().contains(User.Role.ROLE_SELLER)) {
+            sellerProfileService.deleteSellerProfile(userId);
+        }
+        if (deletingUser.getRoles().contains(User.Role.ROLE_BUYER)) {
+            buyerProfileService.deleteBuyerProfile(userId);
+        }
+        walletService.deleteWallet(userId);
         userRepository.delete(commonValidationAndGetService.validateAndGetUser(userId));
-
-//        User deletingUser = commonValidationAndGetService.validateAndGetUser(userId);
-//        buyerProfileService.deleteBuyerProfile(deletingUser);
-//        sellerProfileService.deleteSellerProfile(deletingUser);
-//        walletService.deleteWallet(deletingUser);
     }
 }

@@ -12,6 +12,4 @@ public class BuyerProfileDTO {
     private String shippingAddress;
     @NotBlank(message = "Billing address is required")
     private String billingAddress;
-    @NotBlank(message = "Default payment is required")
-    private String defaultPaymentMethod;
 }

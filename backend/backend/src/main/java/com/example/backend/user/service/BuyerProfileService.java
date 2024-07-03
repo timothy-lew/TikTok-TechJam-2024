@@ -8,20 +8,18 @@ import com.example.backend.user.mapper.BuyerProfileMapper;
 import com.example.backend.user.model.BuyerProfile;
 import com.example.backend.user.model.User;
 import com.example.backend.user.repository.BuyerProfileRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class BuyerProfileService {
 
     private final BuyerProfileRepository buyerProfileRepository;
     private final BuyerProfileMapper buyerProfileMapper;
     private final CommonValidationAndGetService commonValidationAndGetService;
-
-    public BuyerProfileService(BuyerProfileRepository buyerProfileRepository, BuyerProfileMapper buyerProfileMapper, CommonValidationAndGetService commonValidationAndGetService) {
-        this.buyerProfileRepository = buyerProfileRepository;
-        this.buyerProfileMapper = buyerProfileMapper;
-        this.commonValidationAndGetService = commonValidationAndGetService;
-    }
 
     // Overloaded method for creating buyer profile during sign up process
     public BuyerProfile createBuyerProfile(UserDTO userDTO, String userId) {
@@ -48,14 +46,17 @@ public class BuyerProfileService {
         return buyerProfileMapper.fromBuyerProfiletoBuyerProfileResponseDTO(commonValidationAndGetService.validateAndGetBuyerProfileByUserId(userId));
     }
 
-//    public BuyerProfileResponseDTO updateBuyerProfile(String userId, BuyerProfileDTO buyerProfileDTO) {
-//        BuyerProfile existingBuyerProfile = commonValidationAndGetService.validateAndGetBuyerProfile(userId);
-//        BuyerProfile updatedBuyerProfile =
-//
-//        BuyerProfile buyerProfile = buyerProfileRepository.findByUserId(userId)
-//                .orElseThrow(() -> new NotFoundException("Buyer profile not found"));
-//        buyerProfileMapper.updateBuyerProfile(buyerProfileDTO, buyerProfile);
-//        BuyerProfile updatedBuyerProfile = buyerProfileRepository.save(buyerProfile);
-//        return buyerProfileMapper.fromBuyerProfiletoBuyerProfileResponseDTO(updatedBuyerProfile);
-//    }
+    public BuyerProfileResponseDTO updateBuyerProfile(String userId, BuyerProfileDTO buyerProfileDTO) {
+        BuyerProfile existingBuyerProfile = commonValidationAndGetService.validateAndGetBuyerProfile(userId);
+        existingBuyerProfile.setBillingAddress(buyerProfileDTO.getBillingAddress());
+        existingBuyerProfile.setShippingAddress(buyerProfileDTO.getShippingAddress());
+
+        BuyerProfile updatedBuyerProfile = buyerProfileRepository.save(existingBuyerProfile);
+        return buyerProfileMapper.fromBuyerProfiletoBuyerProfileResponseDTO(updatedBuyerProfile);
+    }
+
+    public void deleteBuyerProfile(String userId) {
+        BuyerProfile existingBuyerProfile = commonValidationAndGetService.validateAndGetBuyerProfileByUserId(userId);
+        buyerProfileRepository.delete(existingBuyerProfile);
+    }
 }

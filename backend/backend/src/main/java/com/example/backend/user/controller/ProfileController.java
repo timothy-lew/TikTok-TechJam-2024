@@ -1,72 +1,82 @@
 package com.example.backend.user.controller;
 
-import com.example.backend.auth.model.UserPrincipal;
 import com.example.backend.common.controller.BaseController;
+import com.example.backend.common.exception.ResourceNotFoundException;
+import com.example.backend.user.dto.BuyerProfileDTO;
 import com.example.backend.user.dto.BuyerProfileResponseDTO;
+import com.example.backend.user.dto.SellerProfileDTO;
+import com.example.backend.user.dto.SellerProfileResponseDTO;
 import com.example.backend.user.service.BuyerProfileService;
 import com.example.backend.user.service.SellerProfileService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Handles operations related to buyer and seller profiles, authenticated by the user's role.
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/profiles")
 public class ProfileController extends BaseController {
 
     private final BuyerProfileService buyerProfileService;
     private final SellerProfileService sellerProfileService;
 
-    public ProfileController(BuyerProfileService buyerProfileService, SellerProfileService sellerProfileService) {
-        super();
-        this.buyerProfileService = buyerProfileService;
-        this.sellerProfileService = sellerProfileService;
-    }
-
     @GetMapping("/buyer/{userId}")
-    public ResponseEntity<BuyerProfileResponseDTO> getBuyerProfile(@PathVariable String userId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        if (userNotBuyer(userPrincipal)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<?> getBuyerProfile(@PathVariable String userId) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(buyerProfileService.getBuyerProfile(userId));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Error fetching buyer profile", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+
         }
-        BuyerProfileResponseDTO buyerProfileResponseDTO = buyerProfileService.getBuyerProfile(userId);
-        return ResponseEntity.ok(buyerProfileResponseDTO);
     }
 
-//    @PostMapping("/buyer/{userId}")
-//    public ResponseEntity<BuyerProfileResponseDTO> updateBuyerProfile(@PathVariable String userId, @AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid BuyerProfileDTO buyerProfileDTO) {
-//        if (isUserBuyer(userPrincipal)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//        BuyerProfileResponseDTO updatedBuyerProfileResponseDTO = buyerProfileService.updateBuyerProfile(userId, buyerProfileDTO);
-//        return ResponseEntity.ok(updatedBuyerProfileResponseDTO);
-//    }
-//
-//    @GetMapping("/seller/{userId}")
-//    public ResponseEntity<SellerProfileDTO> getSellerProfile(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-//        if (!isUserSeller(userPrincipal)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//        String userId = getLoginUserId(userPrincipal);
-//        SellerProfileDTO sellerProfileDTO = sellerProfileService.getSellerProfile(userId);
-//        return ResponseEntity.ok(sellerProfileDTO);
-//    }
-//
-//    @PostMapping("/seller/{userId}")
-//    public ResponseEntity<SellerProfileDTO> updateSellerProfile(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody SellerProfileDTO sellerProfileDTO) {
-//        if (!isUserSeller(userPrincipal)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//        String userId = getLoginUserId(userPrincipal);
-//        SellerProfileDTO updatedSellerProfileDTO = sellerProfileService.updateSellerProfile(userId, sellerProfileDTO);
-//        return ResponseEntity.ok(updatedSellerProfileDTO);
-//    }
+    @PutMapping("/buyer/{userId}")
+    public ResponseEntity<?> updateBuyerProfile(@PathVariable String userId, @RequestBody @Valid BuyerProfileDTO buyerProfileDTO) {
+        try {
+            BuyerProfileResponseDTO updatedBuyerProfileResponseDTO = buyerProfileService.updateBuyerProfile(userId, buyerProfileDTO);
+            return ResponseEntity.ok(updatedBuyerProfileResponseDTO);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Error updating buyer profile", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
+    }
+
+    @GetMapping("/seller/{userId}")
+    public ResponseEntity<?> getSellerProfile(@PathVariable String userId) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(sellerProfileService.getSellerProfile(userId));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Error fetching seller profile", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
+    }
+
+    @PutMapping("/seller/{userId}")
+    public ResponseEntity<?> updateSellerProfile(@PathVariable String userId, @RequestBody @Valid SellerProfileDTO sellerProfileDTO) {
+        try {
+            SellerProfileResponseDTO updatedSellerProfileResponseDTO = sellerProfileService.updateSellerProfile(userId, sellerProfileDTO);
+            return ResponseEntity.ok(updatedSellerProfileResponseDTO);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Error updating seller profile", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
+    }
+    
 }
 

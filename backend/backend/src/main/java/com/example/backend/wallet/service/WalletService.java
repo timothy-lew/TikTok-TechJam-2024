@@ -30,6 +30,11 @@ public class WalletService {
         wallet.setCashBalance(BigDecimal.ZERO);
         return walletRepository.save(wallet);
     }
+    
+    public void deleteWallet(String userId) {
+        Wallet wallet = commonValidationAndGetService.validateAndGetWalletByUserId(userId);
+        walletRepository.delete(wallet);
+    }
 
     // Handles deduction of buyer's and addition of seller's balance.
     // Depending on purchaseType, handles cash and toktoken deduction/addition differently.
