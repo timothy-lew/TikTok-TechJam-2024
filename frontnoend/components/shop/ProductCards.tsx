@@ -21,6 +21,7 @@ export function ProductCard({ product }: { product: Product }) {
     imageUrl,
     discountedTokTokenPrice,
     tokTokenPrice,
+    discountRate,
   } = product;
   return (
     <Card className="flex overflow-hidden flex-col">
@@ -51,6 +52,15 @@ export function ProductCard({ product }: { product: Product }) {
             )}
           </h3>
         </CardDescription>
+        {discountRate ? (
+          <CardDescription>
+            <span className="inline-block bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full border border-yellow-500">
+              Save {discountRate} with TOK Coin!
+            </span>
+          </CardDescription>
+        ) : (
+          ""
+        )}
       </CardHeader>
       <CardContent className="flex-grow">
         Sold by{" "}
@@ -153,6 +163,7 @@ export function ProductCardDetails({
     imageUrl,
     discountedTokTokenPrice,
     tokTokenPrice,
+    discountRate,
   } = product;
   return (
     <div className="w-full sm:w-1/2 mx-auto">
@@ -184,6 +195,15 @@ export function ProductCardDetails({
               )}
             </h3>
           </CardDescription>
+          {discountRate ? (
+          <CardDescription>
+            <span className="inline-block bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full border border-yellow-500">
+              Save {discountRate} with TOK Coin!
+            </span>
+          </CardDescription>
+        ) : (
+          ""
+        )}
           <CardDescription>
             Sold by{" "}
             <Link
