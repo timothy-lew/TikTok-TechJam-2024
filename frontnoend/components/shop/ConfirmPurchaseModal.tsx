@@ -39,8 +39,8 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center bg-gray-500 bg-opacity-75">
-      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto p-6">
+    <div className="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center bg-gray-500 bg-opacity-75 p-4">
+      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto p-6 max-h-full overflow-y-auto">
         <div className="flex items-center justify-center mb-4">
           <div className="flex-shrink-0 flex items-center justify-center h-24 w-24 rounded-full bg-blue-100">
             <MdOutlineShoppingCart className="h-12 w-12 text-black-600" />
@@ -118,23 +118,23 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
             </div>
           </div>
         </div>
-        <div className="px-3 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <div className="px-3 py-3 sm:px-6 sm:flex sm:space-x-4 mt-4">
           <button
             type="button"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:w-auto sm:text-sm"
-          >
-            Buy with Cash
-          </button>
-          <button
-            type="button"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 sm:ml-3 sm:w-auto sm:text-sm"
+            className="w-full sm:w-auto flex-grow inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 sm:text-sm"
             onClick={onConfirmTiktokCoin}
           >
             Buy with TOK Coin
           </button>
           <button
             type="button"
-            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm"
+            className="w-full sm:w-auto flex-grow inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 mt-2 sm:mt-0 sm:text-sm"
+          >
+            Buy with Cash
+          </button>
+          <button
+            type="button"
+            className="w-full sm:w-auto flex-grow inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 mt-2 sm:mt-0 sm:text-sm"
             onClick={onClose}
           >
             Cancel
