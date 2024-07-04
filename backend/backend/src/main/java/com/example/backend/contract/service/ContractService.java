@@ -1,7 +1,10 @@
 package com.example.backend.contract.service;
 
+import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.contract.TOKToken;
 import com.example.backend.contract.dto.SendCryptoDTO;
+import com.example.backend.item.model.Item;
+import com.example.backend.item.repository.ItemRepository;
 import com.example.backend.transaction.model.Transaction;
 import com.example.backend.transaction.repository.TransactionRepository;
 import com.example.backend.user.model.BuyerProfile;
@@ -41,6 +44,8 @@ public class ContractService {
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
     private final BuyerProfileRepository buyerProfileRepository;
+    private final ItemRepository itemRepository;
+    private final CommonValidationAndGetService commonValidationAndGetService;
     private Disposable tikTokSubscription;
     private Disposable sellerSubscription;
 
@@ -51,7 +56,9 @@ public class ContractService {
                            @Value("${web3.wallet.private-key}") String privateKey,
                            WalletRepository walletRepository,
                            TransactionRepository transactionRepository,
-                           BuyerProfileRepository buyerProfileRepository) {
+                           BuyerProfileRepository buyerProfileRepository,
+                           ItemRepository itemRepository,
+                           CommonValidationAndGetService commonValidationAndGetService) {
         this.rpcUrl = rpcUrl;
         this.contractAddress = contractAddress;
         this.tikTokAddress = tikTokAddress;
@@ -59,6 +66,8 @@ public class ContractService {
         this.walletRepository = walletRepository;
         this.transactionRepository = transactionRepository;
         this.buyerProfileRepository = buyerProfileRepository;
+        this.itemRepository = itemRepository;
+        this.commonValidationAndGetService = commonValidationAndGetService;
 
         log.info("*****rpcUrl = {}, contractAddress = {}, privateKey = {}*****", rpcUrl, contractAddress, privateKey);
 
@@ -170,8 +179,12 @@ public class ContractService {
                         Optional<BuyerProfile> buyerProfile = buyerProfileRepository.findByUserId(userId.get().getUserId());
                         if (buyerProfile.isPresent()) {
                             Transaction tx = transactionRepository.findFirstByBuyerProfileIdOrderByTransactionDateDesc(buyerProfile.get().getId());
-                            System.out.println("**Transaction ID: " + tx.getId());
                             tx.setIsPaid(true);
+                            // Update item balance
+                            Item item = commonValidationAndGetService.validateAndGetItem(tx.getItemId());
+                            item.setQuantity(item.getQuantity() - tx.getQuantity());
+                            itemRepository.save(item);
+                            System.out.println("**Transaction ID: " + tx.getId());
                             System.out.println(tx.getIsPaid());
                             System.out.println(tx.getTransactionType());
                             System.out.println(tx.getPurchaseType());

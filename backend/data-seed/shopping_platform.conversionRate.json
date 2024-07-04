@@ -1,55 +1,11 @@
 [{
   "_id": {
-    "$oid": "667d07be908c263a18911010"
+    "$oid": "66860acdbe3fb1045465c57e"
   },
-  "rate": 10,
-  "inverseRate": 0.1,
+  "rate": 1,
+  "inverseRate": 1,
   "timestamp": {
-    "$date": "2024-06-27T06:33:34.603Z"
+    "$date": "2024-07-04T02:37:01.673Z"
   },
-  "_class": "com.example.backend.rate.model.ConversionRate"
-},
-{
-  "_id": {
-    "$oid": "667d07e9908c263a18911011"
-  },
-  "rate": 11,
-  "inverseRate": 0.09090909090909091,
-  "timestamp": {
-    "$date": "2024-06-27T06:34:17.698Z"
-  },
-  "_class": "com.example.backend.rate.model.ConversionRate"
-},
-{
-  "_id": {
-    "$oid": "667d07f3908c263a18911012"
-  },
-  "rate": 10,
-  "inverseRate": 0.1,
-  "timestamp": {
-    "$date": "2024-06-27T06:34:27.667Z"
-  },
-  "_class": "com.example.backend.rate.model.ConversionRate"
-},
-{
-  "_id": {
-    "$oid": "667d4a712a08ed556c576c2e"
-  },
-  "rate": 20,
-  "inverseRate": 0.05000000074505806,
-  "timestamp": {
-    "$date": "2024-06-27T11:18:09.103Z"
-  },
-  "_class": "com.example.backend.rate.model.ConversionRate"
-},
-{
-  "_id": {
-    "$oid": "667d4a892a08ed556c576c2f"
-  },
-  "rate": 10,
-  "inverseRate": 0.10000000149011612,
-  "timestamp": {
-    "$date": "2024-06-27T11:18:33.413Z"
-  },
-  "_class": "com.example.backend.rate.model.ConversionRate"
+  "_class": "com.example.backend.rates.model.ConversionRate"
 }]

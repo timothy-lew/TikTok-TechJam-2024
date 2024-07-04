@@ -75,13 +75,14 @@ public class TransactionService {
         transaction.setTotalAmount(totalAmount);
         if (transaction.getPurchaseType() == Transaction.PurchaseType.CASH) {
             transaction.setIsPaid(null);
+            // Update item balance
+            item.setQuantity(item.getQuantity() - dto.getQuantity());
+            itemRepository.save(item);
         } else {
+            // Update item balance in ContractService
             transaction.setIsPaid(false);
         }
 
-        // Update item balance
-        item.setQuantity(item.getQuantity() - dto.getQuantity());
-        itemRepository.save(item);
 
         // Save transaction
         Transaction savedTransaction = transactionRepository.save(transaction);
