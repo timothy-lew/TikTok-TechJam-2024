@@ -11,8 +11,8 @@ spring:
       #      uri: mongodb://root:secret@localhost:27017/?retryWrites=true&w=majority&appName=Cluster0
       #      username: root
       #      password: secret
-    # =============================================== New Docker ===============================================
-  #      uri: ${SPRING_DATA_MONGODB_URI}
+      # =============================================== New Docker ===============================================
+      #      uri: ${SPRING_DATA_MONGODB_URI}
   servlet:
     multipart:
       max-file-size: 256MB

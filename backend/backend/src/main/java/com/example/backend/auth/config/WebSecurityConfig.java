@@ -68,6 +68,7 @@ public class WebSecurityConfig {
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/users/signup")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/refresh-token")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/transfer")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/reset-database")).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userService), UsernamePasswordAuthenticationFilter.class)

@@ -7,6 +7,8 @@ services:
       - mongodb
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://root:secret@mongodb:27017/shopping_platform?authSource=admin
+    volumes:
+      - ./data-seed:/data
 
   mongodb:
     image: 'mongo:latest'
