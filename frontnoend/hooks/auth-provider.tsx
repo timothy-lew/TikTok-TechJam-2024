@@ -39,8 +39,8 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
     }
   }
   
-
-  const signUp = async (userSignUpDetails : UserSignUpDetails) => {
+  // const signUp = async (userSignUpDetails : UserSignUpDetails) => {
+  const signUp = async (userSignUpDetails : any) => {
     try{
       const userDetails = await signup(userSignUpDetails);
       console.log("Inside sign up auth provider:");
