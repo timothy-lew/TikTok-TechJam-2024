@@ -11,7 +11,7 @@ const NewListing = ({setCreateListing, accessToken}: NewListingProps) => {
         const form = e.currentTarget
         const formData = new FormData(form)
 
-        fetch("http://localhost:8080/api/items", {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}}`
@@ -31,7 +31,7 @@ const NewListing = ({setCreateListing, accessToken}: NewListingProps) => {
         return (
             <>
             <iframe name="dummyframe" id="dummyframe" style={{display: "none"}}></iframe>
-            {/* <form method="POST" action={`http://localhost:8080/api/items`} encType="multipart/form-data" target="dummyframe"> */}
+            {/* <form method="POST" action={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items`} encType="multipart/form-data" target="dummyframe"> */}
             <form onSubmit={(e) =>{
                 e.preventDefault()
                 onSubmit(e)

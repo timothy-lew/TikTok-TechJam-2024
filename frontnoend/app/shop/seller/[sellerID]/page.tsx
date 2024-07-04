@@ -62,7 +62,7 @@ const SellerShopPage = ({ params }: PageProps) => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/items/seller/${params.sellerID}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/seller/${params.sellerID}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

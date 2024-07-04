@@ -1,10 +1,12 @@
 "use client";
 
 import { useAuth } from "@/hooks/auth-provider";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import TikTokLoader from "@/components/shared/TiktokLoader";
 import {
   Form,
   FormField,
@@ -29,6 +31,8 @@ export default function SignInForm() {
 
     const auth = useAuth();
 
+    const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
+
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -37,21 +41,23 @@ export default function SignInForm() {
       },
     });
   
-    function onSubmit(values: z.infer<typeof formSchema>) {
-      console.log("Inside onSubmit");
-
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+      setIsSigningIn(true);
       const formattedValues: UserSignInDetails = {
         ...values,
       };
       console.log(formattedValues);
       
       try {
-          auth?.signIn({
+          await auth?.signIn({
             username: formattedValues.username,
             password: formattedValues.password
           });
       } catch(error) {
           alert("Error in signing in")
+      }
+      finally{
+        setIsSigningIn(false);
       }
     }
   
@@ -85,7 +91,14 @@ export default function SignInForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit">
+              {isSigningIn ? 'Logging In' : 'Log In'}
+            </Button>
+            {isSigningIn &&
+              <div className="flex_center w-full">
+                <TikTokLoader />
+              </div>
+            }
           </form>
         </Form>
       </section>

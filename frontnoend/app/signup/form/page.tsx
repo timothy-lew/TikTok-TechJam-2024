@@ -41,7 +41,11 @@ const formSchema = z.object({
 
 export default function SignUpForm() {
   const auth = useAuth();
+
+  // Contorls the radio group
   const [userRole, setUserRole] = useState<UserRoleWithBoth>("ROLE_BUYER");
+
+  const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,7 +64,9 @@ export default function SignUpForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+
+    setIsSigningUp(true);
 
     const roles: UserRole[] = userRole === "ROLE_BOTH" ? ["ROLE_BUYER", "ROLE_SELLER"] : isUserRole(userRole) ? [userRole] : [];
 
@@ -71,10 +77,14 @@ export default function SignUpForm() {
     console.log(formattedValues);
     
     try {
-      alert("Signing Up not implemented!")
-      auth?.signUp(formattedValues);
+
+      await auth?.signUp(formattedValues);
+
     } catch(error) {
       alert("Error in signing up")
+    }
+    finally{
+      setIsSigningUp(false);
     }
   }
 
@@ -276,13 +286,14 @@ export default function SignUpForm() {
             )}
             
             <Button type="submit" className="w-full ">
-              Signing Up...
-
+              {isSigningUp ? 'Signing Up...' : 'Sign Up'}
             </Button>
-            <div className="flex_center w-full">
 
-            <TikTokLoader />
-            </div>
+            {isSigningUp &&
+              <div className="flex_center w-full">
+                <TikTokLoader />
+              </div>
+            }
 
           </form>
         </Form>

@@ -20,7 +20,7 @@ export function useConvertCurrency() {
   // no poll, polling done on caller
   const checkTransactionStatus = async ({transactionID, accessToken}: {transactionID: string, accessToken: string}): Promise<boolean> => {
     try {
-      const response = await fetch(`http://localhost:8080/api/transactions/status/${transactionID}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/status/${transactionID}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export function useConvertCurrency() {
   //     const poll = () => {
   //       setTimeout(async () => {
   //         try {
-  //           const response = await fetch(`http://localhost:8080/api/transactions/status/${transactionID}`, {
+  //           const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/status/${transactionID}`, {
   //             method: 'GET',
   //             headers: {
   //               'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ export function useConvertCurrency() {
 
     try{
 
-      const response = await fetch('http://localhost:8080/api/transactions/conversion', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/conversion`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
