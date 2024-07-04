@@ -4,7 +4,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - PUBLIC_API_URL=http://app:8080/api
+      - PUBLIC_API_URL=app
+#      - PUBLIC_API_URL=http://app:8080/api
 
   app:
     build:

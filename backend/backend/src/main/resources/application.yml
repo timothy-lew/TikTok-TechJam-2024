@@ -4,25 +4,32 @@ server:
 spring:
   data:
     mongodb:
-      # =============================================== Atlas ===============================================
-      #      uri: mongodb+srv://mongo:P%40ssword123@cluster0.bfooric.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-      #      database: shopping_platform
-      # =============================================== Old docker  ===============================================
-      #      uri: mongodb://root:secret@localhost:27017/?retryWrites=true&w=majority&appName=Cluster0
-      #      username: root
-      #      password: secret
-      # =============================================== New Docker ===============================================
-      uri: ${SPRING_DATA_MONGODB_URI}
+      # ========================================= Atlas (FOR DEPLOYMENT) ===========================================
+      uri: mongodb+srv://mongo:P%40ssword123@cluster0.bfooric.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: shopping_platform
+    # =========================================== Docker (FOR LOCAL) ===============================================
+  #      uri: ${SPRING_DATA_MONGODB_URI}
   servlet:
     multipart:
       max-file-size: 256MB
       max-request-size: 256MB
       enabled: true
 
+## FOR DEPLOYMENT
+#web3:
+#  rpc:
+#    url: "https://eth-sepolia.g.alchemy.com/v2/aApuM4rApKBMjA_BkWvZQU-Pn94pSrOm"
+#  contract:
+#    address: "0x7e8705CEB55620Abe93e90bBF6751A08d976E495"
+#    tikTokAddress: "0x99e635aa8B2096d944848Cfe9E06f747E0532aa9"
+#  wallet:
+#    private-key: "e1701760b316e1c047d3c436ffe960796900a7d6c1bb27c3002a11572e212cbd" # account 0
+
+# FOR LOCAL
 web3:
   rpc:
-    #    url: "http://127.0.0.1:8545"
-    url: "http://hardhat:8545"
+    url: "http://127.0.0.1:8545" # for non-docker-compose
+  #    url: "http://hardhat:8545" # for docker-compose
   contract:
     address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
     tikTokAddress: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
