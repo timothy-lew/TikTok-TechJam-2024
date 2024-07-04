@@ -1,5 +1,6 @@
 import { useAuth } from "@/hooks/auth-provider";
 import { access } from "fs";
+import { list } from "postcss";
 import { useEffect, useState } from "react";
 
 
@@ -7,6 +8,10 @@ import { useEffect, useState } from "react";
 type FetchListingsProps = {
     userId: string, 
     accessToken: string,
+    // vv these are hardcoded
+    toEdit: string | null
+    createListing: boolean | "created"
+    isDeleted: "deleted" | "normal"
 }
 
 export type Listing = {
@@ -22,19 +27,27 @@ export type Listing = {
     sellerWalletAddress: string
 }
 
-export function useFetchListings( {userId, accessToken}: FetchListingsProps) {
+export function useFetchListings( {userId, accessToken, toEdit, createListing, isDeleted}: FetchListingsProps) {
     const [listing, setListing] = useState<Listing[]>([])
     useEffect(() => {
-        console.log("accessToken", accessToken)
-        fetch(`http://localhost:8080/api/items/user/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        }).then(res => res.json())
-        .then(res => setListing(res))
+        // console.log("accessToken", accessToken)
+        console.log(isDeleted)
+        if (accessToken == "") {
+            return
+        }
+        if (toEdit != "edited" && createListing != "created" && isDeleted=="normal") { // crazy hardcoded
+            console.log("fetching listings")
+        
+            fetch(`http://localhost:8080/api/items/user/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            }).then(res => res.json())
+            .then(res => setListing(res))
+        }
 
-    }, [accessToken])
+    }, [accessToken, toEdit, createListing, isDeleted])
 
     return listing
 }
