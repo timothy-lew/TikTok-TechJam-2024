@@ -24,7 +24,9 @@ export type Listing = {
 export function useFetchListing( {itemId, accessToken}: FetchListingProps) {
     const [listing, setListing] = useState<Listing|null>(null)
     useEffect(() => {
-        console.log("accessToken", accessToken)
+        if (!accessToken) {
+            return
+        }
         fetch(`http://localhost:8080/api/items/${itemId}`, {
             method: 'GET',
             headers: {
