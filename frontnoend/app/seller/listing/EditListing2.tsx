@@ -147,7 +147,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
   };
 
   // const onSubmit = (listing: Listing) => {
-  //     fetch(`http://localhost:8080/api/items/${itemId}`, {
+  //     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${itemId}`, {
   //         method: 'PUT',
   //         headers: {
   //             'Content-Type': 'multipart/form-data; boundary=B0EC8D07-EBF1-4EA7-966C-E492A9F2C36E',
@@ -176,7 +176,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
   //         data.append("image", listing.imageUrl);
   //     }
   //     console.log("data:", data)
-  //     fetch(`http://localhost:8080/api/items/667c2015fe08ec33cf32e736`, {
+  //     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/667c2015fe08ec33cf32e736`, {
   //         method: 'PUT',
   //         headers: {
   //             'Content-Type': 'multipart/form-data; boundary=B0EC8D07-EBF1-4EA7-966C-E492A9F2C36E',
@@ -199,7 +199,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
       } 
 
       const response = await fetch(
-        `http://localhost:8080/api/items/${itemId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${itemId}`,
         {
           method: "PUT",
           headers: {
@@ -231,7 +231,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
   //     formData.append("tokTokenPrice", listing.tokTokenPrice.toString());
   //     formData.append("quantity", listing.quantity.toString());
   //     formData.append("image", listing.imageUrl);
-  //     axios.put(`http://localhost:8080/api/items/${itemId}`, formData, {
+  //     axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${itemId}`, formData, {
   //         headers: {
   //             'Content-Type': 'multipart/form-data',
   //             'Authorization': `Bearer ${accessToken}`

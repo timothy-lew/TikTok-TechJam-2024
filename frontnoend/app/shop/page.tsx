@@ -59,7 +59,7 @@ const ShopPage = () => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8080/api/items",
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

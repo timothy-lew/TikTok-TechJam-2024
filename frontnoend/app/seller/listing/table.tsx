@@ -217,7 +217,7 @@ export const columns: ColumnDef<Listing>[] = [
                 onClick={() => {
                     // console.log("Delete clicked")
                     table.options.meta?.deleteHandler(row.original.id)
-                    // fetch(`http://localhost:8080/api/items/${row.original.id}`, {
+                    // fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${row.original.id}`, {
                     //     method: 'DELETE',
                     //     headers: {
                     //         'Authorization': `Bearer ${table.options.meta?.accessToken}`
@@ -260,7 +260,7 @@ export function DataTableDemo({data, setToEdit, setIsDelete}: DataTableDemoProps
     }, [])
 
     const deleteHandler = (id: string) => {
-        fetch(`http://localhost:8080/api/items/${id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${accessToken}`

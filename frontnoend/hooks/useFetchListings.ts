@@ -38,7 +38,7 @@ export function useFetchListings( {userId, accessToken, toEdit, createListing, i
         if (toEdit != "edited" && createListing != "created" && isDeleted=="normal") { // crazy hardcoded
             console.log("fetching listings")
         
-            fetch(`http://localhost:8080/api/items/user/${userId}`, {
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/user/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`

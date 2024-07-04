@@ -11,7 +11,7 @@ export function useFetchExchangeRate() {
     
     const accessToken = await auth?.obtainAccessToken();
     try{
-        const response = await fetch(`http://localhost:8080/api/rates/conversion/current`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/rates/conversion/current`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

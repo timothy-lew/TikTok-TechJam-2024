@@ -20,7 +20,7 @@ export async function getAccessToken(): Promise<string|undefined>{
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/refresh-token', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/refresh-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export async function signup(userSignUpDetails : UserSignUpDetails){
     console.log("userSignUpDetails:");
     console.log(userSignUpDetails);
 
-    const responseSignUp = await fetch('http://localhost:8080/api/users/signup', {
+    const responseSignUp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/signup`, {
 
       method: 'POST',
       headers: {
@@ -86,7 +86,7 @@ export async function signup(userSignUpDetails : UserSignUpDetails){
     console.log("userDetails:");
     console.log(userDetails);
 
-    const responseSignIn = await fetch('http://localhost:8080/api/login', {
+    const responseSignIn = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ export async function login(userSignInDetails : UserSignInDetails){
 
   try{
 
-    const responseSignIn = await fetch('http://localhost:8080/api/login', {
+    const responseSignIn = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

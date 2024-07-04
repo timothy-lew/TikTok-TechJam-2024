@@ -95,7 +95,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
         }
 
         const response = await fetch(
-          `http://localhost:8080/api/items/${params.id}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${params.id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -212,7 +212,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
     signal: AbortSignal
   ): Promise<string> => {
     const response = await fetch(
-      "http://localhost:8080/api/transactions/purchase",
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/purchase`,
       {
         method: "POST",
         headers: {
@@ -250,7 +250,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
 
     const checkTransactionStatus = async (): Promise<boolean> => {
       const statusResponse = await fetch(
-        `http://localhost:8080/api/transactions/status/${transactionID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/status/${transactionID}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           signal,

@@ -20,7 +20,7 @@ export function useTopUpWallet() {
       setSuccess(null);
       setError(null);
       console.log("Sending to top up API")
-      const response = await fetch('http://localhost:8080/api/transactions/topup', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/topup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

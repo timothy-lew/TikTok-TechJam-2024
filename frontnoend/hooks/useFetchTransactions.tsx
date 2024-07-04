@@ -57,7 +57,7 @@ export function useFetchTransactions( buyerId: string){
       const accessToken = await auth?.obtainAccessToken();
 
       try{
-        const response = await fetch(`http://localhost:8080/api/transactions/buyer/${buyerId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/buyer/${buyerId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

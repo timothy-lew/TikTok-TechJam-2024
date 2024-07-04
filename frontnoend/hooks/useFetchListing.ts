@@ -27,7 +27,7 @@ export function useFetchListing( {itemId, accessToken}: FetchListingProps) {
         if (!accessToken) {
             return
         }
-        fetch(`http://localhost:8080/api/items/${itemId}`, {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${itemId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`
