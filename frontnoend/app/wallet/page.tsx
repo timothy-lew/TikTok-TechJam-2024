@@ -32,7 +32,7 @@ const WalletPage: React.FC = () => {
 
   const handleClosePopup = () => setLoginPopupOpen(false);
 
-  const transactionData: Transaction[] = useFetchTransactions(user?.buyerProfile?.id || "");
+  const transactionData: Transaction[] = useFetchTransactions(user?.buyerProfile?.id || "", "buyer");
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   
   // const { walletData } = useWallet();

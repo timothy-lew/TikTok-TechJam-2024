@@ -47,7 +47,7 @@ export type Transaction = TransactionResponse & {
   desc: string,
 };
 
-export function useFetchTransactions( buyerId: string){
+export function useFetchTransactions( id: string, buyerSeller: 'buyer' | 'seller') {
   const auth = useAuth();
   const [transactionData, setTransactionData] = useState<Transaction[]>([]);
 
@@ -57,7 +57,7 @@ export function useFetchTransactions( buyerId: string){
       const accessToken = await auth?.obtainAccessToken();
 
       try{
-        const response = await fetch(`http://localhost:8080/api/transactions/buyer/${buyerId}`, {
+        const response = await fetch(`http://localhost:8080/api/transactions/${buyerSeller}/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
