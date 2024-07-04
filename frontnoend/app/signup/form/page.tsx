@@ -17,18 +17,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import TikTokLoader from "@/components/shared/TiktokLoader";
 
-type UserRole = "ROLE_BUYER" | "ROLE_SELLER" | "ROLE_BOTH";
+type UserRoleWithBoth = UserRole | "ROLE_BOTH";
+function isUserRole(role: string): role is UserRole {
+  return role === "ROLE_BUYER" || role === "ROLE_SELLER";
+}
 
 const formSchema = z.object({
   username: z.string().min(2, { message: "Username must be at least 2 characters." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
   email: z.string().email({ message: "Invalid email address." }),
-  firstName: z.string().nonempty({ message: "First name is required." }),
-  lastName: z.string().nonempty({ message: "Last name is required." }),
+  firstName: z.string().min(1, { message: "First name is required." }),
+  lastName: z.string().min(1, { message: "Last name is required." }),
   role: z.enum(["ROLE_BUYER", "ROLE_SELLER", "ROLE_BOTH"]),
   shippingAddress: z.string().min(5, { message: "Shipping address is required." }).optional(),
   billingAddress: z.string().min(5, { message: "Billing address is required." }).optional(),
@@ -39,7 +41,7 @@ const formSchema = z.object({
 
 export default function SignUpForm() {
   const auth = useAuth();
-  const [userRole, setUserRole] = useState<UserRole>("ROLE_BUYER");
+  const [userRole, setUserRole] = useState<UserRoleWithBoth>("ROLE_BUYER");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,15 +61,18 @@ export default function SignUpForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+
+    const roles: UserRole[] = userRole === "ROLE_BOTH" ? ["ROLE_BUYER", "ROLE_SELLER"] : isUserRole(userRole) ? [userRole] : [];
+
     const formattedValues = {
       ...values,
-      roles: userRole === "ROLE_BOTH" ? ["ROLE_BUYER", "ROLE_SELLER"] : [userRole],
+      roles,
     };
     console.log(formattedValues);
     
     try {
       alert("Signing Up not implemented!")
-      // auth?.signUp(formattedValues);
+      auth?.signUp(formattedValues);
     } catch(error) {
       alert("Error in signing up")
     }
@@ -125,7 +130,7 @@ export default function SignUpForm() {
                 name="walletAddress"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Wallet Address</FormLabel>
+                    <FormLabel>Crypto Wallet Address</FormLabel>
                     <FormControl>
                       <Input placeholder="Wallet Address" {...field} />
                     </FormControl>

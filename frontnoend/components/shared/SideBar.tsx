@@ -163,7 +163,7 @@ const SideBar = () => {
       :
       <div className="hidden md:flex_col_center">
         <p className="text-left text-slate-400 text-sm">Log in to follow creators, like videos, and view comments.</p>
-        <Button variant="outline" className="w-full my-4 hover:bg-red-50"><p className="font-semibold text-skin-red">Log In</p></Button>
+        <Link href="/login" className="px-4 py-2 w-full my-4 hover:bg-red-50 flex_center rounded-md border-2 border-tiktok-red/80"><p className="text-skin-red">Log In</p></Link>
       </div>
 
       }

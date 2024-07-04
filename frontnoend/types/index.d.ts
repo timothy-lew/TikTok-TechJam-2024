@@ -45,11 +45,10 @@ type UserSignUpDetails = {
   firstName: string,
   lastName: string,
   roles: UserRole[],
-  shippingAddress: string,
-  billingAddress: string,
-  defaultPaymentMethod: string,
-  businessName: string,
-  businessDescription:string,
+  shippingAddress?: string,
+  billingAddress?: string,
+  businessName?: string,
+  businessDescription?:string,
 }
 
 // Cross checked
