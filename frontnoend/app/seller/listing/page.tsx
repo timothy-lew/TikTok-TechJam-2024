@@ -7,6 +7,7 @@ import { DataTableDemo } from "./table";
 import EditListing from "./EditListing";
 import { Button } from "@/components/ui/button";
 import NewListing from "./NewListing";
+import EditListing2 from "./EditListing2";
 
 
 const page = () => {
@@ -45,7 +46,8 @@ const page = () => {
           data={listing}
           setToEdit={setToEdit}
         />
-        {toEdit && <EditListing itemId={toEdit} setEditListing={setToEdit}/>}
+        {/* {toEdit && <EditListing itemId={toEdit} setEditListing={setToEdit}/>} */}
+        {toEdit && <EditListing2 itemId={toEdit} setEditListing={setToEdit}/>}
         {createListing && <NewListing setCreateListing={setCreateListing}/>}
     </div>
   )

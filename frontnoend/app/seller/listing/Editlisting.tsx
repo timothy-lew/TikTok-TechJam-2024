@@ -60,7 +60,9 @@ const EditListing = ({itemId, setEditListing}: EditListingProps) => {
                 }>
                 {/* <form method="PUT" action={`http://localhost:8080/api/items/${itemId}`} encType="multipart/form-data" >
                 <form method="PUT" action={`http://localhost:8080/api/items/667c2015fe08ec33cf32e736`} encType="multipart/form-data" target="_parent"> */}
-
+                    <div className="flex flex-col mb-4">
+                        {itemId}
+                    </div>
                     <div className="flex flex-col mb-4">
                         <label className="text-left">Name</label>
                         <input name="name" type="text" className="border border-gray-300 p-2 rounded-lg" defaultValue={listing?.name}/>
@@ -117,8 +119,7 @@ const EditListing = ({itemId, setEditListing}: EditListingProps) => {
 
 
     const onSubmit = (listing: Listing) => {
-        // var img = new Image();
-        // img.src = listing.imageUrl;
+        console.log("onSubmit", listing)
         var data = new FormData();
         data.append("name", listing.name);
         data.append("description", listing.description);
@@ -127,9 +128,8 @@ const EditListing = ({itemId, setEditListing}: EditListingProps) => {
         if (listing.imageUrl) {
             data.append("image", listing.imageUrl);
         }
-        console.log("data:", data)
-        fetch(`http://localhost:8080/api/items/667c2015fe08ec33cf32e736`, {
-            method: 'PUT',
+        fetch(`http://localhost:8080/api/items/${itemId}`, {
+            method: 'put',
             headers: {
                 'Content-Type': 'multipart/form-data; boundary=B0EC8D07-EBF1-4EA7-966C-E492A9F2C36E',
                 'Authorization': `Bearer ${accessToken}`
