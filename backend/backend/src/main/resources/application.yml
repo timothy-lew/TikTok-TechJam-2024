@@ -4,11 +4,15 @@ server:
 spring:
   data:
     mongodb:
+      # =============================================== Atlas ===============================================
       uri: mongodb+srv://mongo:P%40ssword123@cluster0.bfooric.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: shopping_platform
-      # uri: mongodb://root:secret@localhost:27017/?retryWrites=true&w=majority&appName=Cluster0
-      # username: root
-      # password: secret
+      # =============================================== Old docker  ===============================================
+      #      uri: mongodb://root:secret@localhost:27017/?retryWrites=true&w=majority&appName=Cluster0
+      #      username: root
+      #      password: secret
+    # =============================================== New Docker ===============================================
+  #      uri: ${SPRING_DATA_MONGODB_URI}
   servlet:
     multipart:
       max-file-size: 256MB
