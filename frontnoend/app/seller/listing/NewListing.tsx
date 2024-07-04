@@ -1,16 +1,41 @@
 
 
 type NewListingProps = {
-    setCreateListing: (createListing: boolean) => void
+    setCreateListing: (createListing: boolean| "created") => void
+    accessToken: string
 }
 
-const NewListing = ({setCreateListing}: NewListingProps) => {
+const NewListing = ({setCreateListing, accessToken}: NewListingProps) => {
+    const onSubmit = (e:any) => {
+        e.preventDefault()
+        const form = e.currentTarget
+        const formData = new FormData(form)
+
+        fetch("http://localhost:8080/api/items", {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}}`
+            },
+            body: formData
+        }).then(res => {
+            if (res.ok) {
+                setCreateListing("created")
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+        
 
     const NewListingForm = () => {
         return (
             <>
             <iframe name="dummyframe" id="dummyframe" style={{display: "none"}}></iframe>
-            <form method="POST" action={`http://localhost:8080/api/items`} encType="multipart/form-data" target="dummyframe">
+            {/* <form method="POST" action={`http://localhost:8080/api/items`} encType="multipart/form-data" target="dummyframe"> */}
+            <form onSubmit={(e) =>{
+                e.preventDefault()
+                onSubmit(e)
+            }}>
                 <div className="flex flex-col mb-4">
                     <label className="text-left">Name</label>
                     <input name="name" type="text" className="border border-gray-300 p-2 rounded-lg"/>
@@ -23,10 +48,10 @@ const NewListing = ({setCreateListing}: NewListingProps) => {
                     <label className="text-left">Price</label>
                     <input name="price"  type="text" className="border border-gray-300 p-2 rounded-lg"/>
                 </div>
-                <div className="flex flex-col mb-4">
+                {/* <div className="flex flex-col mb-4">
                     <label className="text-left">Tok Token Price</label>
                     <input name="toktoken"  type="text" className="border border-gray-300 p-2 rounded-lg"/>
-                </div>
+                </div> */}
                 <div className="flex flex-col mb-4">
                     <label className="text-left">Quantity</label>
                     <input name="quantity"  type="text" className="border border-gray-300 p-2 rounded-lg"/>

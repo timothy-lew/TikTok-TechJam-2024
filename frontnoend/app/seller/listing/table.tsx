@@ -36,10 +36,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { useAuth } from "@/hooks/auth-provider"
 
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
         setToEdit: (toEdit: string) => void
+        deleteHandler: (id: string) => void
     }
   }
 
@@ -211,6 +213,23 @@ export const columns: ColumnDef<Listing>[] = [
             >
               Edit Listing
             </DropdownMenuItem>
+            <DropdownMenuItem
+                onClick={() => {
+                    // console.log("Delete clicked")
+                    table.options.meta?.deleteHandler(row.original.id)
+                    // fetch(`http://localhost:8080/api/items/${row.original.id}`, {
+                    //     method: 'DELETE',
+                    //     headers: {
+                    //         'Authorization': `Bearer ${table.options.meta?.accessToken}`
+                    //     }
+                    // }).then(res => {
+                    //     if (res.ok) {
+                    //         console.log("Item deleted")
+                    //     }
+                    // })
+                }}
+                className="text-red-500"
+            >Delete</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>History</DropdownMenuItem>
             {/* <DropdownMenuItem>View payment details</DropdownMenuItem> */}
@@ -224,9 +243,36 @@ export const columns: ColumnDef<Listing>[] = [
 export interface DataTableDemoProps {
     data: Listing[],
     setToEdit: (id: string) => void
+    setIsDelete: (isDelete: "deleted"| "normal") => void
 }
 
-export function DataTableDemo({data, setToEdit}: DataTableDemoProps) {
+export function DataTableDemo({data, setToEdit, setIsDelete}: DataTableDemoProps) {
+    const [accessToken, setAccessToken] = React.useState<string>("")
+    const auth = useAuth()
+
+    React.useEffect(() => {
+        const fetchAccessToken = () => {
+            auth?.obtainAccessToken().then((res) => {
+                setAccessToken(res||"none")
+            })
+        }
+        fetchAccessToken()
+    }, [])
+
+    const deleteHandler = (id: string) => {
+        fetch(`http://localhost:8080/api/items/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        }).then(res => {
+            if (res.ok) {
+                console.log("Item deleted")
+                setIsDelete("deleted")
+            }
+        })
+    }
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -247,7 +293,8 @@ export function DataTableDemo({data, setToEdit}: DataTableDemoProps) {
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     meta: {
-        setToEdit
+        setToEdit,
+        deleteHandler
         },
     state: {
       sorting,
@@ -346,10 +393,10 @@ export function DataTableDemo({data, setToEdit}: DataTableDemoProps) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        {/* <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
+        </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"

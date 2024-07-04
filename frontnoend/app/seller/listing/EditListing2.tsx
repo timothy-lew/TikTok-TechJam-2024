@@ -37,22 +37,22 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
     onSubmit: (listing: Listing) => void;
   };
   const ListingForm = ({ listing, onSubmit }: ListingFormProps) => {
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const form = e.currentTarget;
-      const formData = new FormData(form);
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //   e.preventDefault();
+    //   const form = e.currentTarget;
+    //   const formData = new FormData(form);
 
-      const updatedListing = {
-        ...listing,
-        name: formData.get("name") as string,
-        description: formData.get("description") as string,
-        price: parseFloat(formData.get("price") as string),
-        quantity: parseInt(formData.get("quantity") as string),
-        imageUrl: (formData.get("image") as File) || listing.imageUrl,
-      };
+    //   const updatedListing = {
+    //     ...listing,
+    //     name: formData.get("name") as string,
+    //     description: formData.get("description") as string,
+    //     price: parseFloat(formData.get("price") as string),
+    //     quantity: parseInt(formData.get("quantity") as string),
+    //     imageUrl: (formData.get("image") as File) || listing.imageUrl,
+    //   };
 
-      onSubmit(updatedListing);
-    };
+    //   onSubmit(updatedListing);
+    // };
 
     return (
       <div>
@@ -67,10 +67,11 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
               price: (e.target as any).price.value,
             //   tokTokenPrice: (e.target as any).toktoken.value,
               quantity: (e.target as any).quantity.value,
-              imageUrl: e.target[5].files[0],
+              imageUrl: e.target[4]?.files[0] || listing.imageUrl,
             };
             console.log(e);
             onSubmit(listingValue);
+            setEditListing("edited");
           }}
         >
           <div className="flex flex-col mb-4">
@@ -135,7 +136,6 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
               />
             </div>
           </div>
-          Broken
           <div className="flex justify-center">
             <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
               Save

@@ -17,7 +17,8 @@ const page = () => {
     // const accessToken = await auth?.obtainAccessToken() || "";
     // const accessToken = await auth?.obtainAccessToken() || "";
     const [accessToken, setAccessToken] = useState<string>("")
-    const [toEdit, setToEdit] = useState<string|null>(null)
+    const [toEdit, setToEdit] = useState<string|null|"edited">(null)
+    const [isDelete, setIsDelete] = useState<"deleted"| "normal">("normal")
 
     useEffect(() => {
         const fetchAccessToken = () => {
@@ -27,17 +28,35 @@ const page = () => {
         }
         fetchAccessToken()
     }, [])
+
+    useEffect(() => {
+        if (toEdit == "edited") {
+            setTimeout(() => {
+                setToEdit(null)
+            }, 1000)
+        }
+    }, [toEdit])
       
-    const [createListing, setCreateListing] = useState<boolean>(false)
+    const [createListing, setCreateListing] = useState<boolean|"created">(false)
 
-    const listing = useFetchListings({userId: "66813c84f8bd211375579165", accessToken})
+    useEffect(() => {
+        if (createListing == "created") {
+            setTimeout(() => {
+                setCreateListing(false)
+            }, 1000)
+        }
+    }, [createListing])
 
-    // const listing = "hellp"
+    useEffect(() => {
+        console.log(isDelete)
+        if (isDelete == "deleted") {
+            setTimeout(() => {
+                setIsDelete("normal")
+            }, 1000)
+        }
+    }, [isDelete])
 
-    // listing.map((item) => {
-    //   item.imageUrl = "Dummy"
-    //   return item
-    // })
+    const listing = useFetchListings({userId: "66813c84f8bd211375579165", accessToken, toEdit, createListing, isDeleted: isDelete})
 
     return (
     <div>
@@ -45,10 +64,11 @@ const page = () => {
         <DataTableDemo
           data={listing}
           setToEdit={setToEdit}
+          setIsDelete={setIsDelete}
         />
         {/* {toEdit && <EditListing itemId={toEdit} setEditListing={setToEdit}/>} */}
-        {toEdit && <EditListing2 itemId={toEdit} setEditListing={setToEdit}/>}
-        {createListing && <NewListing setCreateListing={setCreateListing}/>}
+        {toEdit && toEdit!="edited" && <EditListing2 itemId={toEdit} setEditListing={setToEdit}/>}
+        {createListing && createListing!="created" && <NewListing setCreateListing={setCreateListing} accessToken={accessToken}/>}
     </div>
   )
 }
