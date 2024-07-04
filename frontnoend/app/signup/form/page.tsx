@@ -66,8 +66,8 @@ export default function SignUpForm() {
     console.log(formattedValues);
     
     try {
-      auth?.signUp(formattedValues);
-      alert("Successful!")
+      alert("Signing Up not implemented!")
+      // auth?.signUp(formattedValues);
     } catch(error) {
       alert("Error in signing up")
     }

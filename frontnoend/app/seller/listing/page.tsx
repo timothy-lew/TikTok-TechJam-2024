@@ -4,7 +4,7 @@ import { useFetchListings } from "@/hooks/useFetchListings"
 import { useAuth } from "@/hooks/auth-provider";
 import { use, useEffect, useState } from "react";
 import { DataTableDemo } from "./table";
-import EditListing from "./EditListing";
+import EditListing from "./Editlisting";
 import { Button } from "@/components/ui/button";
 import NewListing from "./NewListing";
 
