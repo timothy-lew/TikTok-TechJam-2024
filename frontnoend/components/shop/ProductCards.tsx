@@ -42,20 +42,20 @@ export function ProductCard({ product }: { product: Product }) {
             ${price} or{" "}
             {discountedTokTokenPrice ? (
               <>
-                {Math.floor(discountedTokTokenPrice)} TOK Coins{" "}
+                {Math.floor(discountedTokTokenPrice)} Tok Coins{" "}
                 <s className="text-xs text-gray-700">
-                  {tokTokenPrice} TOK Coins
+                  {tokTokenPrice} Tok Coins
                 </s>
               </>
             ) : (
-              `${tokTokenPrice} TOK Coins`
+              `${tokTokenPrice} Tok Coins`
             )}
           </h3>
         </CardDescription>
         {discountRate ? (
           <CardDescription>
             <span className="inline-block bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full border border-yellow-500">
-              Save {discountRate} with TOK Coin!
+              Save {discountRate} with Tok Coin!
             </span>
           </CardDescription>
         ) : (
@@ -185,20 +185,20 @@ export function ProductCardDetails({
               ${price} or{" "}
               {discountedTokTokenPrice ? (
                 <>
-                  {Math.floor(discountedTokTokenPrice)} TOK Coins{" "}
+                  {Math.floor(discountedTokTokenPrice)} Tok Coins{" "}
                   <s className="text-xs text-gray-700">
-                    {tokTokenPrice} TOK Coins
+                    {tokTokenPrice} Tok Coins
                   </s>
                 </>
               ) : (
-                `${tokTokenPrice} TOK Coins`
+                `${tokTokenPrice} Tok Coins`
               )}
             </h3>
           </CardDescription>
           {discountRate ? (
           <CardDescription>
             <span className="inline-block bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full border border-yellow-500">
-              Save {discountRate} with TOK Coin!
+              Save {discountRate} with Tok Coin!
             </span>
           </CardDescription>
         ) : (

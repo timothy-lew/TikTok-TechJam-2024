@@ -97,7 +97,7 @@ const TOKTransactionAlertDialog = ({
                     <>
                       <p>
                         Please make payment of{" "}
-                        <strong>{unitTOKTokenCost * quantity} TOK Coins</strong>{" "}
+                        <strong>{unitTOKTokenCost * quantity} Tok Coins</strong>{" "}
                         to the following
                       </p>
                       <p>

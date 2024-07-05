@@ -60,7 +60,7 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
                   Enjoy {product.discountRate} Off!
                 </AlertTitle>
                 <AlertDescription className="text-m">
-                  Checkout using TOK Coin as your payment method to enjoy{" "}
+                  Checkout using Tok Coin as your payment method to enjoy{" "}
                   {product.discountRate} savings!
                 </AlertDescription>
               </div>
@@ -85,13 +85,13 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
               {product.discountedTokTokenPrice ? (
                 <strong>
                   ${(product.price * quantity).toFixed(2)} or{" "}
-                  {Math.floor(product.discountedTokTokenPrice) * quantity} TOK
+                  {Math.floor(product.discountedTokTokenPrice) * quantity} Tok
                   Coins
                 </strong>
               ) : (
                 <strong>
                   ${(product.price * quantity).toFixed(2)} or{" "}
-                  {product.tokTokenPrice * quantity} TOK Coins
+                  {product.tokTokenPrice * quantity} Tok Coins
                 </strong>
               )}
             </p>
@@ -126,7 +126,7 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
             className="w-full sm:w-auto flex-grow inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 sm:text-sm"
             onClick={onConfirmTiktokCoin}
           >
-            Buy with TOK Coin
+            Buy with Tok Coin
           </button>
           <button
             type="button"
