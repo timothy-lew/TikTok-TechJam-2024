@@ -5,10 +5,10 @@ spring:
   data:
     mongodb:
       # ========================================= Atlas (FOR DEPLOYMENT) ===========================================
-      #      uri: mongodb+srv://mongo:P%40ssword123@cluster0.bfooric.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-      #      database: shopping_platform
+      uri: mongodb+srv://mongo:P%40ssword123@cluster0.bfooric.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: shopping_platform
       # =========================================== Docker (FOR LOCAL) ===============================================
-      uri: ${SPRING_DATA_MONGODB_URI}
+  #      uri: ${SPRING_DATA_MONGODB_URI}
   servlet:
     multipart:
       max-file-size: 256MB
@@ -28,8 +28,8 @@ spring:
 # FOR LOCAL
 web3:
   rpc:
-    #    url: "http://127.0.0.1:8545" # for non-docker-compose
-    url: "http://hardhat:8545" # for docker-compose
+    url: "http://127.0.0.1:8545" # for non-docker-compose
+  #    url: "http://hardhat:8545" # for docker-compose
   contract:
     address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
     tikTokAddress: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
