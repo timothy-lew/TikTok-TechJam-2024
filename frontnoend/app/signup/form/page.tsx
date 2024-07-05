@@ -57,11 +57,11 @@ export default function SignUpForm() {
       firstName: "",
       lastName: "",
       role: "ROLE_BUYER",
-      shippingAddress: "",
-      billingAddress: "",
+      shippingAddress: undefined,
+      billingAddress: undefined,
       walletAddress: "",
-      businessName: "",
-      businessDescription: "",
+      businessName: undefined,
+      businessDescription: undefined,
     },
   });
 
