@@ -26,7 +26,7 @@ const SideBar = () => {
   return (
     <nav className="w-[60px] md:w-[260px] flex flex-col items-start justify-start px-4">
             
-      <Link href="/" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <svg
           width="32" data-e2e=""
           height="32" viewBox="0 0 48 48"
@@ -42,7 +42,7 @@ const SideBar = () => {
         <p className={`hidden md:flex_col_center ${pathname==='/' ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>For You</p>
       </Link>
       
-      <Link href="/explore" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/explore" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
       <svg
           width="32" data-e2e=""
           height="32" viewBox="0 0 48 48"
@@ -63,7 +63,7 @@ const SideBar = () => {
         <p className={`hidden md:flex_col_center ${pathname.startsWith('/explore') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Explore</p>
       </Link>
 
-      <Link href="/following" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/following" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <svg fill={`${pathname.startsWith('/following') ? "rgba(254, 44, 85, 1)" : "rgba(22, 24, 35, 1)"}`} width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
         {pathname.startsWith('/following') ?
           <>
@@ -78,7 +78,7 @@ const SideBar = () => {
         <p className={`hidden md:flex_col_center ${pathname.startsWith('/following') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Following</p>
       </Link>
 
-      <Link href="/friends" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/friends" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <svg fill={`${pathname.startsWith('/friends') ? "rgba(254, 44, 85, 1)" : "rgba(22, 24, 35, 1)"}`} width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
         {pathname.startsWith('/friends') ?
           <>
@@ -95,7 +95,7 @@ const SideBar = () => {
 
       
 
-      <Link href="/live" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/live" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <svg width="32" data-e2e="" height="32" viewBox="0 0 48 48" fill={`${pathname.startsWith('/live') ? "rgba(254, 44, 85, 1)" : "rgba(22, 24, 35, 1)"}`} xmlns="http://www.w3.org/2000/svg">
           {pathname.startsWith('/live') ? (
             <>
@@ -111,14 +111,14 @@ const SideBar = () => {
       </Link>
         
       {user?.sellerProfile && 
-      <Link href="/seller" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/seller" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <FaShop className={`${pathname.startsWith('/seller') ? "text-tiktok-black" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
         <div className="flex_center gap-1.5">
           <p className={`hidden md:flex_col_center ${pathname.startsWith('/shop') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Seller Studio</p>
         </div>
       </Link>}
 
-      <Link href="/profile" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/profile" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <svg fill={`${pathname.startsWith('/profile') ? "rgba(254, 44, 85, 1)" : "rgba(22, 24, 35, 1)"}`} width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
           {pathname.startsWith('/profile') ? (
             <>
@@ -133,7 +133,7 @@ const SideBar = () => {
         <p className={`hidden md:flex_col_center ${pathname.startsWith('/profile') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Profile</p>
       </Link>
 
-      <Link href="/wallet" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/wallet" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <FaWallet className={`${pathname.startsWith('/wallet') ? "text-tiktok-red" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
         <div className="flex_center gap-1.5">
           <p className={`hidden md:flex_col_center ${pathname.startsWith('/wallet') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Wallet</p>
@@ -141,7 +141,7 @@ const SideBar = () => {
         </div>
       </Link>
 
-      <Link href="/shop" className="flex justify-start items-center gap-2 hover:bg-slate-100 w-full py-2">
+      <Link href="/shop" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <FaShop className={`${pathname.startsWith('/shop') ? "text-tiktok-red" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
         <div className="flex_center gap-1.5">
           <p className={`hidden md:flex_col_center ${pathname.startsWith('/shop') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Shop</p>

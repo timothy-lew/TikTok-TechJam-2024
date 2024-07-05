@@ -347,7 +347,7 @@ const CurrencyExchangePage: React.FC = () => {
                 <p>Please send {amount} Tok Tokens to this wallet address:</p>
                 <WalletAddressBar wallet_address={TIKTOK_WALLET_ADDRESS}></WalletAddressBar>
                 <p>
-                  Transactions can take up to 3 minutes to be processed<br />Your patience is appreciated!
+                  Transactions can take a few seconds to be processed<br />Your patience is appreciated!
                 </p>
                 <p className="mt-4 font-bold">Time remaining: {formatTime(remainingTime)}</p>
               </AlertDialogDescription>
