@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
- 
+
+
+// Navigates user away from unconstructed routes that are for display only
 export function middleware(request: NextRequest) {
-  console.log("middleware ran");
+  // console.log("middleware ran");
 
   const unconstructedRoutes = ['/explore', '/following', '/friends', '/live', '/profile'];
 

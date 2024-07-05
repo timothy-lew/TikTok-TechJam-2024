@@ -65,7 +65,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
       const accessToken = await getAccessToken();
       return accessToken;
     } catch (error) {
-      alert(`Error getting access token: ${error}`);
+      // alert(`Error getting access token: ${error}`);
       return undefined;
     }
   };
