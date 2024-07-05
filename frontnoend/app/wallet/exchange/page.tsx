@@ -19,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
+import TransactionAlert from "@/components/shared/TransactionAlert";
 
 const CurrencyExchangePage: React.FC = () => {
   const auth = useAuth();
@@ -37,6 +38,20 @@ const CurrencyExchangePage: React.FC = () => {
   const { exchangeRate } = useFetchExchangeRate();
 
   const [EXCHANGE_RATE, setExchangeRateNow] = useState<null | number>(null);
+  
+  // Functions related to TransactionAlert
+  const [isOpen, setIsOpen] = useState(false);
+  const [alertContent, setAlertContent] = useState('');
+
+  const handleOpen = (message: string) => {
+    setIsOpen(true);
+    setAlertContent(message);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setAlertContent(''); 
+  };
 
 
   useEffect(() => {
@@ -110,19 +125,18 @@ const CurrencyExchangePage: React.FC = () => {
           };
         });
     
-        toast({
-          title: "Success!",
-          description: "Your wallet has been updated",
-        })
+        // toast({
+        //   title: "Success!",
+        //   description: "Your wallet has been updated",
+        // })
+        handleOpen(`Success! Your wallet has been updated.`)
         return;
       }
 
     }
     else{
-      toast({
-        title: "Unsuccessful!",
-        description: "Something went wrong!",
-      })
+      handleOpen("Unsuccessful! Something went wrong!")
+      return;
     }
 
     setIsAlertDialogOpen(true);
@@ -162,10 +176,7 @@ const CurrencyExchangePage: React.FC = () => {
       };
     });
 
-    toast({
-      title: "Success!",
-      description: "Your wallet has been updated",
-    });
+    handleOpen("Success! Your wallet has been updated.")
   };
 
   useEffect(() => {
@@ -220,15 +231,13 @@ const CurrencyExchangePage: React.FC = () => {
         };
       });
 
-      toast({
-        title: "Success!",
-        description: "Your wallet has been updated",
-      });
+      handleOpen("Success! Your wallet has been updated.")
     } else {
-      toast({
-        title: "Transaction Failed",
-        description: "The transaction was not completed in time",
-      });
+      // toast({
+      //   title: "Transaction Failed",
+      //   description: "The transaction was not completed in time",
+      // });
+      handleOpen("Transaction Failed. The transaction was not completed in time")
     }
 
     setIsAlertDialogOpen(false);
@@ -395,6 +404,8 @@ const CurrencyExchangePage: React.FC = () => {
         </svg>
         Back to Wallet
       </Link>
+      <TransactionAlert open={isOpen} onClose={handleClose} alertContent={alertContent} />
+
     </section>
   );
 };
