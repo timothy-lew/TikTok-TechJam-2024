@@ -13,7 +13,7 @@ export default function SellerLayout({
 
     return (
         <>
-            <nav className="w-[60px] md:w-[260px] flex items-start justify-start gap-4 px-4">
+            <nav className="w-[60px] md:w-[260px] flex items-start justify-start gap-4 px-4 pb-8">
                 <Link href="/seller" className="flex justify-center items-center gap-2"
                     style={{ color: pathname === "/seller" ? "rgba(254, 44, 85, 1)" : "rgba(22, 24, 35, 1)" }}>
                     <p className={`hidden md:flex_col_center font-bold text-lg`}>Dashboard</p>
