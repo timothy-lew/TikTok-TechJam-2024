@@ -1,9 +1,12 @@
-import React from 'react'
+"use client"
 
-const FriendsPage = () => {
+import UnavailableComponent from "@/components/shared/UnavailableComponent"
+
+
+const Unavailablepage = () => {
   return (
-    <div>FriendsPage</div>
+    <UnavailableComponent/>
   )
 }
 
-export default FriendsPage
+export default Unavailablepage

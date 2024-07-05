@@ -1,9 +1,12 @@
-import React from 'react'
+"use client"
 
-const FollowingPage = () => {
+import UnavailableComponent from "@/components/shared/UnavailableComponent"
+
+
+const Unavailablepage = () => {
   return (
-    <div>FollowingPage</div>
+    <UnavailableComponent/>
   )
 }
 
-export default FollowingPage
+export default Unavailablepage

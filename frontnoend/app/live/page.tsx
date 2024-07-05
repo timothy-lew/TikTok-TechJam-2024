@@ -1,9 +1,12 @@
-import React from 'react'
+"use client"
 
-const LivePage = () => {
+import UnavailableComponent from "@/components/shared/UnavailableComponent"
+
+
+const Unavailablepage = () => {
   return (
-    <div>LivePage</div>
+    <UnavailableComponent/>
   )
 }
 
-export default LivePage
+export default Unavailablepage

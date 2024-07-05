@@ -11,13 +11,15 @@ import {
 } from "@/components/shop/ProductCards";
 import { useAuth } from "@/hooks/auth-provider";
 import { Product } from "@/types/ShopTypes";
+import TikTokLoader from "@/components/shared/TiktokLoader";
+import TiktokLoader2 from "@/components/shared/UnavailableComponent";
 
 const ProductGridSection = ({ products }: { products: Product[] }) => {
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
         <h2 className="text-3xl font-bold">Recommended Products</h2>
-        <Button variant="outline" asChild>
+        <Button variant="outline" className="hover:bg-red-50 hover:text-black" asChild>
           <Link href="/shop" className="space-x-2">
             <span>View More</span>
             <ArrowRight className="size-4" />
@@ -80,10 +82,21 @@ const ShopPage = () => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <ProductCardSkeleton />
-        <ProductCardSkeleton />
-        <ProductCardSkeleton />
+      <div className="flex_col_center w-full gap-6">
+        <TikTokLoader />
+        <TiktokLoader2 />
+
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+        </div>
       </div>
     );
   }
