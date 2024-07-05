@@ -105,8 +105,14 @@ const TOKTransactionAlertDialog = ({
                         <WalletAddressBar
                           wallet_address={product?.sellerWalletAddress}
                         />
+                        <p>
+                          Transactions can take a few seconds to be processed
+                          <br />
+                          Your patience is appreciated!
+                          <br />
+                        </p>
                       </p>
-                      <p className="font-medium text-red-600">
+                      <p className="mt-4 font-medium text-red-600">
                         Time left to complete the transaction:{" "}
                         {formatTime(countdown)}
                       </p>
