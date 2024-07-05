@@ -26,6 +26,24 @@ type WalletActionProps = {
   href?: string;
 };
 
+function calculateMonthlyTotals(transactions: Transaction[], targetMonth: number, targetYear: number) {
+  const incoming = transactions
+    .filter(t => {
+      const date = new Date(t.transactionDate);
+      return date.getMonth() === targetMonth && date.getFullYear() === targetYear && t.transactionType === 'TOPUP';
+    })
+    .reduce((sum, t) => sum + (t.topUpDetails?.topUpAmount ?? 0), 0);
+
+  const outgoing = transactions
+    .filter(t => {
+      const date = new Date(t.transactionDate);
+      return date.getMonth() === targetMonth && date.getFullYear() === targetYear && t.transactionType === 'PURCHASE';
+    })
+    .reduce((sum, t) => sum + (t.purchaseDetails?.purchaseAmount ?? 0), 0);
+
+  return { incoming, outgoing };
+}
+
 const WalletAction: React.FC<WalletActionProps> = ({ icon, label, variant, onClick, href }) => {
   const commonClasses = "flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-100 w-full sm:w-auto";
 
@@ -63,17 +81,25 @@ const WalletPage: React.FC = () => {
   const { toast } = useToast()
   const walletData = auth?.userWallet;
 
-  let incoming: number = 0;
-  let outgoing: number = 0;
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+  const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
 
-  // Conversion is excluded
-  transactionData.forEach((transaction) => {
-    if (transaction.transactionType === 'PURCHASE') {
-      outgoing += transaction.purchaseDetails?.purchaseAmount || 0;
-    } else if (transaction.transactionType === 'TOPUP') {
-      incoming += transaction.topUpDetails?.topUpAmount || 0;
-    }
-  });
+  const allTimeIncoming = transactionData
+    .filter(t => t.transactionType === 'TOPUP')
+    .reduce((sum, t) => sum + (t.topUpDetails?.topUpAmount || 0), 0);
+
+  const allTimeOutgoing = transactionData
+    .filter(t => t.transactionType === 'PURCHASE')
+    .reduce((sum, t) => sum + (t.purchaseDetails?.purchaseAmount || 0), 0);
+
+  const thisMonth = calculateMonthlyTotals(transactionData, currentMonth, currentYear);
+  const lastMonthTotals = calculateMonthlyTotals(transactionData, lastMonth, lastMonthYear);
+
+  const incomingChange = ((thisMonth.incoming - lastMonthTotals.incoming) / lastMonthTotals.incoming) * 100;
+  const outgoingChange = ((thisMonth.outgoing - lastMonthTotals.outgoing) / lastMonthTotals.outgoing) * 100;
 
   return (
     <section className="text-gray-800 flex flex-col lg:flex-row w-full justify-start items-start gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8 max-w-[1400px] mx-auto">
@@ -101,7 +127,7 @@ const WalletPage: React.FC = () => {
                   expiryDate={tiktokCardDetails.expiryDate}
                   hideDetails={hideDetails}
                   frozen={freezeCard}
-                  noDetails={false}
+                  noDetails={true}
                   variant="blue"
                 />
                 <div className="flex_col_center gap-2">
@@ -147,43 +173,59 @@ const WalletPage: React.FC = () => {
         </div>
 
         {/* Transaction Summary Section */}
-        <div className="bg-white rounded-xl p-4 sm:p-6 shadow-md w-full border border-slate-200">
-          <h2 className="text-tiktok-red text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center">
-            Your Transactions
-          </h2>
-          <div className="flex justify-around items-center mb-6">
-            <div className="flex flex-col items-center">
-              <div className="flex items-center gap-4">
-                <Image
-                  src="/icons/incomingTransactions.svg"
-                  alt="icon"
-                  height={48}
-                  width={48}
-                />
-                <h2 className="font-bold text-lg sm:text-xl md:text-3xl text-green-600">
-                  Incoming:
-                </h2>
-              </div>
-              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">+${incoming.toFixed(2)}</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="flex items-center gap-4">
-                <Image
-                  src="/icons/outgoingTransactions.svg"
-                  alt="icon"
-                  height={48}
-                  width={48}
-                />
-                <h2 className="font-bold text-lg sm:text-xl md:text-3xl text-tiktok-red">
-                  Outgoing:
-                </h2>
-              </div>
-              <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-${outgoing.toFixed(2)}</p>
-            </div>
-          </div>
-
-          <DataTable columns={columns} data={transactionData} />
+        <div className="bg-white rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
+        <h2 className="text-tiktok-red text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center">
+          Your Transactions
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
+          <h3 className="font-bold text-lg">All Time</h3>
+          <p className="text-green-600">Incoming: ${allTimeIncoming.toFixed(2)}</p>
+          <p className="text-red-600">Outgoing: ${allTimeOutgoing.toFixed(2)}</p>
         </div>
+        <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
+          <h3 className="font-bold text-lg">This Month</h3>
+          <p className="text-green-600">Incoming: ${thisMonth.incoming.toFixed(2)}</p>
+          <p className="text-red-600">Outgoing: ${thisMonth.outgoing.toFixed(2)}</p>
+        </div>
+        <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
+          <h3 className="font-bold text-lg">Last Month</h3>
+          <p className="text-green-600">Incoming: ${lastMonthTotals.incoming.toFixed(2)}</p>
+          <p className="text-red-600">Outgoing: ${lastMonthTotals.outgoing.toFixed(2)}</p>
+        </div>
+      </div>
+      <div className="flex justify-around items-center mb-6">
+        <div className="flex flex-col items-center">
+          <h3 className="font-bold text-lg mb-2">Month-over-Month Change</h3>
+          <div className="flex items-center space-x-2">
+            <Image
+              src={incomingChange >= 0 ? "/icons/increasing.svg" : "/icons/decreasing.svg"}
+              alt={incomingChange >= 0 ? "Increase" : "Decrease"}
+              width={20}
+              height={20}
+            />
+            <p className={incomingChange >= 0 ? "text-green-600" : "text-red-600"}>
+              Incoming: {Math.abs(incomingChange).toFixed(2)}%
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Image
+              src={outgoingChange >= 0 ? "/icons/increasing.svg" : "/icons/decreasing.svg"}
+              alt={outgoingChange >= 0 ? "Increase" : "Decrease"}
+              width={20}
+              height={20}
+            />
+            <p className={outgoingChange >= 0 ? "text-green-600" : "text-red-600"}>
+              Outgoing: {Math.abs(outgoingChange).toFixed(2)}%
+            </p>
+          </div>
+        </div>
+      </div>
+
+        
+
+        <DataTable columns={columns} data={transactionData} />
+      </div>
       </div>
 
       {/* Card Tiers Section - Only visible on large screens */}
