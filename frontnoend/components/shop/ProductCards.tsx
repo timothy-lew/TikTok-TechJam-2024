@@ -76,7 +76,7 @@ export function ProductCard({ product }: { product: Product }) {
         <Button
           asChild
           size="lg"
-          className="w-full bg-white text-black border border-gray-400 hover:bg-black hover:text-white focus:bg-black focus:text-white"
+          className="w-full bg-white text-black border rounded-md border-gray-400 hover:bg-tiktok-red hover:text-white focus:bg-red-600 focus:text-white"
         >
           <Link href={`/shop/${id}/`}>Purchase</Link>
         </Button>

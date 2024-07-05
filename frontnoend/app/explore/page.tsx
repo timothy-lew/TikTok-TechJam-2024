@@ -1,8 +1,12 @@
+"use client"
 
-const ExplorePage = () => {
+import UnavailableComponent from "@/components/shared/UnavailableComponent"
+
+
+const Unavailablepage = () => {
   return (
-    <div>ExplorePage</div>
+    <UnavailableComponent/>
   )
 }
 
-export default ExplorePage
+export default Unavailablepage
