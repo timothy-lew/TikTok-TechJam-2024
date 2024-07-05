@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { navigate } from '@/lib/actions'
 import {
   Form,
   FormControl,
@@ -20,11 +19,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
 import TikTokLoader from "@/components/shared/TiktokLoader";
-import { redirect } from "next/navigation";
 
 type UserRoleWithBoth = UserRole | "ROLE_BOTH";
-function isUserRole(role: string | null): role is UserRole {
-  return role != null && (role === "ROLE_BUYER" || role === "ROLE_SELLER");
+function isUserRole(role: string): role is UserRole {
+  return role === "ROLE_BUYER" || role === "ROLE_SELLER";
 }
 
 const formSchema = z.object({
@@ -34,18 +32,8 @@ const formSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required." }),
   lastName: z.string().min(1, { message: "Last name is required." }),
   role: z.enum(["ROLE_BUYER", "ROLE_SELLER", "ROLE_BOTH"]),
-  shippingAddress: z.string().min(5, { message: "Shipping address is required." })
-    .optional()
-    .refine((val) => val !== undefined && val !== "", {
-      message: "Shipping address is required for buyers.",
-      path: ["shippingAddress"],
-    }),
-  billingAddress: z.string().min(5, { message: "Billing address is required." })
-    .optional()
-    .refine((val) => val !== undefined && val !== "", {
-      message: "Billing address is required for buyers.",
-      path: ["billingAddress"],
-    }),
+  shippingAddress: z.string().min(5, { message: "Shipping address is required." }).optional(),
+  billingAddress: z.string().min(5, { message: "Billing address is required." }).optional(),
   walletAddress: z.string().min(5, { message: "Wallet address is required." }),
   businessName: z.string().min(2, { message: "Business name is required." }).optional(),
   businessDescription: z.string().min(10, { message: "Business description must be at least 10 characters." }).optional(),
@@ -54,8 +42,8 @@ const formSchema = z.object({
 export default function SignUpForm() {
   const auth = useAuth();
 
-  // Controls the radio group
-  const [userRole, setUserRole] = useState<UserRoleWithBoth | null>(null);
+  // Contorls the radio group
+  const [userRole, setUserRole] = useState<UserRoleWithBoth>("ROLE_BUYER");
 
   const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
 
@@ -67,19 +55,16 @@ export default function SignUpForm() {
       email: "",
       firstName: "",
       lastName: "",
-      role: undefined,
+      role: "ROLE_BUYER",
       shippingAddress: "",
       billingAddress: "",
       walletAddress: "",
       businessName: "",
       businessDescription: "",
     },
-    mode:"onChange"
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-
-    console.log("Inside onSubmit signup: ", values);
 
     setIsSigningUp(true);
 
@@ -94,12 +79,9 @@ export default function SignUpForm() {
     try {
 
       await auth?.signUp(formattedValues);
-      // TODO: redirect user to home page
-      navigate('/')
 
     } catch(error) {
       alert("Error in signing up")
-      console.log(error);
     }
     finally{
       setIsSigningUp(false);
@@ -203,11 +185,11 @@ export default function SignUpForm() {
                   <FormLabel>Account Type</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={(value: UserRoleWithBoth) => {
+                      onValueChange={(value: UserRole) => {
                         setUserRole(value);
                         field.onChange(value);
                       }}
-                      value={field.value}
+                      defaultValue={field.value}
                       className="flex flex-col space-y-1"
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -303,7 +285,7 @@ export default function SignUpForm() {
               </div>
             )}
             
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full ">
               {isSigningUp ? 'Signing Up...' : 'Sign Up'}
             </Button>
 
