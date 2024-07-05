@@ -114,7 +114,7 @@ const SideBar = () => {
       <Link href="/seller" className="flex justify-center items-center gap-2">
         <FaShop className={`${pathname.startsWith('/seller') ? "text-tiktok-black" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
         <div className="flex_center gap-1.5">
-          <p className={`hidden md:flex_col_center ${pathname.startsWith('/shop') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Seller Studio</p>
+          <p className={`hidden md:flex_col_center ${pathname.startsWith('/seller') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Seller Studio</p>
         </div>
       </Link>}
 
