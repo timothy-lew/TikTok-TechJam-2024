@@ -66,7 +66,7 @@ export async function signup(userSignUpDetails : UserSignUpDetails){
     const usernameCurr : string = userSignUpDetails.username;
     const passwordCurr : string = userSignUpDetails.password;
 
-    console.log("userSignUpDetails:");
+    console.log("Inside signup fetching with userSignUpDetails:");
     console.log(userSignUpDetails);
 
     const responseSignUp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/signup`, {
@@ -76,7 +76,6 @@ export async function signup(userSignUpDetails : UserSignUpDetails){
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(userSignUpDetails),
-
     });
 
     if (!responseSignUp.ok) throw new Error('Error in Sign-up Request');
@@ -92,8 +91,8 @@ export async function signup(userSignUpDetails : UserSignUpDetails){
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: "alex2",
-        password: "password2",
+        username: usernameCurr,
+        password: passwordCurr,
       }),
     });
 

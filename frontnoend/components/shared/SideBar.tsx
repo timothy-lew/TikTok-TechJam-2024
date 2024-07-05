@@ -171,7 +171,7 @@ const SideBar = () => {
       <Separator className="my-1 bg-slate-200"/>
 
 
-      <div className="hidden md:flex_col_center relative">
+      <div className="hidden md:flex_col_center relative py-4">
         <Image src="/images/sidebarbannerbg.png" alt="banner" height={280} width={220}/>
           <h4 className="absolute inset-0 flex items-center justify-center text-yellow-200 text-xs pl-[50px] px-4 py-2 font-semibold">Create TikTok effects, get a reward</h4>
       </div>
