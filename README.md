@@ -57,12 +57,13 @@ All components are containerized using Docker for easy local setup.
      ```
 
 2. **Build the Backend**
+     For Linux:
      ```
      ./mvnw clean package -DskipTests
      ```
 
-     Alternatively:
-    ```
+     Alternatively, for Windows:
+     ```
      mvnw clean package -DskipTests
      ```
 
