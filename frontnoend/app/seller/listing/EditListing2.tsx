@@ -1,4 +1,5 @@
 "use client";
+import { getBackendUrl } from "@/lib/utils";
 
 import { useAuth } from "@/hooks/auth-provider";
 import { useEffect, useState } from "react";
@@ -65,7 +66,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
               name: (e.target as any).name.value,
               description: (e.target as any).description.value,
               price: (e.target as any).price.value,
-            //   tokTokenPrice: (e.target as any).toktoken.value,
+              //   tokTokenPrice: (e.target as any).toktoken.value,
               quantity: (e.target as any).quantity.value,
               imageUrl: e.target[4]?.files[0] || listing.imageUrl,
             };
@@ -147,7 +148,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
   };
 
   // const onSubmit = (listing: Listing) => {
-  //     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${itemId}`, {
+  //     fetch(`${getBackendUrl()}/api/items/${itemId}`, {
   //         method: 'PUT',
   //         headers: {
   //             'Content-Type': 'multipart/form-data; boundary=B0EC8D07-EBF1-4EA7-966C-E492A9F2C36E',
@@ -176,7 +177,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
   //         data.append("image", listing.imageUrl);
   //     }
   //     console.log("data:", data)
-  //     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/667c2015fe08ec33cf32e736`, {
+  //     fetch(`${getBackendUrl()}/api/items/667c2015fe08ec33cf32e736`, {
   //         method: 'PUT',
   //         headers: {
   //             'Content-Type': 'multipart/form-data; boundary=B0EC8D07-EBF1-4EA7-966C-E492A9F2C36E',
@@ -188,7 +189,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
 
   const onSubmit = async (listing: Listing) => {
     try {
-        const file = new File([], "filename")
+      const file = new File([], "filename");
       const data = new FormData();
       data.append("name", listing.name);
       data.append("description", listing.description);
@@ -196,18 +197,15 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
       data.append("quantity", listing.quantity.toString());
       if (listing.imageUrl instanceof File) {
         data.append("image", listing.imageUrl);
-      } 
+      }
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${itemId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: data,
-        }
-      );
+      const response = await fetch(`${getBackendUrl()}/api/items/${itemId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: data,
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -231,7 +229,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
   //     formData.append("tokTokenPrice", listing.tokTokenPrice.toString());
   //     formData.append("quantity", listing.quantity.toString());
   //     formData.append("image", listing.imageUrl);
-  //     axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${itemId}`, formData, {
+  //     axios.put(`${getBackendUrl()}/api/items/${itemId}`, formData, {
   //         headers: {
   //             'Content-Type': 'multipart/form-data',
   //             'Authorization': `Bearer ${accessToken}`

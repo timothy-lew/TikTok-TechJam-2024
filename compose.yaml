@@ -4,8 +4,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - PUBLIC_API_URL=app
-#      - PUBLIC_API_URL=http://app:8080/api
+      - NEXT_PUBLIC_BACKEND_URL=http://app:8080
+    depends_on:
+      - app
 
   app:
     build:
@@ -41,3 +42,15 @@ services:
       - "8545:8545"
     volumes:
       - ./backend/smart-contract:/app
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - app
+      - mongodb
+      - hardhat

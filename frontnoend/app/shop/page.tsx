@@ -1,4 +1,5 @@
 "use client";
+import { getBackendUrl } from "@/lib/utils";
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,6 @@ import {
 } from "@/components/shop/ProductCards";
 import { useAuth } from "@/hooks/auth-provider";
 import { Product } from "@/types/ShopTypes";
-
-
 
 const ProductGridSection = ({ products }: { products: Product[] }) => {
   return (
@@ -27,8 +26,7 @@ const ProductGridSection = ({ products }: { products: Product[] }) => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
-          <ProductCard product={product}
-          />
+          <ProductCard product={product} />
         ))}
       </div>
     </div>
@@ -58,14 +56,11 @@ const ShopPage = () => {
 
     const fetchProducts = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await fetch(`${getBackendUrl()}/api/items`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
