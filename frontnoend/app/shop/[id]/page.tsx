@@ -197,11 +197,11 @@ export default function ProductDetailsPage({ params }: PageProps) {
     try {
       await initiateTransaction(payload, signal);
       setCashAlertDialogContent(
-        "Purchase successful! Redirecting to home page..."
+        "Purchase successful! Redirecting to Shop..."
       );
       setTimeout(() => {
         setIsCashDialogOpen(false);
-        router.push("/profile");
+        router.push("/shop");
       }, 3000);
     } catch (error) {
       handleError(error as PurchaseError);
@@ -270,11 +270,11 @@ export default function ProductDetailsPage({ params }: PageProps) {
     while (Date.now() - startTime < timeout) {
       if (await checkTransactionStatus()) {
         setAlertDialogContent(
-          "Purchase successful! Redirecting to home page..."
+          "Purchase successful! Redirecting to Shop..."
         );
         setTimeout(() => {
           setIsAlertDialogOpen(false);
-          router.push("/profile");
+          router.push("/shop");
         }, 3000);
         return;
       }

@@ -251,12 +251,12 @@ const CurrencyExchangePage: React.FC = () => {
           <div className="mb-4 sm:mb-0">
             <h2 className="text-lg font-semibold mb-2">Your Balance</h2>
             <p className="text-muted-foreground">Fiat: ${walletData?.cashBalance}</p>
-            <p className="text-muted-foreground">TikTok Coins: {walletData?.tokTokenBalance}</p>
+            <p className="text-muted-foreground">Tok Coins: {walletData?.tokTokenBalance}</p>
           </div>
           <div>
             <h2 className="text-lg font-semibold mb-2">Exchange Rate</h2>
             {EXCHANGE_RATE ?
-            <p className="text-muted-foreground">1 SGD = {EXCHANGE_RATE} TikTok Coins</p>
+            <p className="text-muted-foreground">1 SGD = {EXCHANGE_RATE} Tok Coins</p>
             :
             <p className="text-muted-foreground">Loading Exchange Rate....</p>  
             }
@@ -273,7 +273,7 @@ const CurrencyExchangePage: React.FC = () => {
                   : "bg-card text-tiktok-red"
               } transition duration-300`}
             >
-              Fiat to TikTok Coins
+              Fiat to Tok Coins
             </button>
             <button
               onClick={() => setConversionType("TOKTOKEN_TO_CASH")}
@@ -283,7 +283,7 @@ const CurrencyExchangePage: React.FC = () => {
                   : "bg-card text-tiktok-red"
               } transition duration-300`}
             >
-              TikTok Coins to Fiat
+              Tok Coins to Fiat
             </button>
           </div>
         </div>
@@ -302,7 +302,7 @@ const CurrencyExchangePage: React.FC = () => {
               placeholder="Enter amount"
             />
             <span className="bg-muted text-muted-foreground px-4 py-2 rounded-r-md">
-              {conversionType === "CASH_TO_TOKTOKEN" ? 'SGD' : "TikTok Coins"}
+              {conversionType === "CASH_TO_TOKTOKEN" ? 'SGD' : "Tok Coins"}
             </span>
           </div>
         </div>
@@ -311,7 +311,7 @@ const CurrencyExchangePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2">You will receive:</h3>
           <p className="text-2xl font-bold text-tiktok-red">
             {calculatedAmount ?  calculatedAmount.toFixed(2) : ""}{" "}
-            {conversionType === "CASH_TO_TOKTOKEN" ? "TikTok Coins" : 'SGD'}
+            {conversionType === "CASH_TO_TOKTOKEN" ? "Tok Coins" : 'SGD'}
           </p>
         </div>
         
@@ -337,7 +337,7 @@ const CurrencyExchangePage: React.FC = () => {
               disabled={!amount && !EXCHANGE_RATE}
               className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
             >
-              Exchange Tokens
+              Exchange Tok Coin
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
