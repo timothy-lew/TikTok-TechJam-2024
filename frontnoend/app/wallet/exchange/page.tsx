@@ -130,17 +130,20 @@ const CurrencyExchangePage: React.FC = () => {
         //   description: "Your wallet has been updated",
         // })
         handleOpen(`Success! Your wallet has been updated.`)
+        setAmount(null);
         return;
       }
 
     }
     else{
       handleOpen("Unsuccessful! Something went wrong!")
+      setAmount(null);
       return;
     }
 
     setIsAlertDialogOpen(true);
     setRemainingTime(givenTime); // Reset timer
+    setAmount(null);
     
     // the first input which is the function will get called after `AUTO_CANCEL_TIMEOUT` milliseconds
     setAutoCloseTimer(
@@ -328,7 +331,6 @@ const CurrencyExchangePage: React.FC = () => {
           <button
           onClick={()=>{
             handleExchange();
-            setAmount(null);
           }}
           disabled={!amount && !EXCHANGE_RATE}
           className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
@@ -368,13 +370,13 @@ const CurrencyExchangePage: React.FC = () => {
               }} className="hover:bg-red-50 hover:text-black">
                 Cancel
               </AlertDialogCancel>
-              <AlertDialogAction onClick={() => {
+              {/* <AlertDialogAction onClick={() => {
                 setIsAlertDialogOpen(false);
                 handleTransferConfirmation();
                 setRemainingTime(givenTime); // Reset timer
               }} className="hover:bg-red-600">
                 Transferred
-              </AlertDialogAction>
+              </AlertDialogAction> */}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
