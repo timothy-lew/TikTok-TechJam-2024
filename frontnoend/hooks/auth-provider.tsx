@@ -1,9 +1,9 @@
 "use client"
 
 import { login, logout, signup, getAccessToken } from "@/lib/auth";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { ReactNode } from "react";
-
+import TikTokLoader from "@/components/shared/TiktokLoader";
 
 type Auth = {
   user : UserDetails | null;
@@ -24,7 +24,35 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
 
   const [userWallet, setUserWallet] = useState<UserWallet | null>(null);
 
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        const storedUser = localStorage.getItem('tiktokuser');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser) as UserDetails;
+          setUser(parsedUser);
+          setUserWallet(parsedUser.wallet || null);
+
+          // Verify the stored user with the backend
+          const accessToken = await getAccessToken();
+          if (!accessToken) {
+            // If no access token, clear the stored user
+            localStorage.removeItem('tiktokuser');
+            setUser(null);
+            setUserWallet(null);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to initialize auth:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initAuth();
+  }, []);
 
   const signIn = async (userSignInDetails : UserSignInDetails) => {
     try{
@@ -33,6 +61,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
       console.log(userDetails);
       setUser(userDetails);
       setUserWallet(userDetails.wallet || null);
+      localStorage.setItem('tiktokuser', JSON.stringify(userDetails));
     }
     catch(error){
       console.log(`Error in sign in: ${error}`)
@@ -46,6 +75,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
       console.log(userDetails);
       setUser(userDetails);
       setUserWallet(userDetails.wallet || null);
+      localStorage.setItem('tiktokuser', JSON.stringify(userDetails));
     }
     catch(error){
       console.log("Error in auth provider");
@@ -57,6 +87,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
   const signOut = async () => {
     await logout();
     setUser(null);
+    localStorage.removeItem('tiktokuser');
   }
 
 
@@ -70,6 +101,7 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
     }
   };
 
+  if (loading) return (<div className="mx-auto w-full"><TikTokLoader/> </div>)
 
 
   return(
