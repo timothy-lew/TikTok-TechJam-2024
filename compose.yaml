@@ -7,6 +7,8 @@ services:
       - NEXT_PUBLIC_BACKEND_URL=http://app:8080
     depends_on:
       - app
+    networks:
+        - app-network
 
   app:
     build:
@@ -21,6 +23,8 @@ services:
       - WEB3_RPC_URL=http://hardhat:8545
     volumes:
       - ./backend/backend/data-seed:/data
+    networks:
+      - app-network
 
   mongodb:
     image: 'mongo:latest'
@@ -32,7 +36,9 @@ services:
       - '27017:27017'
     volumes:
       - ./backend/backend/data-seed:/data
-      - ./backend/backend/seed.sh:/docker-entrypoint-initdb.d/seed.sh
+      - ./backend/backend/data-seed/seed.sh:/docker-entrypoint-initdb.d/seed.sh
+    networks:
+      - app-network
 
   hardhat:
     build:
@@ -42,6 +48,8 @@ services:
       - "8545:8545"
     volumes:
       - ./backend/smart-contract:/app
+    networks:
+      - app-network
 
   nginx:
     image: nginx:latest
@@ -54,3 +62,9 @@ services:
       - app
       - mongodb
       - hardhat
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
