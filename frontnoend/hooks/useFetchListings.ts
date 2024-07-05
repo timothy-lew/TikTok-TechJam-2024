@@ -2,6 +2,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import { access } from "fs";
 import { list } from "postcss";
 import { useEffect, useState } from "react";
+import { getBackendUrl } from "@/lib/utils";
 
 type FetchListingsProps = {
   userId: string;

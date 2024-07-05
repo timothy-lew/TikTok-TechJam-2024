@@ -1,4 +1,5 @@
 "use client";
+import { getBackendUrl } from "@/lib/utils";
 
 import { useAuth } from "@/hooks/auth-provider";
 import { useEffect, useState } from "react";
@@ -160,7 +161,7 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
     if (listing.imageUrl) {
       data.append("image", listing.imageUrl);
     }
-    fetch(`${}/api/items/${itemId}`, {
+    fetch(`${getBackendUrl()}/api/items/${itemId}`, {
       method: "put",
       headers: {
         "Content-Type":
