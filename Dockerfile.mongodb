@@ -1,0 +1,10 @@
+FROM mongo:latest
+
+COPY ./backend/backend/data-seed/seed.sh /docker-entrypoint-initdb.d/seed.sh
+
+# Set execute permissions and verify
+RUN chmod +x /docker-entrypoint-initdb.d/seed.sh && \
+    ls -l /docker-entrypoint-initdb.d/seed.sh
+
+# Optionally, you can also print a message
+RUN echo "Execute permissions set successfully on seed.sh"
