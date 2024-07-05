@@ -6,10 +6,12 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   // console.log("middleware ran");
 
-  const unconstructedRoutes = ['/explore', '/following', '/friends', '/live', '/profile'];
+  // const unconstructedRoutes = ['/explore', '/following', '/friends', '/live', '/profile'];
+
+  const unconstructedRoutes : string[] = [];
 
   if (unconstructedRoutes.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/unavailable', request.url));
   }
 }
 
