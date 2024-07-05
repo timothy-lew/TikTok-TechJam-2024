@@ -8,4 +8,4 @@ RUN apt-get update && apt-get install -y mongodb-database-tools
 
 VOLUME /tmp
 COPY target/*.jar app.jar
-ENTRYPOINT ["java","-Xmx2g","-Xms2g","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]
