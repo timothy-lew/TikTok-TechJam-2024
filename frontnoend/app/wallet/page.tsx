@@ -127,7 +127,7 @@ const WalletPage: React.FC = () => {
                   expiryDate={tiktokCardDetails.expiryDate}
                   hideDetails={hideDetails}
                   frozen={freezeCard}
-                  noDetails={true}
+                  noDetails={false}
                   variant="blue"
                 />
                 <div className="flex_col_center gap-2">
@@ -173,59 +173,72 @@ const WalletPage: React.FC = () => {
         </div>
 
         {/* Transaction Summary Section */}
-        <div className="bg-white rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
-        <h2 className="text-tiktok-red text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center">
-          Your Transactions
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
-          <h3 className="font-bold text-lg">All Time</h3>
-          <p className="text-green-600">Incoming: ${allTimeIncoming.toFixed(2)}</p>
-          <p className="text-red-600">Outgoing: ${allTimeOutgoing.toFixed(2)}</p>
-        </div>
-        <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
-          <h3 className="font-bold text-lg">This Month</h3>
-          <p className="text-green-600">Incoming: ${thisMonth.incoming.toFixed(2)}</p>
-          <p className="text-red-600">Outgoing: ${thisMonth.outgoing.toFixed(2)}</p>
-        </div>
-        <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
-          <h3 className="font-bold text-lg">Last Month</h3>
-          <p className="text-green-600">Incoming: ${lastMonthTotals.incoming.toFixed(2)}</p>
-          <p className="text-red-600">Outgoing: ${lastMonthTotals.outgoing.toFixed(2)}</p>
-        </div>
-      </div>
-      <div className="flex justify-around items-center mb-6">
-        <div className="flex flex-col items-center">
-          <h3 className="font-bold text-lg mb-2">Month-over-Month Change</h3>
-          <div className="flex items-center space-x-2">
-            <Image
-              src={incomingChange >= 0 ? "/icons/increasing.svg" : "/icons/decreasing.svg"}
-              alt={incomingChange >= 0 ? "Increase" : "Decrease"}
-              width={20}
-              height={20}
-            />
-            <p className={incomingChange >= 0 ? "text-green-600" : "text-red-600"}>
-              Incoming: {Math.abs(incomingChange).toFixed(2)}%
-            </p>
+        <div className="bg-white rounded-xl p-6 sm:p-8 shadow-md w-full border border-tiktok-red">
+          <h2 className="text-tiktok-red text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">
+            Your Transactions
+          </h2>
+          <p className="text-sm text-center w-full text-slate-400 mb-6">*Withdrawals / Currency Exchange are not included in calculation</p>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div className="flex flex-col items-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-sm">
+              <h3 className="font-bold text-xl mb-4 text-gray-700">All Time</h3>
+              <div className="flex-grow flex flex-col justify-evenly">
+                <div className="flex justify-center items-center gap-2">
+                  <Image src="/icons/incomingTransactions.svg" alt="icon" height={40} width={40} className="relative bottom-2"/>
+                  <p className="text-green-600 text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
+                    +${allTimeIncoming.toFixed(2)}
+                  </p>
+                </div>
+                <div className="flex justify-center items-center gap-2">
+                  <Image src="/icons/outgoingTransactions.svg" alt="icon" height={40} width={40}/>
+                  <p className="text-amber-500 text-2xl sm:text-3xl md:text-4xl font-bold">
+                    -${allTimeOutgoing.toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex flex-col items-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-sm">
+              <h3 className="font-bold text-xl mb-4 text-gray-700">This Month</h3>
+              <div className="flex flex-col items-center mb-4">
+                <p className="text-green-600 text-2xl sm:text-3xl md:text-4xl font-bold mb-1">
+                  +${thisMonth.incoming.toFixed(2)}
+                </p>
+                <div className="flex items-center space-x-0.5 text-sm">
+                  <span className={`${incomingChange >= 0 ? "text-green-600" : "text-red-600"} font-semibold`}>
+                    {incomingChange.toFixed(0)}%
+                  </span>
+                  <Image
+                    src={incomingChange >= 0 ? "/icons/greenIncrease.svg" : "/icons/redDecrease.svg"}
+                    alt={incomingChange >= 0 ? "Increase" : "Decrease"}
+                    width={16}
+                    height={16}
+                  />
+                  <span className="text-gray-500">vs prev month</span>
+                </div>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-amber-500 text-2xl sm:text-3xl md:text-4xl font-bold mb-1">
+                  -${thisMonth.outgoing.toFixed(2)}
+                </p>
+                <div className="flex items-center space-x-0.5 text-sm">
+                  <span className={`${outgoingChange >= 0 ? "text-red-600" : "text-green-600"} font-semibold`}>
+                    {outgoingChange.toFixed(0)}%
+                  </span>
+                  <Image
+                    src={outgoingChange >= 0 ? "/icons/redIncrease.svg" : "/icons/greenDecrease.svg"}
+                    alt={outgoingChange >= 0 ? "Increase" : "Decrease"}
+                    width={16}
+                    height={16}
+                  />
+                  <span className="text-gray-500">vs prev month</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Image
-              src={outgoingChange >= 0 ? "/icons/increasing.svg" : "/icons/decreasing.svg"}
-              alt={outgoingChange >= 0 ? "Increase" : "Decrease"}
-              width={20}
-              height={20}
-            />
-            <p className={outgoingChange >= 0 ? "text-green-600" : "text-red-600"}>
-              Outgoing: {Math.abs(outgoingChange).toFixed(2)}%
-            </p>
-          </div>
+
+          <DataTable columns={columns} data={transactionData} />
         </div>
-      </div>
-
-        
-
-        <DataTable columns={columns} data={transactionData} />
-      </div>
       </div>
 
       {/* Card Tiers Section - Only visible on large screens */}
@@ -252,12 +265,12 @@ const WalletPage: React.FC = () => {
             <div className="flex flex-col items-start justify-center mt-4 space-y-2 text-sm">
               <TiktokCardBenefits desc="24/7 Priority Customer Support" />
               <TiktokCardBenefits desc="11% Cashback on TikTok Shop Purchases" />
-              <TiktokCardBenefits desc="Exclusive Red Tier Events" />
+              <TiktokCardBenefits desc="Exclusive Red Tier Discounts" />
             </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">Black Tier</h3>
+            <h3 className="text-xl font-semibold mb-2">Obsidian Tier</h3>
             <TiktokCard
               number={["***", "***", "***", "***"]}
               cardName={"Your Name"}
@@ -266,7 +279,7 @@ const WalletPage: React.FC = () => {
               hideDetails={false}
               frozen={false}
               noDetails={true}
-              variant="black"
+              variant="obsidian"
             />
             <div className="mt-4 space-y-2">
               <Progress value={30} className="w-full" />
@@ -276,7 +289,7 @@ const WalletPage: React.FC = () => {
               <TiktokCardBenefits desc="24/7 Priority Customer Support" />
               <TiktokCardBenefits desc="12% Cashback on TikTok Shop Purchases" />
               <TiktokCardBenefits desc="Free Shipping" />
-              <TiktokCardBenefits desc="Exclusive Black Tier Events" />
+              <TiktokCardBenefits desc="Exclusive Obsidian Tier Discounts" />
               <TiktokCardBenefits desc="Personalized Shopping Concierge" />
             </div>
           </div>

@@ -5,7 +5,7 @@ interface TiktokCardProps extends TiktokCardDetails {
   hideDetails: boolean;
   frozen: boolean;
   noDetails: boolean;
-  variant: 'blue' | 'red' | 'black';
+  variant: 'blue' | 'red' | 'obsidian';
 }
 
 const TiktokCard: React.FC<TiktokCardProps> = ({ number, cardName, cvc, expiryDate, hideDetails, frozen, noDetails, variant }) => {
@@ -13,13 +13,13 @@ const TiktokCard: React.FC<TiktokCardProps> = ({ number, cardName, cvc, expiryDa
   const cardClasses = {
     blue: 'bg-gradient-to-br from-cyan-200 via-cyan-400 to-blue-500',
     red: 'bg-gradient-to-br from-rose-600 via-red-800 to-red-950',
-    black: 'bg-gradient-to-br from-gray-600 via-gray-800 to-black',
+    obsidian: 'bg-gradient-to-br from-gray-600 via-gray-800 to-black',
   };
 
   const overlayClasses = {
     blue: 'from-white via-cyan-100 to-cyan-200',
     red: 'from-rose-200 via-rose-300 to-red-400',
-    black: 'from-neutral-300 via-neutral-400 to-neutral-500',
+    obsidian: 'from-neutral-300 via-neutral-400 to-neutral-500',
   };
 
   const frozenClasses = 'bg-gradient-to-br from-slate-300 via-slate-600 to-slate-300';
