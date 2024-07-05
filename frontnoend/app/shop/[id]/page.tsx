@@ -1,4 +1,6 @@
 "use client";
+import { getBackendUrl } from "@/lib/utils";
+
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -46,7 +48,8 @@ export default function ProductDetailsPage({ params }: PageProps) {
   const [isCashDialogOpen, setIsCashDialogOpen] = useState(false);
   const [cashAlertDialogContent, setCashAlertDialogContent] = useState("");
   const [transactionTOKCancelled, setTransactionTOKCancelled] = useState(false);
-  const [transactionCashCancelled, setTransactionCashCancelled] = useState(false);
+  const [transactionCashCancelled, setTransactionCashCancelled] =
+    useState(false);
 
   const router = useRouter();
   const transactionControllerRef = useRef<AbortController | null>(null);
@@ -95,7 +98,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
         }
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${params.id}`,
+          `${getBackendUrl()}/api/items/${params.id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -212,7 +215,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
     signal: AbortSignal
   ): Promise<string> => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/purchase`,
+      `${getBackendUrl()}/api/transactions/purchase`,
       {
         method: "POST",
         headers: {
@@ -250,7 +253,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
 
     const checkTransactionStatus = async (): Promise<boolean> => {
       const statusResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transactions/status/${transactionID}`,
+        `${getBackendUrl()}/api/transactions/status/${transactionID}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           signal,

@@ -75,6 +75,7 @@ public class WebSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(error -> error.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+//                .requiresChannel(channel -> channel.anyRequest().requiresSecure())
                 .build();
     }
 

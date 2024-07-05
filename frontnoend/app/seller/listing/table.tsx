@@ -1,6 +1,7 @@
-"use client"
+"use client";
+import { getBackendUrl } from "@/lib/utils";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,11 +14,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -26,8 +27,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -35,15 +36,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { useAuth } from "@/hooks/auth-provider"
+} from "@/components/ui/table";
+import { useAuth } from "@/hooks/auth-provider";
 
-declare module '@tanstack/react-table' {
-    interface TableMeta<TData extends RowData> {
-        setToEdit: (toEdit: string) => void
-        deleteHandler: (id: string) => void
-    }
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends RowData> {
+    setToEdit: (toEdit: string) => void;
+    deleteHandler: (id: string) => void;
   }
+}
 
 // const data: Listing[] = [{
 //         "id":"667c2106fe08ec33cf32e73c",
@@ -69,61 +70,60 @@ declare module '@tanstack/react-table' {
 //         "sellerWalletAddress":"0x90F79bf6EB2c4f870365E785982E1f101E93b906"
 //     }]
 
-
-
-
 export type Listing = {
-    id: string
-    sellerProfileId: string
-    name: string
-    description: string
-    price: number
-    tokTokenPrice: number
-    quantity: number
-    imageUrl: string | File
-    businessName: string
-    sellerWalletAddress: string
-}
+  id: string;
+  sellerProfileId: string;
+  name: string;
+  description: string;
+  price: number;
+  tokTokenPrice: number;
+  quantity: number;
+  imageUrl: string | File;
+  businessName: string;
+  sellerWalletAddress: string;
+};
 
 export const columns: ColumnDef<Listing>[] = [
-//   {
-//     id: "select",
-//     header: ({ table }) => (
-//       <Checkbox
-//         checked={
-//           table.getIsAllPageRowsSelected() ||
-//           (table.getIsSomePageRowsSelected() && "indeterminate")
-//         }
-//         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-//         aria-label="Select all"
-//       />
-//     ),
-//     cell: ({ row }) => (
-//       <Checkbox
-//         checked={row.getIsSelected()}
-//         onCheckedChange={(value) => row.toggleSelected(!!value)}
-//         aria-label="Select row"
-//       />
-//     ),
-//     enableSorting: false,
-//     enableHiding: false,
-//   },
-    {
-        accessorKey: "imageUrl",
-        header: "Preview",
-        cell: ({ row }) => (
-        <div className="capitalize">
-            {/* Title: <span text="${title}">name</span> */}
-            <img alt="preview" style={{height:50, width:50, objectFit: "cover"}} src={`data:image/png;base64, ${row.getValue("imageUrl")}`} />
-        </div>
-        ),
-    },
+  //   {
+  //     id: "select",
+  //     header: ({ table }) => (
+  //       <Checkbox
+  //         checked={
+  //           table.getIsAllPageRowsSelected() ||
+  //           (table.getIsSomePageRowsSelected() && "indeterminate")
+  //         }
+  //         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //         aria-label="Select all"
+  //       />
+  //     ),
+  //     cell: ({ row }) => (
+  //       <Checkbox
+  //         checked={row.getIsSelected()}
+  //         onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //         aria-label="Select row"
+  //       />
+  //     ),
+  //     enableSorting: false,
+  //     enableHiding: false,
+  //   },
+  {
+    accessorKey: "imageUrl",
+    header: "Preview",
+    cell: ({ row }) => (
+      <div className="capitalize">
+        {/* Title: <span text="${title}">name</span> */}
+        <img
+          alt="preview"
+          style={{ height: 50, width: 50, objectFit: "cover" }}
+          src={`data:image/png;base64, ${row.getValue("imageUrl")}`}
+        />
+      </div>
+    ),
+  },
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("name")}</div>
-    ),
+    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "price",
@@ -155,7 +155,9 @@ export const columns: ColumnDef<Listing>[] = [
     //     </Button>
     //   )
     // },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("tokTokenPrice")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("tokTokenPrice")}</div>
+    ),
   },
   {
     accessorKey: "quantity",
@@ -171,28 +173,30 @@ export const columns: ColumnDef<Listing>[] = [
     //     </Button>
     //   )
     // },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("quantity")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("quantity")}</div>
+    ),
   },
-//   {
-//     accessorKey: "amount",
-//     header: () => <div className="text-right">Amount</div>,
-//     cell: ({ row }) => {
-//       const amount = parseFloat(row.getValue("amount"))
+  //   {
+  //     accessorKey: "amount",
+  //     header: () => <div className="text-right">Amount</div>,
+  //     cell: ({ row }) => {
+  //       const amount = parseFloat(row.getValue("amount"))
 
-//       // Format the amount as a dollar amount
-//       const formatted = new Intl.NumberFormat("en-US", {
-//         style: "currency",
-//         currency: "USD",
-//       }).format(amount)
+  //       // Format the amount as a dollar amount
+  //       const formatted = new Intl.NumberFormat("en-US", {
+  //         style: "currency",
+  //         currency: "USD",
+  //       }).format(amount)
 
-//       return <div className="text-right font-medium">{formatted}</div>
-//     },
-//   },
+  //       return <div className="text-right font-medium">{formatted}</div>
+  //     },
+  //   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row, table }) => {
-    //   const payment = row.original
+      //   const payment = row.original
 
       return (
         <DropdownMenu>
@@ -206,80 +210,85 @@ export const columns: ColumnDef<Listing>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
-                    console.log("Edit clicked")
-                    table.options.meta?.setToEdit(row.original.id)
-                }
-              }
+                console.log("Edit clicked");
+                table.options.meta?.setToEdit(row.original.id);
+              }}
             >
               Edit Listing
             </DropdownMenuItem>
             <DropdownMenuItem
-                onClick={() => {
-                    // console.log("Delete clicked")
-                    table.options.meta?.deleteHandler(row.original.id)
-                    // fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${row.original.id}`, {
-                    //     method: 'DELETE',
-                    //     headers: {
-                    //         'Authorization': `Bearer ${table.options.meta?.accessToken}`
-                    //     }
-                    // }).then(res => {
-                    //     if (res.ok) {
-                    //         console.log("Item deleted")
-                    //     }
-                    // })
-                }}
-                className="text-red-500"
-            >Delete</DropdownMenuItem>
+              onClick={() => {
+                // console.log("Delete clicked")
+                table.options.meta?.deleteHandler(row.original.id);
+                // fetch(`${getBackendUrl()}/api/items/${row.original.id}`, {
+                //     method: 'DELETE',
+                //     headers: {
+                //         'Authorization': `Bearer ${table.options.meta?.accessToken}`
+                //     }
+                // }).then(res => {
+                //     if (res.ok) {
+                //         console.log("Item deleted")
+                //     }
+                // })
+              }}
+              className="text-red-500"
+            >
+              Delete
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>History</DropdownMenuItem>
             {/* <DropdownMenuItem>View payment details</DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export interface DataTableDemoProps {
-    data: Listing[],
-    setToEdit: (id: string) => void
-    setIsDelete: (isDelete: "deleted"| "normal") => void
+  data: Listing[];
+  setToEdit: (id: string) => void;
+  setIsDelete: (isDelete: "deleted" | "normal") => void;
 }
 
-export function DataTableDemo({data, setToEdit, setIsDelete}: DataTableDemoProps) {
-    const [accessToken, setAccessToken] = React.useState<string>("")
-    const auth = useAuth()
+export function DataTableDemo({
+  data,
+  setToEdit,
+  setIsDelete,
+}: DataTableDemoProps) {
+  const [accessToken, setAccessToken] = React.useState<string>("");
+  const auth = useAuth();
 
-    React.useEffect(() => {
-        const fetchAccessToken = () => {
-            auth?.obtainAccessToken().then((res) => {
-                setAccessToken(res||"none")
-            })
-        }
-        fetchAccessToken()
-    }, [])
+  React.useEffect(() => {
+    const fetchAccessToken = () => {
+      auth?.obtainAccessToken().then((res) => {
+        setAccessToken(res || "none");
+      });
+    };
+    fetchAccessToken();
+  }, []);
 
-    const deleteHandler = (id: string) => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        }).then(res => {
-            if (res.ok) {
-                console.log("Item deleted")
-                setIsDelete("deleted")
-            }
-        })
-    }
+  const deleteHandler = (id: string) => {
+    fetch(`${getBackendUrl()}/api/items/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((res) => {
+      if (res.ok) {
+        console.log("Item deleted");
+        setIsDelete("deleted");
+      }
+    });
+  };
 
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable<Listing>({
     data,
@@ -293,16 +302,16 @@ export function DataTableDemo({data, setToEdit, setIsDelete}: DataTableDemoProps
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     meta: {
-        setToEdit,
-        deleteHandler
-        },
+      setToEdit,
+      deleteHandler,
+    },
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -357,7 +366,7 @@ export function DataTableDemo({data, setToEdit, setIsDelete}: DataTableDemoProps
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -417,5 +426,5 @@ export function DataTableDemo({data, setToEdit, setIsDelete}: DataTableDemoProps
         </div>
       </div>
     </div>
-  )
+  );
 }

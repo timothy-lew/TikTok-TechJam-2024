@@ -69,20 +69,14 @@ public class ContractService {
         this.itemRepository = itemRepository;
         this.commonValidationAndGetService = commonValidationAndGetService;
 
-        log.info("*****rpcUrl = {}, contractAddress = {}, privateKey = {}*****", rpcUrl, contractAddress, privateKey);
-
         this.web3j = Web3j.build(new HttpService(rpcUrl));
         Credentials credentials = Credentials.create(privateKey);
-        log.info("*****Credentials = {}*****", credentials.getAddress());
 
         TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
-        log.info("*****TransactionManager = {}*****", transactionManager.toString());
 
         ContractGasProvider gasProvider = new DefaultGasProvider();
-        log.info("*****GasProvider = {}*****", gasProvider.toString());
 
         this.contract = TOKToken.load(contractAddress, web3j, transactionManager, gasProvider);
-        log.info("*****Contract = {}*****", contract.toString());
     }
 
     public void listenToTikTokAddress() {

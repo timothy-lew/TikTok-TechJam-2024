@@ -1,4 +1,5 @@
 "use client";
+import { getBackendUrl } from "@/lib/utils";
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,9 @@ const ProductGridSection = ({ products }: { products: Product[] }) => {
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
-        <h2 className="text-3xl font-bold">Products from {products[0].businessName}</h2>
+        <h2 className="text-3xl font-bold">
+          Products from {products[0].businessName}
+        </h2>
         <Button variant="outline" asChild>
           <Link href="/shop" className="space-x-2">
             <span>View More</span>
@@ -62,7 +65,7 @@ const SellerShopPage = ({ params }: PageProps) => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/items/seller/${params.sellerID}`,
+          `${getBackendUrl()}/api/items/seller/${params.sellerID}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -75,7 +78,7 @@ const SellerShopPage = ({ params }: PageProps) => {
         }
 
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setProducts(data);
         setLoading(false);
       } catch (err) {

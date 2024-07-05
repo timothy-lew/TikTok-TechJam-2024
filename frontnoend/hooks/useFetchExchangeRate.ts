@@ -1,40 +1,37 @@
 import { useAuth } from "./auth-provider";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import { getBackendUrl } from "@/lib/utils";
 
 export function useFetchExchangeRate() {
-
   const auth = useAuth();
-  
+
   const [exchangeRate, setExchangeRate] = useState<number | null>(null);
 
   const getCashToTokenExchangeRate = async () => {
-    
     const accessToken = await auth?.obtainAccessToken();
-    try{
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/rates/conversion/current`, {
-          method: 'GET',
+    try {
+      const response = await fetch(
+        `${getBackendUrl()}/api/rates/conversion/current`,
+        {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-          }
-        });
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
-        const data = await response.json();
+      const data = await response.json();
 
-        setExchangeRate(Number(data.rate));
-
+      setExchangeRate(Number(data.rate));
+    } catch (error) {
+      console.log("Error in fetching exchange rate");
     }
-    catch(error){
-        console.log("Error in fetching exchange rate");
-    }
+  };
 
-
-  }
-
-  useEffect(()=>{
+  useEffect(() => {
     getCashToTokenExchangeRate();
-  }, [])
+  }, []);
 
-  return { exchangeRate }
-
+  return { exchangeRate };
 }
