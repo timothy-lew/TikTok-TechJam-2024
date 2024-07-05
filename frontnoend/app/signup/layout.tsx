@@ -25,7 +25,7 @@ export default function SignUpLayout({
         </p>
 
         
-        <p className="text-center text-sm bottom-0 border-t border-slate-600 w-full py-4">
+        <p className="text-center text-sm bottom-0 border-t border-slate-600 w-full py-4 mt-auto">
           Already have an account? <Link href="/login" className="text-tiktok-red font-semibold hover:underline">Log in</Link>
         </p>
     </div>

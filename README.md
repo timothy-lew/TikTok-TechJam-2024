@@ -23,7 +23,7 @@ All components are containerized using Docker for easy local setup.
 - Download and install MetaMask Extension on Google Chrome from [MetaMask's official website](https://metamask.io/download/)
 
 #### 2.2 Configure Local Hardhat Network
-1. Follow the instructions on [MetaMask Docs](https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/) to import the local Hardhat network with the following configuration:
+1. Follow the instructions on [MetaMask Docs](https://docs.metamask.io/wallet/how-to/run-devnet/) to import the local Hardhat network with the following configuration:
    - **Network Name:** localhost-hardhat
    - **RPC URL:** http://127.0.0.1:8545/
    - **Chain ID:** 31337
@@ -59,6 +59,11 @@ All components are containerized using Docker for easy local setup.
 2. **Build the Backend**
      ```
      ./mvnw clean package -DskipTests
+     ```
+
+     Alternatively:
+    ```
+     mvnw clean package -DskipTests
      ```
 
 2. **Navigate to the root directory of the repository**

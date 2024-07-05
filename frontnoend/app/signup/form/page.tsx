@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { navigate } from "@/lib/actions";
 import {
   Form,
   FormControl,
@@ -56,11 +57,11 @@ export default function SignUpForm() {
       firstName: "",
       lastName: "",
       role: "ROLE_BUYER",
-      shippingAddress: "",
-      billingAddress: "",
+      shippingAddress: undefined,
+      billingAddress: undefined,
       walletAddress: "",
-      businessName: "",
-      businessDescription: "",
+      businessName: undefined,
+      businessDescription: undefined,
     },
   });
 
@@ -79,9 +80,10 @@ export default function SignUpForm() {
     try {
 
       await auth?.signUp(formattedValues);
+      navigate('/')
 
     } catch(error) {
-      alert("Error in signing up")
+      console.log("Error in signing up")
     }
     finally{
       setIsSigningUp(false);
