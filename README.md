@@ -61,6 +61,11 @@ All components are containerized using Docker for easy local setup.
      ./mvnw clean package -DskipTests
      ```
 
+     Alternatively:
+    ```
+     mvnw clean package -DskipTests
+     ```
+
 2. **Navigate to the root directory of the repository**
      ```
      cd ../..
