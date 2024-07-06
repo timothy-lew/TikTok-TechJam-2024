@@ -186,13 +186,13 @@ const WalletPage: React.FC = () => {
                 <div className="flex justify-center items-center gap-2">
                   <Image src="/icons/incomingTransactions.svg" alt="icon" height={40} width={40} className="relative bottom-2"/>
                   <p className="text-green-600 text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
-                    +${allTimeIncoming.toFixed(2)}
+                    {isNaN(allTimeIncoming) ? "-" : `+$${allTimeIncoming.toFixed(2)}`}
                   </p>
                 </div>
                 <div className="flex justify-center items-center gap-2">
                   <Image src="/icons/outgoingTransactions.svg" alt="icon" height={40} width={40}/>
                   <p className="text-amber-500 text-2xl sm:text-3xl md:text-4xl font-bold">
-                    -${allTimeOutgoing.toFixed(2)}
+                    {isNaN(allTimeOutgoing) ? "-" : `-$${allTimeOutgoing.toFixed(2)}`}
                   </p>
                 </div>
               </div>
@@ -202,37 +202,37 @@ const WalletPage: React.FC = () => {
               <h3 className="font-bold text-xl mb-4 text-gray-700">This Month</h3>
               <div className="flex flex-col items-center mb-4">
                 <p className="text-green-600 text-2xl sm:text-3xl md:text-4xl font-bold mb-1">
-                  +${thisMonth.incoming.toFixed(2)}
+                  {isNaN(thisMonth.incoming) ? "-" : `+$${thisMonth.incoming.toFixed(2)}`}
                 </p>
-                <div className="flex items-center space-x-0.5 text-sm">
-                  <span className={`${incomingChange >= 0 ? "text-green-600" : "text-red-600"} font-semibold`}>
+                {!isNaN(incomingChange) && <div className="flex items-center space-x-0.5 text-sm">
+                  <span className={`${!isNaN(incomingChange) && incomingChange >= 0 ? "text-green-600" : "text-red-600"} font-semibold`}>
                     {incomingChange.toFixed(0)}%
                   </span>
-                  <Image
-                    src={incomingChange >= 0 ? "/icons/greenIncrease.svg" : "/icons/redDecrease.svg"}
-                    alt={incomingChange >= 0 ? "Increase" : "Decrease"}
-                    width={16}
-                    height={16}
-                  />
+                    <Image
+                      src={incomingChange >= 0 ? "/icons/greenIncrease.svg" : "/icons/redDecrease.svg"}
+                      alt={incomingChange >= 0 ? "Increase" : "Decrease"}
+                      width={16}
+                      height={16}
+                    />
                   <span className="text-gray-500">vs prev month</span>
-                </div>
+                </div>}
               </div>
               <div className="flex flex-col items-center">
                 <p className="text-amber-500 text-2xl sm:text-3xl md:text-4xl font-bold mb-1">
-                  -${thisMonth.outgoing.toFixed(2)}
+                  {isNaN(thisMonth.outgoing) ? "-" : `-$${thisMonth.outgoing.toFixed(2)}`}
                 </p>
-                <div className="flex items-center space-x-0.5 text-sm">
-                  <span className={`${outgoingChange >= 0 ? "text-red-600" : "text-green-600"} font-semibold`}>
+                {isNaN(thisMonth.outgoing) && <div className="flex items-center space-x-0.5 text-sm">
+                  <span className={`${!isNaN(outgoingChange) && outgoingChange >= 0 ? "text-red-600" : "text-green-600"} font-semibold`}>
                     {outgoingChange.toFixed(0)}%
                   </span>
-                  <Image
-                    src={outgoingChange >= 0 ? "/icons/redIncrease.svg" : "/icons/greenDecrease.svg"}
-                    alt={outgoingChange >= 0 ? "Increase" : "Decrease"}
-                    width={16}
-                    height={16}
-                  />
+                    <Image
+                      src={outgoingChange >= 0 ? "/icons/redIncrease.svg" : "/icons/greenDecrease.svg"}
+                      alt={outgoingChange >= 0 ? "Increase" : "Decrease"}
+                      width={16}
+                      height={16}
+                    />
                   <span className="text-gray-500">vs prev month</span>
-                </div>
+                </div>}
               </div>
             </div>
           </div>
