@@ -76,8 +76,6 @@ const WalletPage: React.FC = () => {
   const [freezeCard, setFreezeCard] = useState<boolean>(false);
 
   const transactionData: Transaction[] = useFetchTransactions(user?.buyerProfile?.id || "", "buyer");
-  console.log("transactionData");
-  console.log(transactionData);
 
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   

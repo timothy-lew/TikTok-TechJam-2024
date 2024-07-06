@@ -15,47 +15,31 @@ interface ShopItem {
 }
 
 
-const useFetchShopItem = ({itemId} : {itemId: string}) => {
-  
-  const [loading, setLoading] = useState(true);
-  const [shopItem, setShopItem] = useState<ShopItem | null>(null);
+const fetchShopItem = async (itemId: string) => {
+  try{
+    const auth = useAuth();
 
+    const accessToken = await auth?.obtainAccessToken();
 
-  const auth = useAuth();
+    const response = await fetch(`${getBackendUrl}/api/items${itemId}`,{
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
 
-  useEffect(()=>{
+    const data : ShopItem = await response.json();
 
-    const fetchShopItem = async () => {
-      try{
-        setLoading(true);
-        const accessToken = await auth?.obtainAccessToken();
-  
-        const response = await fetch(`${getBackendUrl}/api/items${itemId}`,{
-          method: 'GET',
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
+    console.log(data);
+  }
+  catch(error){
+    console.log(error);
+  }
 
-        const data : ShopItem = await response.json();
-
-        console.log(data);
-      }
-      catch(error){
-        console.log(error);
-      }
-      finally{
-        setLoading(false);
-      }
-
-    }
-
-    fetchShopItem();
-  })
-
-
-  return { loading, shopItem }
 }
 
-export { useFetchShopItem }
+
+
+
+export { fetchShopItem }
