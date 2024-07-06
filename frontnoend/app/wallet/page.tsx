@@ -76,6 +76,9 @@ const WalletPage: React.FC = () => {
   const [freezeCard, setFreezeCard] = useState<boolean>(false);
 
   const transactionData: Transaction[] = useFetchTransactions(user?.buyerProfile?.id || "", "buyer");
+  console.log("transactionData");
+  console.log(transactionData);
+
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   
   const { toast } = useToast()
@@ -105,7 +108,7 @@ const WalletPage: React.FC = () => {
     <section className="text-gray-800 flex flex-col lg:flex-row w-full justify-start items-start gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8 max-w-[1400px] mx-auto">
       <div className="w-full lg:w-3/4 space-y-6">
         {/* Wallet and Card Section */}
-        <div className="bg-white shadow-md w-full flex justify-center items-start border border-slate-200 rounded-xl p-4 sm:p-6">
+        <div className="bg-white shadow-sm w-full flex justify-center items-start border border-slate-200 rounded-xl p-4 sm:p-6">
           <div className="w-full flex_col_center gap-4">
             <h2 className="text-tiktok-red text-center w-full text-xl sm:text-2xl md:text-3xl font-bold mb-4">
               Your <Image src="/tiktokIconNoBg.svg" alt="icon" width={42} height={42} className="inline rotate-6"/> Wallet
@@ -173,7 +176,7 @@ const WalletPage: React.FC = () => {
         </div>
 
         {/* Transaction Summary Section */}
-        <div className="bg-white rounded-xl p-6 sm:p-8 shadow-md w-full border border-tiktok-red">
+        <div className="bg-white rounded-xl p-6 sm:p-8 shadow-md w-full border border-slate-200">
           <h2 className="text-tiktok-red text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">
             Your Transactions
           </h2>
