@@ -12,7 +12,7 @@ type EditListingProps = {
   setEditListing: (itemId: string | null) => void;
 };
 
-const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
+const EditListing2 = ({ itemId, setEditListing }: EditListingProps) => {
   const auth = useAuth();
   const [accessToken, setAccessToken] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
@@ -264,4 +264,4 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
   );
 };
 
-export default EditListing;
+export default EditListing2;
