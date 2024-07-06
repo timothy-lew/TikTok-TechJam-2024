@@ -59,6 +59,8 @@ const CurrencyExchangePage: React.FC = () => {
   
   }, [exchangeRate])
   
+  const [toUpdateCoins, setToUpdateCoins] = useState(0);
+  const [toUpdateCash, setToUpdateCash] = useState(0);
 
   // const TIKTOK_WALLET_ADDRESS : string = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; - i think this is old wallet
   const TIKTOK_WALLET_ADDRESS : string = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
@@ -107,10 +109,15 @@ const CurrencyExchangePage: React.FC = () => {
       conversionType,
     });
 
+    console.log("ConvertedResult:")
+    console.log(convertedResult);
+
 
     if (convertedResult.status === "success"){
 
       if (conversionType==="TOKTOKEN_TO_CASH"){
+        setToUpdateCoins(convertedResult.coinsConverted)
+        setToUpdateCash(convertedResult.cashConverted)
         settransactionID(convertedResult.transactionID);
         setIsAlertDialogOpen(true);
         setRemainingTime(givenTime);
@@ -166,12 +173,21 @@ const CurrencyExchangePage: React.FC = () => {
     }
     
     // Update wallet balance
+    // auth.setUserWallet((prev) => {
+    //   if (!prev) return null;
+    //   return {
+    //     ...prev,
+    //     cashBalance: prev.cashBalance + calculatedAmount!,
+    //     tokTokenBalance: prev.tokTokenBalance - Number(amount),
+    //   };
+    // });
+
     auth.setUserWallet((prev) => {
       if (!prev) return null;
       return {
         ...prev,
-        cashBalance: prev.cashBalance + calculatedAmount!,
-        tokTokenBalance: prev.tokTokenBalance - Number(amount),
+        cashBalance: prev.cashBalance + toUpdateCash,
+        tokTokenBalance: prev.tokTokenBalance + toUpdateCoins,
       };
     });
 
@@ -337,7 +353,6 @@ const CurrencyExchangePage: React.FC = () => {
             <button
               onClick={()=>{
                 handleExchange();
-                setAmount(null);
               }}
               disabled={!amount && !EXCHANGE_RATE}
               className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"

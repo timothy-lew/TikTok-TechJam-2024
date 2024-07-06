@@ -28,7 +28,12 @@ const Page = () => {
     const [editName, setEditName] = useState<"edit" | "saving" | "saved">("saved");
     const [editDescription, setEditDescription] = useState<"edit" | "saving" | "saved">("saved");
 
-    const saveNameHandler = () => {
+    const saveNameHandler = (name: string) => {
+        const formData = {
+            businessName: name,
+            businessDescription: user?.sellerProfile?.businessDescription || undefined,
+        }
+
         setEditName("saving");
         fetch(`${getBackendUrl()}/api/profiles/seller/${user?.sellerProfile?.id}`, {
             method: "PUT",
@@ -36,9 +41,7 @@ const Page = () => {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${accessToken}`,
             },
-            body: JSON.stringify({
-                businessName: "new name",
-            }),
+            body: JSON.stringify(formData),
         })    
     }
 
@@ -60,15 +63,23 @@ const Page = () => {
                                     } />
                                 </button>
                             </h2>:
-                            <form className="flex flex-row gap-4">
+                            <form className="flex flex-row gap-4"
+                                onSubmit={
+                                    (e: any) => {
+                                        e.preventDefault();
+                                        console.log(e)
+                                        saveNameHandler(e.target.name.value);
+                                    }
+                                }
+                            >
                                 <input
                                     name="name"
                                     type="text"
                                     className="border border-gray-300 p-2 rounded-lg"
                                     defaultValue={sellerDetails.businessName}
                                 />
-                                <Button onClick={() => {
-                                    setEditName("saving");
+                                <Button onClick={(e) => {
+                                    
                                 }}>Save</Button>
                             </form>}
                             
