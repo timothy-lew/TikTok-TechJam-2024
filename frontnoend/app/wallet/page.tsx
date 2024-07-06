@@ -290,7 +290,7 @@ const WalletPage: React.FC = () => {
             />
             <div className="mt-4 space-y-2">
               <Progress value={(allTimeOutgoing/blueCardSpending)*100} className="w-full" />
-              <p className="text-sm text-center">Spend <span className="font-semibold">${blueCardSpending-allTimeOutgoing}</span> more to reach Red tier!</p>
+              <p className="text-sm text-center">Spend <span className="font-semibold">${blueCardSpending-allTimeOutgoing}</span> more to reach Blue tier!</p>
             </div>
             <div className="flex flex-col items-start justify-center mt-4 space-y-2 text-sm">
               <TiktokCardBenefits desc="10% Cashback on TikTok Shop Purchases" />
