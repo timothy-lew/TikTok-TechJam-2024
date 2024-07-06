@@ -186,7 +186,7 @@ const SideBar = () => {
         </div>
       </div>
       <div className="flex flex-col justify-center items-start w-full">
-        <h2 className="text-sm font-semibold text-gray-600 pb-2">Program</h2>
+        <h2 className="text-sm font-semibold text-gray-600 pt-3 pb-2">Program</h2>
         <div className="flex flex-wrap gap-2 text-xs">
           {sidebarFooterPrograms.map((item, index) => (
             <span key={index} className="text-gray-600 hover:underline cursor-pointer">{item}</span>
@@ -194,7 +194,7 @@ const SideBar = () => {
         </div>
       </div>
       <div className="flex flex-col justify-center items-start w-full">
-        <h2 className="text-sm font-semibold text-gray-600 pb-2">Terms & Policies</h2>
+        <h2 className="text-sm font-semibold text-gray-600 pt-3 pb-2">Terms & Policies</h2>
         <div className="flex flex-wrap gap-2 text-xs">
           {sidebarFooterTermsPolicies.map((item, index) => (
             <span key={index} className="text-gray-600 hover:underline cursor-pointer">{item}</span>
@@ -202,7 +202,7 @@ const SideBar = () => {
         </div>
       </div>
 
-      <p className="text-left text-slate-400 text-sm">© 2024 TikTok</p>
+      <p className="text-left text-gray-500 font-medium text-sm mt-4">© 2024 TikTok</p>
 
 
     </nav>
