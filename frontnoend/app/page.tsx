@@ -3,6 +3,7 @@
 import Post from "@/components/shared/Post";
 import Link from "next/link";
 import { useAuth } from "@/hooks/auth-provider"
+import { TokCoin, TokCoins } from "@/components/shared/TokCoin";
 
 const HomePage = () => {
   
@@ -47,7 +48,7 @@ const HomePage = () => {
         </button>
       </div>
       }
-      
+
       <Post
         image="/images/homePost.png"
         name="TikTok Shop Singapore"
