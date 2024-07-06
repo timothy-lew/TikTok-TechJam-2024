@@ -15,10 +15,10 @@ const TransactionAlert: React.FC<AlertProps> = ({ open, onClose, alertContent })
 
   useEffect(() => {
     if (open) {
-      // Set a timer to close the alert after 3 seconds
+      // Set a timer to close the alert after 2 seconds
       const timerId = setTimeout(() => {
         onClose();
-      }, 3000);
+      }, 2000);
 
       // Save the timer ID to clear it on component unmount or when open state changes
       setTimer(timerId);
