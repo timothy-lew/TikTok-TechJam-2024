@@ -84,8 +84,6 @@ const ShopPage = () => {
     return (
       <div className="flex_col_center w-full gap-6">
         <TikTokLoader />
-        <TiktokLoader2 />
-
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <ProductCardSkeleton />
           <ProductCardSkeleton />

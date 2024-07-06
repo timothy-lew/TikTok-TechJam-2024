@@ -7,12 +7,17 @@ import { useAuth } from "@/hooks/auth-provider";
 export type TransactionResponse = {
   id: string;
   transactionType: "PURCHASE" | "CONVERSION" | "TOPUP" | "WITHDRAW";
-  transactionDate: String;
+  transactionDate: string;
   userId: string;
   purchaseDetails: PurchaseDetails | null;
   topUpDetails: TopUpDetails | null;
   ConversionDetails: ConversionDetails | null;
   withdrawDetails: withdrawDetails | null;
+};
+
+export type Transaction = TransactionResponse & {
+  amount: number;
+  desc: string;
 };
 
 export type PurchaseDetails = {
@@ -42,10 +47,7 @@ export type ConversionDetails = {
   conversionType: "CASH_TO_TOKTOKEN" | "TOKTOKEN_TO_CASH";
 };
 
-export type Transaction = TransactionResponse & {
-  amount: number;
-  desc: string;
-};
+
 
 export function useFetchTransactions(
   id: string,
