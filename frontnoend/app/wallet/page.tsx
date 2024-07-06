@@ -77,7 +77,7 @@ const WalletPage: React.FC = () => {
   const [hideDetails, setHideDetails] = useState<boolean>(true);
   const [freezeCard, setFreezeCard] = useState<boolean>(false);
 
-  const transactionData: Transaction[] = useFetchTransactions(user?.buyerProfile?.id || "", "buyer");
+  const {transactionData, loadingTransactionData} = useFetchTransactions(user?.buyerProfile?.id || "", "buyer");
 
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   
@@ -199,7 +199,7 @@ const WalletPage: React.FC = () => {
           <p className="text-sm text-center w-full text-slate-400 mb-6">*Withdrawals / Currency Exchange are not included in calculation</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div className="flex flex-col items-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-sm">
+            <div className="flex flex-col items-center p-6 bg-slate-100/80 rounded-xl">
               <h3 className="font-bold text-xl mb-4 text-gray-700">All Time</h3>
               <div className="flex-grow flex flex-col justify-evenly">
                 <div className="flex justify-center items-center gap-2">
@@ -217,13 +217,13 @@ const WalletPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="flex flex-col items-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-sm">
+            <div className="flex flex-col items-center p-6 bg-slate-100/80 rounded-xl">
               <h3 className="font-bold text-xl mb-4 text-gray-700">This Month</h3>
               <div className="flex flex-col items-center mb-4">
                 <p className="text-green-600 text-2xl sm:text-3xl md:text-3xl font-bold mb-1">
                   {isNaN(thisMonth.incoming) ? "-" : `+$${thisMonth.incoming.toFixed(2)}`}
                 </p>
-                {!isNaN(incomingChange) && <div className="flex items-center space-x-0.5 text-sm">
+                {!isNaN(incomingChange) && <div className="flex items-center space-x-1 text-sm">
                   <span className={`${!isNaN(incomingChange) && incomingChange >= 0 ? "text-green-600" : "text-red-600"} font-semibold`}>
                     {incomingChange.toFixed(0)}%
                   </span>
@@ -240,12 +240,12 @@ const WalletPage: React.FC = () => {
                 <p className="text-amber-500 text-2xl sm:text-3xl md:text-3xl font-bold mb-1">
                   {isNaN(thisMonth.outgoing) ? "-" : `-$${thisMonth.outgoing.toFixed(2)}`}
                 </p>
-                {!isNaN(thisMonth.outgoing) && <div className="flex items-center space-x-0.5 text-sm">
-                  <span className={`${!isNaN(outgoingChange) && outgoingChange >= 0 ? "text-red-600" : "text-green-600"} font-semibold`}>
+                {!isNaN(thisMonth.outgoing) && <div className="flex items-center space-x-1 text-sm">
+                  <span className={`${!isNaN(outgoingChange) && outgoingChange >= 0 ? "text-green-600" : "text-red-600"} font-semibold`}>
                     {outgoingChange.toFixed(0)}%
                   </span>
                     <Image
-                      src={outgoingChange >= 0 ? "/icons/redIncrease.svg" : "/icons/greenDecrease.svg"}
+                      src={outgoingChange >= 0 ? "/icons/greenIncrease.svg" : "/icons/redDecrease.svg"}
                       alt={outgoingChange >= 0 ? "Increase" : "Decrease"}
                       width={16}
                       height={16}
@@ -256,7 +256,7 @@ const WalletPage: React.FC = () => {
             </div>
           </div>
 
-          <DataTable columns={columns} data={transactionData} />
+          <DataTable columns={columns} data={transactionData} isLoading={loadingTransactionData}/>
         </div>
       </div>
 
@@ -335,7 +335,7 @@ const WalletPage: React.FC = () => {
             />
             <div className="mt-4 space-y-2">
               <Progress value={(allTimeOutgoing/obsidianCardSpending)*100} className="w-full" />
-              <p className="text-sm text-center">Spend <span className="font-semibold">${obsidianCardSpending-allTimeOutgoing}</span> more to reach Black tier!</p>
+              <p className="text-sm text-center">Spend <span className="font-semibold">${obsidianCardSpending-allTimeOutgoing}</span> more to reach Obsidian tier!</p>
             </div>
             <div className="flex flex-col items-start justify-center mt-4 space-y-2 text-sm">
               <TiktokCardBenefits desc="24/7 Priority Customer Support" />

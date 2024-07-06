@@ -38,6 +38,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/hooks/auth-provider";
+import LoadingPage from "@/app/loading";
+import TikTokLoader from "@/components/shared/TiktokLoader";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -276,13 +278,16 @@ export function DataTableDemo({
       },
     }).then((res) => {
       if (res.ok) {
-        console.log("Item deleted");
+        // console.log("Item deleted");
         setIsDelete("deleted");
       }
     });
   };
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  // React.useEffect (() => {
+  //   console.log(sorting)
+  // }, [sorting])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -394,7 +399,9 @@ export function DataTableDemo({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <div className="flex justify-center items-center h-full">
+                    <TikTokLoader />
+                  </div>
                 </TableCell>
               </TableRow>
             )}

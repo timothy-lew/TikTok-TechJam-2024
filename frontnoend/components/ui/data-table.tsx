@@ -30,18 +30,23 @@ import {
 
 
 import { useState } from "react"
+import TikTokLoader from "../shared/TiktokLoader"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  isLoading: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading
 }: DataTableProps<TData, TValue>) {
-
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([{
+    id: "transactionDate",
+    desc: true,
+  }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -90,13 +95,15 @@ export function DataTable<TData, TValue>({
           </SelectTrigger>
 
           <SelectContent>
+            {selectorFilter == "" ||
+              <SelectItem value={CLEAR_FILTER_VALUE} className="text-red-500 hover:cursor-pointer hover:bg-slate-100">Clear Filter</SelectItem>
+            }
             {["PURCHASE", "CONVERSION", "TOPUP", "WITHDRAW"].map((option, index) =>
               <SelectItem className="hover:cursor-pointer hover:bg-slate-200 " value={option} key={`${option}_${index}`}>
                 <p className="capitalize">{option.toLowerCase()}</p>
               </SelectItem>
             )}
 
-            <SelectItem value={CLEAR_FILTER_VALUE} className="text-red-500 hover:cursor-pointer hover:bg-slate-100">Clear Filter</SelectItem>
 
           </SelectContent>
 
@@ -120,13 +127,16 @@ export function DataTable<TData, TValue>({
           </SelectTrigger>
 
           <SelectContent>
+            <p>{monthFilter}</p>
+            {
+              monthFilter == "" ||
+              <SelectItem value={CLEAR_FILTER_VALUE} className="text-red-500 hover:cursor-pointer hover:bg-slate-100">Clear Filter</SelectItem>
+            }
             {monthOptions.map((month, index) =>
               <SelectItem className="hover:cursor-pointer hover:bg-slate-200" value={month} key={`${month}_${index}`}>
                 {month}
               </SelectItem>
             )}
-
-            <SelectItem value={CLEAR_FILTER_VALUE} className="text-red-500 hover:cursor-pointer hover:bg-slate-100">Clear Filter</SelectItem>
           </SelectContent>
         </Select>
 
@@ -152,7 +162,7 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {!isLoading && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -165,13 +175,24 @@ export function DataTable<TData, TValue>({
                 ))}
               </TableRow>
             ))
-          ) : (
+          ) :
+              <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                <p>No Data</p>
+              </TableCell>
+            </TableRow>}
+            
+          {isLoading &&(
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                <div className="flex justify-center items-center h-full">
+                  <TikTokLoader />
+                </div>
               </TableCell>
             </TableRow>
-          )}
+          )
+          }
+            
         </TableBody>
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
