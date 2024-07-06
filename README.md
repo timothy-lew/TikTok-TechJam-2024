@@ -8,6 +8,7 @@ This project integrates multiple technologies for a comprehensive blockchain-ena
 - **Backend**: Spring Boot (Java)
 - **Smart Contract**: Solidity (Ethereum)
 - **Database**: MongoDB
+- **Server Configuration**: Nginx
 - **Containerization**: Docker
 
 All components are containerized using Docker for easy local setup.
