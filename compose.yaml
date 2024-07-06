@@ -27,7 +27,7 @@ services:
       - app-network
 
   mongodb:
-    image: 'mongo:latest'
+    image: mongo:latest
     environment:
       - MONGO_INITDB_DATABASE=shopping_platform
       - MONGO_INITDB_ROOT_PASSWORD=secret
@@ -36,7 +36,52 @@ services:
       - '27017:27017'
     volumes:
       - ./backend/backend/data-seed:/data
-      - ./backend/backend/data-seed/seed.sh:/docker-entrypoint-initdb.d/seed.sh
+    networks:
+      - app-network
+
+  mongo-seed:
+    image: mongo:latest
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend/backend/data-seed:/data
+    command: >
+      bash -c '
+        set -e;
+        echo "Waiting for MongoDB to be ready...";
+        until mongosh --host mongodb --port 27017 -u root -p secret --authenticationDatabase admin --eval "print(\"waited for connection\")"; do
+          sleep 2;
+        done;
+        echo "MongoDB is ready.";
+  
+        echo "Dropping existing database and creating a new one...";
+        mongosh --host mongodb --port 27017 -u root -p secret --authenticationDatabase admin --eval "
+          use shopping_platform;
+          db.dropDatabase();
+        "
+  
+        JSON_FILES=(
+          "shopping_platform.buyer_profiles.json"
+          "shopping_platform.conversionRate.json"
+          "shopping_platform.discountRates.json"
+          "shopping_platform.giftCards.json"
+          "shopping_platform.items.json"
+          "shopping_platform.seller_profiles.json"
+          "shopping_platform.transactions.json"
+          "shopping_platform.users.json"
+          "shopping_platform.wallets.json"
+        )
+  
+        for file in "$${JSON_FILES[@]}"; do
+          echo "Importing $$file...";
+          collection=$$(echo "$$file" | sed "s/shopping_platform\\.\(.*\)\.json/\\1/");
+          mongoimport --host mongodb --port 27017 -u root -p secret \
+            --authenticationDatabase admin --db shopping_platform --collection "$$collection" \
+            --file /data/"$$file" --jsonArray;
+        done;
+  
+        echo "Import completed.";
+      '
     networks:
       - app-network
 
