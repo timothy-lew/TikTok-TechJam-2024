@@ -48,7 +48,7 @@ export function useFetchListings({
       // crazy hardcoded
       console.log("fetching listings");
 
-      fetch(`${getBackendUrl()}/api/items/user/${userId}`, {
+      fetch(`${getBackendUrl()}/api/items/seller/${userId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
