@@ -16,10 +16,12 @@ import {
   type TiktokCardDetails,
   useFetchTiktokCard,
 } from "@/hooks/useFetchTiktokCard";
-import { Progress } from "@/components/ui/progress"
+import { Progress } from "@/components/ui/progress";
+import { TokCoin, TokCoins } from '@/components/shared/TokCoin';
 
 type WalletActionProps = {
   icon: string;
+  iconSize: number;
   label: string;
   variant: 'button' | 'link';
   onClick?: () => void;
@@ -44,22 +46,22 @@ function calculateMonthlyTotals(transactions: Transaction[], targetMonth: number
   return { incoming, outgoing };
 }
 
-const WalletAction: React.FC<WalletActionProps> = ({ icon, label, variant, onClick, href }) => {
-  const commonClasses = "flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-100 w-full sm:w-auto";
+const WalletAction: React.FC<WalletActionProps> = ({ icon, iconSize, label, variant, onClick, href }) => {
+  const commonClasses = "flex items-center justify-center gap-2 bg-gray-200 hover:bg-slate-300 text-white rounded-full px-2 py-2 transition duration-100 w-full sm:w-auto";
 
   return (
     <div className="flex justify-start items-center gap-2 w-full">
       {variant === 'button' ? (
         <div className="flex justify-start items-center gap-2 w-full">
           <button className={commonClasses} onClick={onClick}>
-            <Image src={icon} alt={label} height={22} width={22} />
+            <Image src={icon} alt={label} height={iconSize} width={iconSize} />
           </button>
           <p className="hidden md:inline font-medium md:text-sm">{label}</p>
         </div>
       ) : (
         <div className="flex justify-start items-center gap-2 w-full">
           <Link href={href || ''} className={commonClasses}>
-            <Image src={icon} alt={label} height={22} width={22} />
+            <Image src={icon} alt={label} height={iconSize} width={iconSize} />
           </Link>
           <p className="hidden md:inline font-medium md:text-sm">{label}</p>
         </div>
@@ -81,6 +83,10 @@ const WalletPage: React.FC = () => {
   
   const { toast } = useToast()
   const walletData = auth?.userWallet;
+
+  const blueCardSpending : number = 1000;
+  const redCardSpending : number = 5000;
+  const obsidianCardSpending : number = 50000;
 
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
@@ -104,24 +110,33 @@ const WalletPage: React.FC = () => {
 
   return (
     <section className="text-gray-800 flex flex-col lg:flex-row w-full justify-start items-start gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8 max-w-[1400px] mx-auto">
-      <div className="w-full lg:w-3/4 space-y-6">
+
+      <div className="w-full lg:w-3/4 space-y-6 ">
         {/* Wallet and Card Section */}
-        <div className="bg-white shadow-sm w-full flex justify-center items-start border border-slate-200 rounded-xl p-4 sm:p-6">
+        <div className="bg-white w-full flex justify-center shadow-sm items-start border border-slate-200 rounded-xl p-4 sm:p-6">
           <div className="w-full flex_col_center gap-4">
-            <h2 className="text-tiktok-red text-center w-full text-xl sm:text-2xl md:text-3xl font-bold mb-4">
+            <h2 className="text-tiktok-red text-center w-full text-xl sm:text-2xl md:text-4xl font-bold mb-4">
               Your <Image src="/tiktokIconNoBg.svg" alt="icon" width={42} height={42} className="inline rotate-6"/> Wallet
             </h2>
             <div className="flex_col_center gap-3">
-              <h3 className="text-slate-900 font-semibold text-xl">Available in Wallet:</h3>
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
-                <p className="text-slate-800 text-xl">${walletData?.cashBalance.toFixed(2)} <span className="text-lg">SGD</span></p>
-                <p className="text-slate-800 text-xl">{walletData?.tokTokenBalance} <span className="text-lg">Tok Coins</span></p>
+              {/* <h3 className="text-slate-900 font-semibold text-xl">Available in Wallet:</h3> */}
+              <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-7=8">
+                
+                <div className="flex_center gap-2">
+                  <Image src="/icons/cash.svg" alt="$" height={40} width={40} className="-rotate-6"/>
+                  <p className="text-slate-800 text-xl md:text-2xl">${walletData?.cashBalance.toFixed(2)} <span className="text-lg">SGD</span></p>
+                </div>
+                
+                <div className="flex_center gap-2">
+                  <TokCoins />
+                  <p className="text-slate-800 text-xl md:text-2xl">{walletData?.tokTokenBalance} <span className="text-lg">Tok Coins</span></p>
+                </div>
               </div>
             </div>
             
             {tiktokCardDetails ? (
               <div className="flex_center gap-4 w-full">
-                <TiktokCard
+                {/* <TiktokCard
                   number={tiktokCardDetails.number}
                   cardName={tiktokCardDetails.cardName}
                   cvc={tiktokCardDetails.cvc}
@@ -130,9 +145,9 @@ const WalletPage: React.FC = () => {
                   frozen={freezeCard}
                   noDetails={false}
                   variant="blue"
-                />
-                <div className="flex_col_center gap-2">
-                  <WalletAction
+                /> */}
+                <div className="flex_center gap-6">
+                  {/* <WalletAction
                     icon={hideDetails ? "/icons/eyeOpen.svg" : "/icons/eyeClose.svg"}
                     label={hideDetails ? "Show Details" : "Hide Details"}
                     variant="button"
@@ -148,21 +163,24 @@ const WalletPage: React.FC = () => {
                         title: freezeCard ? "Card Unfrozen!" : "Card Frozen!",
                       });
                     }}
-                  />
+                  /> */}
                   <WalletAction
-                    icon="/icons/topup.svg"
+                    icon="/icons/topup2.svg"
+                    iconSize={18}
                     label="Top Up"
                     variant="link"
                     href="/wallet/topup"
                   />
                   <WalletAction
                     icon="/icons/exchange.svg"
-                    label="Convert Currency"
+                    iconSize={24}
+                    label="Exchange"
                     variant="link"
                     href="/wallet/exchange"
                   />
                   <WalletAction
                     icon="/icons/withdraw.svg"
+                    iconSize={24}
                     label="Withdraw"
                     variant="link"
                     href="/wallet"
@@ -174,10 +192,10 @@ const WalletPage: React.FC = () => {
         </div>
 
         {/* Transaction Summary Section */}
-        <div className="bg-white rounded-xl p-6 sm:p-8 shadow-md w-full border border-slate-200">
-          <h2 className="text-tiktok-red text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">
-            Your Transactions
-          </h2>
+        <div className="bg-white rounded-xl p-6 sm:p-8 shadow-sm w-full border border-slate-200">
+            <h2 className="text-tiktok-red text-center w-full text-xl sm:text-2xl md:text-4xl font-bold mb-4">
+              Your <Image src="/tiktokIconNoBg.svg" alt="icon" width={42} height={42} className="inline rotate-6"/> Transactions
+            </h2>
           <p className="text-sm text-center w-full text-slate-400 mb-6">*Withdrawals / Currency Exchange are not included in calculation</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -243,12 +261,45 @@ const WalletPage: React.FC = () => {
       </div>
 
       {/* Card Tiers Section - Only visible on large screens */}
-      <div className="hidden lg:block w-1/4 bg-white shadow-md border border-slate-200 rounded-xl p-4">
-        <h2 className="text-tiktok-red text-2xl font-bold mb-6 text-center">Card Tiers</h2>
+      <div className="hidden lg:block w-1/4 bg-white shadow-sm border border-slate-200 rounded-xl p-4">
+
+        <div className="flex_col_center w-full gap-2 mb-6">
+          <h2 className="text-tiktok-red text-2xl font-bold mx-auto">
+            <div className="flex_center gap-1">
+              <Image src="/tiktokIconNoBg.svg" alt="icon" width={32} height={38} className="inline rotate-6 relative bottom-0.5"/>
+              <span>Cards</span>
+            </div>
+          </h2>
+          <span className="hidden md:inline text-xs px-1.5 py-0.5 bg-tiktok-red text-white font-bold rounded-xl">Coming Soon</span>
+        </div>
+        
         
         <div className="space-y-8">
+
           <div>
-            <h3 className="text-xl font-semibold mb-2">Red Tier</h3>
+            {/* <h3 className="text-xl text-center font-semibold mb-2">Blue Tier</h3> */}
+            <TiktokCard
+              number={["***", "***", "***", "***"]}
+              cardName={"Your Name"}
+              cvc={"***"}
+              expiryDate={"99/99"}
+              hideDetails={false}
+              frozen={false}
+              noDetails={true}
+              variant="blue"
+            />
+            <div className="mt-4 space-y-2">
+              <Progress value={(allTimeOutgoing/blueCardSpending)*100} className="w-full" />
+              <p className="text-sm text-center">Spend <span className="font-semibold">${blueCardSpending-allTimeOutgoing}</span> more to reach Red tier!</p>
+            </div>
+            <div className="flex flex-col items-start justify-center mt-4 space-y-2 text-sm">
+              <TiktokCardBenefits desc="10% Cashback on TikTok Shop Purchases" />
+              <TiktokCardBenefits desc="Exclusive Blue Tier Discounts" />
+            </div>
+          </div>
+
+          <div>
+            {/* <h3 className="text-xl text-center font-semibold mb-2">Red Tier</h3> */}
             <TiktokCard
               number={["***", "***", "***", "***"]}
               cardName={"Your Name"}
@@ -260,8 +311,8 @@ const WalletPage: React.FC = () => {
               variant="red"
             />
             <div className="mt-4 space-y-2">
-              <Progress value={60} className="w-full" />
-              <p className="text-sm text-center">Spend <span className="font-semibold">$500</span> more to reach Red tier!</p>
+              <Progress value={(allTimeOutgoing/redCardSpending)*100} className="w-full" />
+              <p className="text-sm text-center">Spend <span className="font-semibold">${redCardSpending-allTimeOutgoing}</span> more to reach Red tier!</p>
             </div>
             <div className="flex flex-col items-start justify-center mt-4 space-y-2 text-sm">
               <TiktokCardBenefits desc="24/7 Priority Customer Support" />
@@ -271,7 +322,7 @@ const WalletPage: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">Obsidian Tier</h3>
+            {/* <h3 className="text-xl text-center font-semibold mb-2">Obsidian Tier</h3> */}
             <TiktokCard
               number={["***", "***", "***", "***"]}
               cardName={"Your Name"}
@@ -283,8 +334,8 @@ const WalletPage: React.FC = () => {
               variant="obsidian"
             />
             <div className="mt-4 space-y-2">
-              <Progress value={30} className="w-full" />
-              <p className="text-sm text-center">Spend <span className="font-semibold">$2000</span> more to reach Black tier!</p>
+              <Progress value={(allTimeOutgoing/obsidianCardSpending)*100} className="w-full" />
+              <p className="text-sm text-center">Spend <span className="font-semibold">${obsidianCardSpending-allTimeOutgoing}</span> more to reach Black tier!</p>
             </div>
             <div className="flex flex-col items-start justify-center mt-4 space-y-2 text-sm">
               <TiktokCardBenefits desc="24/7 Priority Customer Support" />

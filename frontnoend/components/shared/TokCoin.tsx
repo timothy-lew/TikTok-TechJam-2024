@@ -16,18 +16,14 @@ const TokCoin = ({coinSize=30} : {coinSize? : number}) => {
 const TokCoins = ({mainCoinSize = 30}) => {
   return (
     <div className="relative inline-block" style={{ width: `${mainCoinSize * 2.2}px`, height: `${mainCoinSize * 1.8}px` }}>
-      {/* Bottom left coin */}
-      <div className="absolute bottom-0 left-0 transform rotate-[-8deg]" style={{ zIndex: 1 }}>
-        <TokCoin coinSize={Math.floor(mainCoinSize * 0.5)} />
-      </div>
       
       {/* Top right coin */}
       <div className="absolute top-0 right-0 transform rotate-[5deg]" style={{ zIndex: 2 }}>
-        <TokCoin coinSize={Math.floor(mainCoinSize * 0.65)} />
+        <TokCoin coinSize={Math.floor(mainCoinSize * 0.35)} />
       </div>
       
       {/* Center coin (slightly larger to appear on top) */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" style={{ zIndex: 3 }}>
+      <div className="absolute top-1/2 left-1/2 transform rotate-[-15deg] -translate-x-1/2 -translate-y-1/2" style={{ zIndex: 3 }}>
         <TokCoin coinSize={mainCoinSize} />
       </div>
     </div>
