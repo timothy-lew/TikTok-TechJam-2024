@@ -74,6 +74,9 @@ export function useFetchTransactions(
 
         const data: TransactionResponse[] = await response.json();
 
+        console.log("Received TransactionResponse:");
+        console.log(data);
+
         const finalData = data.map((transaction) => {
           let amount;
           let desc = "";

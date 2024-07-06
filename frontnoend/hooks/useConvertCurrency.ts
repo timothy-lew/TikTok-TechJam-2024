@@ -47,56 +47,6 @@ export function useConvertCurrency() {
     }
   };
 
-  // old implementation - polling done here
-  // const checkTransactionStatus = async ({transactionID, accessToken} : {transactionID: string, accessToken: string}) => {
-
-  //   const pollInterval = 5000 // poll every 5 seconds
-  //   const maxAttempts = 66 // window is 5 minutes long, added 30 more seconds of buffer
-
-  //   return new Promise((resolve)=>{
-  //     let attempts = 0;
-
-  //     const poll = () => {
-  //       setTimeout(async () => {
-  //         try {
-  //           const response = await fetch(`${getBackendUrl()}/api/transactions/status/${transactionID}`, {
-  //             method: 'GET',
-  //             headers: {
-  //               'Content-Type': 'application/json',
-  //               'Authorization': `Bearer ${accessToken}`
-  //             }
-  //           });
-
-  //           const result = await response.json(); // result is simply a boolean
-
-  //           console.log("received transaction status:", result);
-
-  //           if (result){
-  //             console.log("transaction successful");
-  //             resolve(true);
-  //           }
-  //           else if (attempts < maxAttempts){
-  //             attempts ++;
-  //             poll();
-  //           }
-  //           else{
-  //             console.log("waitied for 5mins");
-  //             resolve(false);
-  //           }
-
-  //         }
-  //         catch(error){
-  //           console.log("Error in check status")
-  //           resolve(false);
-  //         }
-  //       })
-  //     }
-
-  //     poll();
-  //   })
-
-  // }
-
   const convertCurrency = async ({
     accessToken,
     userId,

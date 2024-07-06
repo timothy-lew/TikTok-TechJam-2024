@@ -72,13 +72,11 @@ const TopUpPage: React.FC = () => {
 
   return (
     <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
-        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-tiktok-red">
-          Top Up Your Wallet
-        </h1>
-      </div>
 
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-red">
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-slate-300">
+      <h1 className="font-bold text-center text-2xl sm:text-3xl md:text-4xl text-tiktok-red mb-6">
+          Top Up
+        </h1>
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Current Balance</h2>
           <p className="text-muted-foreground">Fiat: ${walletData?.cashBalance}</p>
