@@ -29,7 +29,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import { columns } from "./transactionsSeller";
 import { DataTable } from "@/components/ui/data-table";
 import { useFetchTransactions } from "@/hooks/useFetchTransactions";
-import { Bar, BarChart, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, LabelList, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts"
 
 
 
@@ -40,42 +40,10 @@ const page = () => {
 
     const transactionData = useFetchTransactions(user?.sellerProfile?.id || "", "seller");
 
-    // const [incoming, setIncoming] = useState<number>(0);
-
     var totalSales = 0
     for (let i = 0; i < transactionData.length; i++) {
         totalSales += transactionData[i].amount;
     }
-
-  //   {
-  //     "id": "6687c7644e98e30ca88f37bb",
-  //     "transactionType": "PURCHASE",
-  //     "transactionDate": "2024-07-05T18:13:56.454",
-  //     "userId": "null",
-  //     "purchaseDetails": {
-  //         "buyerProfileId": "66813c7ef8bd211375579161",
-  //         "buyerUserName": "buyer",
-  //         "sellerProfileId": "66813c81f8bd211375579164",
-  //         "sellerBusinessName": "Vintage Closet",
-  //         "itemId": "667c2015fe08ec33cf32e736",
-  //         "quantity": 1,
-  //         "purchaseAmount": 19.9,
-  //         "purchaseType": "CASH"
-  //     },
-  //     "topUpDetails": null,
-  //     "conversionDetails": null,
-  //     "withdrawDetails": null
-  // },
-
-    // const getYear = (date: string) => {
-    //   // "2024-07-05T18:13:56.454" to "2024"
-    //   return date.split("-")[0];
-    // }
-
-    // const getMonth = (date: string) => {
-    //   // "2024-07-05T18:13:56.454" to "07"
-    //   return date.split("-")[1];
-    // }
 
     const stringToDate = (date: String) => {
       // "2024-07-05T18:13:56.454" to Date
@@ -95,28 +63,39 @@ const page = () => {
     const now = new Date();
 
     // append clean data with dummy transection 10 days back and 5 monthes back
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i <= 10; i++) {
         cleanDataDate.push({
             amount: 0,
-            transactionDate: new Date(now.setDate(now.getDate() - i))
+            transactionDate: new Date(new Date().setDate(new Date().getDate() - i))
         })
     }
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i <= 5; i++) {
         cleanDataDate.push({
             amount: 0,
-            transactionDate: new Date(now.setMonth(now.getMonth() - i))
+            transactionDate: new Date(new Date().setMonth(new Date().getMonth() - i))
+        })
+    }
+
+    for (let i = 0; i <= 1; i++) {
+        cleanDataDate.push({
+            amount: 0,
+            transactionDate: new Date(new Date().setFullYear(new Date().getFullYear() - i))
         })
     }
 
     //bug in date logic
 
     type groupByType = "day" | "month" | "year";
-    const [groupBy, setGroupBy] = useState<groupByType>("month");
+    const [groupBy, setGroupBy] = useState<groupByType>("day");
+    // if day, show 10 days, if month, show 5 months, if year, show 1 year
+    const numberToShow = groupBy === "day" ? 10 : groupBy === "month" ? 5 : 2;
 
     cleanDataDate = cleanDataDate.sort((a, b) => {
         return a.transactionDate.getTime() - b.transactionDate.getTime();
     })
+
+    console.log(cleanDataDate);
 
     const data = Object.groupBy(cleanDataDate, (item) => {
         if (groupBy === "day") {
@@ -128,25 +107,24 @@ const page = () => {
         }
     })
 
+    console.log(JSON.stringify(data));
+
     var data2 = Object.entries(data).map(([key, value]) => {
         return {
             date: key,
-            goal: value?.reduce((acc, item) => acc + item.amount, 0) ?? 0
+            dummyDate: value?.[0].transactionDate,
+            total: value?.reduce((acc, item) => acc + item.amount, 0) ?? 0
         }
     })
 
-    data2 = data2.sort((a, b) => {
-        return a.date.localeCompare(b.date);
-    })
+    // data2 = data2.sort((a, b) => {
+    //     return a.date.localeCompare(b.date);
+    // })
 
     // reduce to only 5 data
-    data2 = data2.reverse().slice(0, 5).reverse();
+    data2 = data2.reverse().slice(0, numberToShow).reverse();
 
-
-    // // reduce to only 5 data
-    // data2 = data2.slice(0, 5);
-    
-    
+      
     return (
     <div>
 
@@ -185,22 +163,28 @@ const page = () => {
               </button>
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">Total Sales: ${totalSales.toFixed(2)}</p>
-          <ResponsiveContainer width={600} height={400}>
+          <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">Total Sales</p>
+          <ResponsiveContainer height={400}>
             <BarChart data={data2}
-                width={600}
                 height={400}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <Bar
-                  dataKey="goal"
+                  dataKey="total"
                   style={
                     {
                       fill: "hsl(var(--foreground))",
                       opacity: 0.9,
                     } as React.CSSProperties
                   }
-                />
+                >
+                  <LabelList dataKey="total" position="top" formatter={(value: number) => {
+                    if (value === 0) {
+                      return ""
+                    }
+                    return `$${value.toFixed(2)}`
+                  }} />
+                </Bar>
                 <XAxis dataKey="date" />
                 <YAxis />
                 <Legend />
@@ -211,7 +195,7 @@ const page = () => {
         {/* Transaction Summary Section */}
         <div className="bg-white rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
           <h2 className="text-tiktok-red text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center">
-            Your Sales help
+            Your Sales
           </h2>
           <div className="flex justify-around items-center">
             <div className="flex flex-col items-center">
