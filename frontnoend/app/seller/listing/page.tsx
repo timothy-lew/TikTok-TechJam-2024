@@ -50,7 +50,7 @@ const page = () => {
     }, [createListing])
 
     useEffect(() => {
-        console.log(isDelete)
+        // console.log(isDelete)
         if (isDelete == "deleted") {
             setTimeout(() => {
                 setIsDelete("normal")

@@ -29,7 +29,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import { columns } from "./transactionsSeller";
 import { DataTable } from "@/components/ui/data-table";
 import { useFetchTransactions } from "@/hooks/useFetchTransactions";
-import { Bar, BarChart, LabelList, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, LabelList, Legend, ResponsiveContainer, Text, XAxis, YAxis } from "recharts"
 
 
 
@@ -101,7 +101,7 @@ const page = () => {
         return a.transactionDate.getTime() - b.transactionDate.getTime();
     })
 
-    console.log(cleanDataDate);
+    // console.log(cleanDataDate);
 
     const data = Object.groupBy(cleanDataDate, (item) => {
         if (groupBy === "day") {
@@ -112,8 +112,6 @@ const page = () => {
             return item.transactionDate.getFullYear().toString();
         }
     })
-
-    console.log(JSON.stringify(data));
 
     var data2 = Object.entries(data).map(([key, value]) => {
         return {
@@ -173,7 +171,7 @@ const page = () => {
           <ResponsiveContainer height={400}>
             <BarChart data={data2}
                 height={400}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                margin={{ top: 30, right: 30, left: 20, bottom: 20 }}
               >
                 <Bar
                   dataKey="total"
@@ -193,7 +191,6 @@ const page = () => {
                 </Bar>
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Legend />
               </BarChart>
           </ResponsiveContainer>
         </div>
@@ -233,8 +230,7 @@ const page = () => {
               <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-${outgoing.toFixed(2)}</p>
             </div> */}
           </div>
-
-          <DataTable columns={columns} data={transactionData} />
+          <DataTable columns={columns} data={transactionData}/>
         </div>
 
         

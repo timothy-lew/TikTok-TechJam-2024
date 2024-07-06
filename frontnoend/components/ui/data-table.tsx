@@ -30,6 +30,7 @@ import {
 
 
 import { useState } from "react"
+import TikTokLoader from "../shared/TiktokLoader"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -168,7 +169,9 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                <div className="flex justify-center items-center h-full">
+                  <TikTokLoader />
+                </div>
               </TableCell>
             </TableRow>
           )}
