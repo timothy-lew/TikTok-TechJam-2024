@@ -54,6 +54,27 @@ export const AuthProvider = ( {children} : {children: ReactNode}) => {
     initAuth();
   }, []);
 
+    // save updated user wallet details into local storage
+    useEffect(()=>{
+
+      const storedUser = localStorage.getItem('tiktokuser');
+  
+      if (storedUser && userWallet){
+        const parsedUser = JSON.parse(storedUser) as UserDetails;
+        
+        const updatedUser = {
+          ...parsedUser,
+          wallet: userWallet
+        }
+  
+        console.log('Updated user in local storage:')
+        console.log(updatedUser);
+  
+        localStorage.setItem('tiktokuser', JSON.stringify(updatedUser));
+      }
+  
+    }, [userWallet, user])
+
   const signIn = async (userSignInDetails : UserSignInDetails) => {
     try{
       const userDetails = await login(userSignInDetails);

@@ -1,45 +1,48 @@
-import { getBackendUrl } from "@/lib/utils"
-import { useState, useEffect } from "react"
+// useFetchShopItem.ts
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/auth-provider";
+import { getBackendUrl } from "@/lib/utils";
 
-// not the full attribute received but what is needed only
-interface ShopItem {
-  id: string,
-  sellerProfileId: string,
-  name: string,
-  descruption: string,
-  price: number,
-  tokTokenPrice: number,
-  imageUrl: string,
-  businessName: string,
+import { type Product } from "@/types/ShopTypes";
+
+export function useFetchShopItem(itemId: string | undefined) {
+  const [shopItem, setShopItem] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const auth = useAuth();
+
+  useEffect(() => {
+    async function fetchItem() {
+      if (!itemId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const accessToken = await auth?.obtainAccessToken();
+        const response = await fetch(`${getBackendUrl()}/api/items/${itemId}`, {
+          method: 'GET',
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch item');
+        }
+
+        const data = await response.json();
+        setShopItem(data);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('An error occurred'));
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchItem();
+  }, [itemId, auth]);
+
+  return { shopItem, loading, error };
 }
-
-
-const fetchShopItem = async (itemId: string) => {
-  try{
-    const auth = useAuth();
-
-    const accessToken = await auth?.obtainAccessToken();
-
-    const response = await fetch(`${getBackendUrl}/api/items${itemId}`,{
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-
-    const data : ShopItem = await response.json();
-
-    console.log(data);
-  }
-  catch(error){
-    console.log(error);
-  }
-
-}
-
-
-
-
-export { fetchShopItem }
