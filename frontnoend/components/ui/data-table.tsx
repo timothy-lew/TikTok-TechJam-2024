@@ -35,11 +35,13 @@ import TikTokLoader from "../shared/TiktokLoader"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  isLoading: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading
 }: DataTableProps<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -153,7 +155,7 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {!isLoading && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -166,7 +168,14 @@ export function DataTable<TData, TValue>({
                 ))}
               </TableRow>
             ))
-          ) : (
+          ) :
+              <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                <p>No Data</p>
+              </TableCell>
+            </TableRow>}
+            
+          {isLoading &&(
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 <div className="flex justify-center items-center h-full">
@@ -174,7 +183,9 @@ export function DataTable<TData, TValue>({
                 </div>
               </TableCell>
             </TableRow>
-          )}
+          )
+          }
+            
         </TableBody>
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4">

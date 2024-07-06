@@ -230,7 +230,7 @@ const page = () => {
               <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-${outgoing.toFixed(2)}</p>
             </div> */}
           </div>
-          <DataTable columns={columns} data={transactionData}/>
+          <DataTable columns={columns} data={transactionData} isLoading={false}/>
         </div>
 
         

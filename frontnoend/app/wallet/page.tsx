@@ -256,7 +256,7 @@ const WalletPage: React.FC = () => {
             </div>
           </div>
 
-          <DataTable columns={columns} data={transactionData} />
+          <DataTable columns={columns} data={transactionData} isLoading={false}/>
         </div>
       </div>
 
@@ -335,7 +335,7 @@ const WalletPage: React.FC = () => {
             />
             <div className="mt-4 space-y-2">
               <Progress value={(allTimeOutgoing/obsidianCardSpending)*100} className="w-full" />
-              <p className="text-sm text-center">Spend <span className="font-semibold">${obsidianCardSpending-allTimeOutgoing}</span> more to reach Black tier!</p>
+              <p className="text-sm text-center">Spend <span className="font-semibold">${obsidianCardSpending-allTimeOutgoing}</span> more to reach Obsidian tier!</p>
             </div>
             <div className="flex flex-col items-start justify-center mt-4 space-y-2 text-sm">
               <TiktokCardBenefits desc="24/7 Priority Customer Support" />
