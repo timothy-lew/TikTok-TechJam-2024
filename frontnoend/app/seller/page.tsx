@@ -38,7 +38,7 @@ const page = () => {
     const auth = useAuth();
     const user = auth?.user || null;
 
-    const transactionData = useFetchTransactions(user?.sellerProfile?.id || "", "seller");
+    const {transactionData, loadingTransactionData} = useFetchTransactions(user?.sellerProfile?.id || "", "seller");
 
     var totalSales = 0
     for (let i = 0; i < transactionData.length; i++) {
@@ -230,7 +230,7 @@ const page = () => {
               <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-${outgoing.toFixed(2)}</p>
             </div> */}
           </div>
-          <DataTable columns={columns} data={transactionData} isLoading={false}/>
+          <DataTable columns={columns} data={transactionData} isLoading={loadingTransactionData}/>
         </div>
 
         

@@ -55,9 +55,11 @@ export function useFetchTransactions(
 ) {
   const auth = useAuth();
   const [transactionData, setTransactionData] = useState<Transaction[]>([]);
+  const [loadingTransactionData, setLoadingTransactionData] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchTransactions = async () => {
+      setLoadingTransactionData(true);
       const accessToken = await auth?.obtainAccessToken();
 
       try {
@@ -118,13 +120,15 @@ export function useFetchTransactions(
         });
 
         setTransactionData(finalData);
+        setLoadingTransactionData(false);
       } catch (e) {
         console.log(e);
+        setLoadingTransactionData(false);
       }
     };
 
     fetchTransactions();
   }, []);
 
-  return transactionData;
+  return {transactionData, loadingTransactionData};
 }

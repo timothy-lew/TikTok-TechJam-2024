@@ -77,7 +77,7 @@ const WalletPage: React.FC = () => {
   const [hideDetails, setHideDetails] = useState<boolean>(true);
   const [freezeCard, setFreezeCard] = useState<boolean>(false);
 
-  const transactionData: Transaction[] = useFetchTransactions(user?.buyerProfile?.id || "", "buyer");
+  const {transactionData, loadingTransactionData} = useFetchTransactions(user?.buyerProfile?.id || "", "buyer");
 
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   
@@ -256,7 +256,7 @@ const WalletPage: React.FC = () => {
             </div>
           </div>
 
-          <DataTable columns={columns} data={transactionData} isLoading={false}/>
+          <DataTable columns={columns} data={transactionData} isLoading={loadingTransactionData}/>
         </div>
       </div>
 
