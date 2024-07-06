@@ -62,22 +62,28 @@ const page = () => {
 
     const now = new Date();
 
-    // append clean data with dummy transection 10 days back and 5 monthes back
-    for (let i = 0; i <= 10; i++) {
+    const NUMBER_DAYS = 7;
+    const NUMBER_MONTHS = 5;
+    const NUMBER_YEARS = 2;
+
+    // append clean data with dummy transection NUMBER_DAYS days back
+    // append clean data with dummy transection NUMBER_MONTHS months back
+    // append clean data with dummy transection NUMBER_YEARS years back
+    for (let i = 0; i <= NUMBER_DAYS; i++) {
         cleanDataDate.push({
             amount: 0,
             transactionDate: new Date(new Date().setDate(new Date().getDate() - i))
         })
     }
 
-    for (let i = 0; i <= 5; i++) {
+    for (let i = 0; i <= NUMBER_MONTHS; i++) {
         cleanDataDate.push({
             amount: 0,
             transactionDate: new Date(new Date().setMonth(new Date().getMonth() - i))
         })
     }
 
-    for (let i = 0; i <= 1; i++) {
+    for (let i = 0; i <= NUMBER_YEARS; i++) {
         cleanDataDate.push({
             amount: 0,
             transactionDate: new Date(new Date().setFullYear(new Date().getFullYear() - i))
@@ -89,7 +95,7 @@ const page = () => {
     type groupByType = "day" | "month" | "year";
     const [groupBy, setGroupBy] = useState<groupByType>("day");
     // if day, show 10 days, if month, show 5 months, if year, show 1 year
-    const numberToShow = groupBy === "day" ? 10 : groupBy === "month" ? 5 : 2;
+    const numberToShow = groupBy === "day" ? NUMBER_DAYS : groupBy === "month" ? NUMBER_MONTHS : NUMBER_YEARS;
 
     cleanDataDate = cleanDataDate.sort((a, b) => {
         return a.transactionDate.getTime() - b.transactionDate.getTime();
@@ -128,8 +134,8 @@ const page = () => {
     return (
     <div>
 
-        <div className="flex flex-col justify-between items-center">
-          <div className="mb-6">
+        <div className="flex flex-col justify-between items-center mt-2">
+          <div className="mb-2">
             <div className="flex rounded-md overflow-hidden border border-tiktok-red">
               <button
                 onClick={() => setGroupBy("day")}
