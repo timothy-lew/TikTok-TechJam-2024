@@ -30,6 +30,7 @@ import { columns } from "./transactionsSeller";
 import { DataTable } from "@/components/ui/data-table";
 import { useFetchTransactions } from "@/hooks/useFetchTransactions";
 import { Bar, BarChart, LabelList, Legend, ResponsiveContainer, Text, XAxis, YAxis } from "recharts"
+import TikTokLoader from "@/components/shared/TiktokLoader";
 
 
 
@@ -168,6 +169,15 @@ const page = () => {
             </div>
           </div>
           <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">Total Sales</p>
+          {
+            loadingTransactionData && 
+            <div className="flex justify-center items-center p-0 m-0" style={{
+                position: "relative",
+                bottom: "-180px",
+              }}>
+              <TikTokLoader />
+            </div>
+          }
           <ResponsiveContainer height={400}>
             <BarChart data={data2}
                 height={400}
