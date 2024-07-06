@@ -127,11 +127,3 @@ yarn hardhat node
 ```
 web3j generate solidity -b ./constants/TOKToken.bin -a ./constants/TOKToken.abi -o ../backend/src/main/java -p com.example.backend.contract
 ```
-
-# Sepolia Testnet
-
-- Follow the instructions on [Metamask Docs](https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/) to import the Sepolia testnet network with the following configuration:
-  - **Network Name:** Sepolia test network
-  - **RPC URL:** https://sepolia.infura.io/v3/
-  - **Chain ID:** 11155111
-  - **Currency Symbol:** SepoliaETH
