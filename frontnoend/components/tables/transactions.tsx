@@ -48,7 +48,7 @@ export const columns: ColumnDef<Transaction>[] = [
       return <div>{formattedDate}</div>;
     },
     filterFn: (row, columnId, filterValue) => {
-      if (filterValue === "") return true; // If no filter is applied, show all rows
+      if (filterValue === "") return true; 
       const dateString: string = row.getValue(columnId);
       const date = parseISO(dateString);
       const month = format(date, 'MMMM');
