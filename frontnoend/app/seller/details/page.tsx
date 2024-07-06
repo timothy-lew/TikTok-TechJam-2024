@@ -35,7 +35,7 @@ const Page = () => {
         }
 
         setEditName("saving");
-        fetch(`${getBackendUrl()}/api/profiles/seller/${user?.sellerProfile?.id}`, {
+        fetch(`${getBackendUrl()}/api/profiles/seller/${user?.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -45,7 +45,52 @@ const Page = () => {
         })    
     }
 
-    const sellerDetails = user?.sellerProfile;
+    const saveDescriptionHandler = (description: string) => {
+        console.log("description", description)
+        const formData = {
+            businessName: user?.sellerProfile?.businessName || undefined,
+            businessDescription: description,
+        }
+
+        setEditDescription("saving");
+        fetch(`${getBackendUrl()}/api/profiles/seller/${user?.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(formData),
+        })    
+    }
+
+    // const sellerDetails = user?.sellerProfile;
+    const [sellerDetails, setSellerDetails] = useState<{businessName: string, businessDescription:string} | null>(null);
+
+    useEffect(() => {
+        if (user?.sellerProfile == null){
+            return;
+        } else {
+            setSellerDetails(user?.sellerProfile);
+        }
+    }, [user])
+
+    useEffect(() => {
+        if (editName == "saving" || editDescription == "saving") {
+            setTimeout(() => {
+                setEditName("saved")
+                setEditDescription("saved")
+                fetch(`${getBackendUrl()}/api/profiles/seller/${user?.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                }).then((response) => response.json())
+                .then((data) => {
+                    setSellerDetails(data);
+                });
+            }, 1000)
+        }
+    }, [editName, editDescription])
+
 
     return (
         <div>
@@ -78,9 +123,7 @@ const Page = () => {
                                     className="border border-gray-300 p-2 rounded-lg"
                                     defaultValue={sellerDetails.businessName}
                                 />
-                                <Button onClick={(e) => {
-                                    
-                                }}>Save</Button>
+                                <Button>Save</Button>
                             </form>}
                             
                             {/* <p className="text-l text-center font-semibold text-gray-800">
@@ -103,15 +146,21 @@ const Page = () => {
                                             }
                                         } />
                                     </button>
-                                </p>: <form className="flex flex-row gap-4 w-3/5 h-24">
+                                </p>: <form className="flex flex-row gap-4 w-3/5 h-24"
+                                    onSubmit={
+                                        (e: any) => {
+                                            e.preventDefault();
+                                            console.log(e)
+                                            saveDescriptionHandler(e.target.description.value);
+                                        }
+                                    }
+                                >
                                     <textarea
                                         name="description"
                                         className="border border-gray-300 p-2 rounded-lg w-full"
                                         defaultValue={sellerDetails.businessDescription}
                                     />
-                                    <Button onClick={() => {
-                                        setEditDescription("saving");
-                                    }}>Save</Button>
+                                    <Button>Save</Button>
                                 </form>
                             }
                         </div>
