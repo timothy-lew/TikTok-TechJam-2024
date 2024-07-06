@@ -125,10 +125,6 @@ const CurrencyExchangePage: React.FC = () => {
           };
         });
     
-        // toast({
-        //   title: "Success!",
-        //   description: "Your wallet has been updated",
-        // })
         handleOpen(`Success! Your wallet has been updated.`)
         setAmount(null);
         return;
@@ -252,13 +248,11 @@ const CurrencyExchangePage: React.FC = () => {
 
   return (
     <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
-        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-tiktok-red">
+
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-slate-300">
+        <h1 className="font-bold text-center text-2xl sm:text-3xl md:text-4xl text-tiktok-red mb-6">
           Currency Exchange
         </h1>
-      </div>
-
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-red">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <div className="mb-4 sm:mb-0">
             <h2 className="text-lg font-semibold mb-2">Your Balance</h2>
@@ -355,7 +349,7 @@ const CurrencyExchangePage: React.FC = () => {
             <AlertDialogHeader>
               <AlertDialogTitle>Initiate your Transfer</AlertDialogTitle>
               <AlertDialogDescription>
-                <p>Please send {amount} Tok Tokens to this wallet address:</p>
+                <p>Please send {amount} Tok Coins to this wallet address:</p>
                 <WalletAddressBar wallet_address={TIKTOK_WALLET_ADDRESS}></WalletAddressBar>
                 <p>
                   Transactions can take a few seconds to be processed<br />Your patience is appreciated!
@@ -370,13 +364,6 @@ const CurrencyExchangePage: React.FC = () => {
               }} className="hover:bg-red-50 hover:text-black">
                 Cancel
               </AlertDialogCancel>
-              {/* <AlertDialogAction onClick={() => {
-                setIsAlertDialogOpen(false);
-                handleTransferConfirmation();
-                setRemainingTime(givenTime); // Reset timer
-              }} className="hover:bg-red-600">
-                Transferred
-              </AlertDialogAction> */}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

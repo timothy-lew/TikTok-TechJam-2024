@@ -186,13 +186,13 @@ const WalletPage: React.FC = () => {
               <div className="flex-grow flex flex-col justify-evenly">
                 <div className="flex justify-center items-center gap-2">
                   <Image src="/icons/incomingTransactions.svg" alt="icon" height={40} width={40} className="relative bottom-2"/>
-                  <p className="text-green-600 text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
+                  <p className="text-green-600 text-2xl sm:text-3xl md:text-3xl font-bold mb-2">
                     {isNaN(allTimeIncoming) ? "-" : `+$${allTimeIncoming.toFixed(2)}`}
                   </p>
                 </div>
                 <div className="flex justify-center items-center gap-2">
                   <Image src="/icons/outgoingTransactions.svg" alt="icon" height={40} width={40}/>
-                  <p className="text-amber-500 text-2xl sm:text-3xl md:text-4xl font-bold">
+                  <p className="text-amber-500 text-2xl sm:text-3xl md:text-3xl font-bold">
                     {isNaN(allTimeOutgoing) ? "-" : `-$${allTimeOutgoing.toFixed(2)}`}
                   </p>
                 </div>
@@ -202,7 +202,7 @@ const WalletPage: React.FC = () => {
             <div className="flex flex-col items-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow-sm">
               <h3 className="font-bold text-xl mb-4 text-gray-700">This Month</h3>
               <div className="flex flex-col items-center mb-4">
-                <p className="text-green-600 text-2xl sm:text-3xl md:text-4xl font-bold mb-1">
+                <p className="text-green-600 text-2xl sm:text-3xl md:text-3xl font-bold mb-1">
                   {isNaN(thisMonth.incoming) ? "-" : `+$${thisMonth.incoming.toFixed(2)}`}
                 </p>
                 {!isNaN(incomingChange) && <div className="flex items-center space-x-0.5 text-sm">
@@ -219,10 +219,10 @@ const WalletPage: React.FC = () => {
                 </div>}
               </div>
               <div className="flex flex-col items-center">
-                <p className="text-amber-500 text-2xl sm:text-3xl md:text-4xl font-bold mb-1">
+                <p className="text-amber-500 text-2xl sm:text-3xl md:text-3xl font-bold mb-1">
                   {isNaN(thisMonth.outgoing) ? "-" : `-$${thisMonth.outgoing.toFixed(2)}`}
                 </p>
-                {isNaN(thisMonth.outgoing) && <div className="flex items-center space-x-0.5 text-sm">
+                {!isNaN(thisMonth.outgoing) && <div className="flex items-center space-x-0.5 text-sm">
                   <span className={`${!isNaN(outgoingChange) && outgoingChange >= 0 ? "text-red-600" : "text-green-600"} font-semibold`}>
                     {outgoingChange.toFixed(0)}%
                   </span>
