@@ -9,7 +9,7 @@
   * [Deployment](#deployment)
 
 ## Contributors
-- @Alexlaaa (Alex) Backend and MongoDB Development
+- @Alexlaaa (Alessandro) Backend and MongoDB Development
 - @Greg-Lim (Greg) Frontend Development
 - @LimJiaEarn (Jia Earn) Frontend Development
 - @jpl12345 (John) Frontend Development
