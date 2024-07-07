@@ -29,8 +29,8 @@ const HomePage = () => {
   }
   
   return (
-    <div className="flex_col_center gap-4">
-      {user?
+    <div className="flex flex-col justify-start items-center gap-4">
+      {/* {user?
       <div>
         <p>Signed in with {user.email}, {user.firstName}</p>
         <button className="bg-red-400 px-4 py-2 rounded-lg" onClick={()=>{auth?.signOut()}}>Log out</button>
@@ -47,7 +47,7 @@ const HomePage = () => {
         Quick User Log In (Hardcode)
         </button>
       </div>
-      }
+      } */}
 
       <Post
         image="/images/homePost.png"

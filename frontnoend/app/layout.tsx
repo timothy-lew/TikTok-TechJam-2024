@@ -28,9 +28,9 @@ export default function RootLayout({
               <Header />
             </section>
             
-            <section className="flex justify-start items-start pt-20">
+            <section className="flex justify-start items-start pt-16">
                 <SideBar />
-              <main className="w-full min-h-screen">
+              <main className="w-full min-h-screen pt-4">
                 {children}
               </main>
             </section>

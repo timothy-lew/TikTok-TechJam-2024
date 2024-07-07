@@ -78,7 +78,7 @@ const SideBar = () => {
         <p className={`hidden md:flex_col_center ${pathname.startsWith('/following') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Following</p>
       </Link>
 
-      <Link href="/friends" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
+      {user && <Link href="/friends" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <svg fill={`${pathname.startsWith('/friends') ? "rgba(254, 44, 85, 1)" : "rgba(22, 24, 35, 1)"}`} width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
         {pathname.startsWith('/friends') ?
           <>
@@ -91,7 +91,7 @@ const SideBar = () => {
         }
         </svg>
         <p className={`hidden md:flex_col_center ${pathname.startsWith('/friends') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Friends</p>
-      </Link>
+      </Link>}
 
       
 
@@ -135,21 +135,21 @@ const SideBar = () => {
         <p className={`hidden md:flex_col_center ${pathname.startsWith('/profile') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Profile</p>
       </Link>
 
-      <Link href="/wallet" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
+      {user && <Link href="/wallet" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <FaWallet className={`${pathname.startsWith('/wallet') ? "text-tiktok-red" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
         <div className="flex_center gap-1.5">
           <p className={`hidden md:flex_col_center ${pathname.startsWith('/wallet') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Wallet</p>
           <span className="hidden md:inline text-xs px-1.5 py-0.5 bg-tiktok-red text-white font-bold rounded-xl">New</span>
         </div>
-      </Link>
+      </Link>}
 
-      <Link href="/shop" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
+      {user && <Link href="/shop" className="flex justify-start items-center gap-2 hover:bg-gray-50 w-full py-2">
         <FaShop className={`${pathname.startsWith('/shop') ? "text-tiktok-red" : "text-tiktok-gray"} w-6 h-6 ml-1 cursor-pointer`} />
         <div className="flex_center gap-1.5">
           <p className={`hidden md:flex_col_center ${pathname.startsWith('/shop') ? 'text-skin-red' : 'text-skin-base'} font-bold text-lg`}>Shop</p>
           <span className="hidden md:inline text-xs px-1.5 py-0.5 bg-tiktok-red text-white font-bold rounded-xl">New</span>
         </div>
-      </Link>
+      </Link>}
       
       <Separator className="my-1 bg-slate-200"/>
 

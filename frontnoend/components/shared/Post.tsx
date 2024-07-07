@@ -14,7 +14,7 @@ type PostProps = {
 
 const Post = ({image, name, verified, desc, profile, likes, comments, bookmarks, shares} : PostProps) => {
     return (
-        <div className="flex w-3/5 max-w-[800px] max-h-screen">
+        <div className="flex w-3/5 max-w-[800px] max-h-screen py-4">
             <div className="flex-grow relative h-screen py-[100px]">
                 <div className="w-full h-full relative">
                     <Image
