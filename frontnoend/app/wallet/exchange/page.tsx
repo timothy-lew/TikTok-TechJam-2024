@@ -33,7 +33,7 @@ const CurrencyExchangePage: React.FC = () => {
   const { convertCurrency, checkTransactionStatus, success, isConverting, error } = useConvertCurrency();
 
   const [amount, setAmount] = useState<number | null>(null);
-  const [conversionType, setConversionType] = useState<"CASH_TO_TOKTOKEN" | "TOKTOKEN_TO_CASH">("TOKTOKEN_TO_CASH");
+  const [conversionType, setConversionType] = useState<"CASH_TO_TOKTOKEN" | "TOKTOKEN_TO_CASH">("CASH_TO_TOKTOKEN");
 
   const { exchangeRate } = useFetchExchangeRate();
 
@@ -108,10 +108,6 @@ const CurrencyExchangePage: React.FC = () => {
       tokTokenToConvert: conversionType === "CASH_TO_TOKTOKEN" ? 0 : Number(amount),
       conversionType,
     });
-
-    console.log("ConvertedResult:")
-    console.log(convertedResult);
-
 
     if (convertedResult.status === "success"){
 
@@ -295,7 +291,7 @@ const CurrencyExchangePage: React.FC = () => {
                   : "bg-card text-tiktok-red"
               } transition duration-300`}
             >
-              Fiat to Tok Coins
+              Cash to Tok Coins
             </button>
             <button
               onClick={() => setConversionType("TOKTOKEN_TO_CASH")}
@@ -305,7 +301,7 @@ const CurrencyExchangePage: React.FC = () => {
                   : "bg-card text-tiktok-red"
               } transition duration-300`}
             >
-              Tok Coins to Fiat
+              Tok Coins to Cash
             </button>
           </div>
         </div>

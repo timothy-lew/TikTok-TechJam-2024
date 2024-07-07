@@ -114,7 +114,7 @@ export const columns: ColumnDef<Transaction>[] = [
                   <DialogTitle>Transaction Details</DialogTitle>
                   <DialogDescription>
                     <div className="w-full flex_col_center gap-2">
-                      {!isPurchase && <p>{transaction.desc}</p>}
+                      {!isPurchase && <p className="w-full text-left mt-4">{transaction.desc}</p>}
                       {isPurchase && <PurchaseTransactionView itemId={transaction.purchaseDetails?.itemId} transaction={transaction}/>}
                     </div>
                   </DialogDescription>

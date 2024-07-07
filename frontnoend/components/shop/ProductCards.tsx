@@ -55,7 +55,7 @@ export function ProductCard({ product }: { product: Product }) {
         {discountRate ? (
           <CardDescription>
             <span className="inline-block bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full border border-yellow-500">
-              Save {discountRate} with Tok Coin!
+              Save {discountRate} with Tok Coins!
             </span>
           </CardDescription>
         ) : (
@@ -198,7 +198,7 @@ export function ProductCardDetails({
           {discountRate ? (
           <CardDescription>
             <span className="inline-block bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full border border-yellow-500">
-              Save {discountRate} with Tok Coin!
+              Save {discountRate} with Tok Coins!
             </span>
           </CardDescription>
         ) : (

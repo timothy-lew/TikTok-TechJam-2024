@@ -2,6 +2,7 @@ import { Product, BuyerInfo } from "@/types/ShopTypes";
 import { Gift } from "lucide-react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
+import { TokCoin, TokCoins } from "../shared/TokCoin";
 
 type ConfirmPurchaseModalProps = {
   product: Product;
@@ -60,7 +61,7 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
                   Enjoy {product.discountRate} Off!
                 </AlertTitle>
                 <AlertDescription className="text-m">
-                  Checkout using Tok Coin as your payment method to enjoy{" "}
+                  Checkout using Tok Coins as your payment method to enjoy{" "}
                   {product.discountRate} savings!
                 </AlertDescription>
               </div>
@@ -126,7 +127,7 @@ export const ConfirmPurchaseModal: React.FC<ConfirmPurchaseModalProps> = ({
             className="w-full sm:w-auto flex-grow inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 sm:text-sm"
             onClick={onConfirmTiktokCoin}
           >
-            Buy with Tok Coin
+            Buy with Tok Coins
           </button>
           <button
             type="button"

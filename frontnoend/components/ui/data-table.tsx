@@ -201,6 +201,7 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="border-slate-300 hover:border-slate-200 hover:bg-gray-50 hover:text-slate-800"
         >
           Previous
         </Button>
@@ -209,6 +210,7 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="border-slate-300 hover:border-slate-200 hover:bg-gray-50 hover:text-slate-800"
         >
           Next
         </Button>

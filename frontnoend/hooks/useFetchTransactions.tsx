@@ -11,7 +11,7 @@ export type TransactionResponse = {
   userId: string;
   purchaseDetails: PurchaseDetails | null;
   topUpDetails: TopUpDetails | null;
-  ConversionDetails: ConversionDetails | null;
+  conversionDetails: ConversionDetails | null;
   withdrawDetails: withdrawDetails | null;
 };
 
@@ -42,6 +42,9 @@ export type withdrawDetails = {
 
 export type ConversionDetails = {
   conversionRate: number;
+  cashToConvert: number | null;
+  tokTokenToConvert: number | null;
+  convertedAmount: number;
   cashBalance: number;
   coinBalance: number;
   conversionType: "CASH_TO_TOKTOKEN" | "TOKTOKEN_TO_CASH";
@@ -95,18 +98,18 @@ export function useFetchTransactions(
               } from ${transaction.purchaseDetails?.sellerBusinessName}`;
               break;
             case "CONVERSION":
-              amount = transaction.ConversionDetails?.cashBalance || 0;
+              amount = transaction.conversionDetails?.cashBalance || 0;
               if (
-                transaction.ConversionDetails?.conversionType ===
+                transaction.conversionDetails?.conversionType ===
                 "CASH_TO_TOKTOKEN"
               )
-                desc = `Converted SGD${transaction.ConversionDetails?.cashBalance} to ${transaction.ConversionDetails?.coinBalance} Tok Coins`;
+                desc = `Converted SGD${transaction.conversionDetails?.convertedAmount} to ${transaction.conversionDetails?.convertedAmount} Tok Coins`;
               else
-                desc = `Converted ${transaction.ConversionDetails?.coinBalance} Tok Coins to SGD${transaction.ConversionDetails?.cashBalance}`;
+                desc = `Converted ${transaction.conversionDetails?.convertedAmount || "weird"} Tok Coins to SGD${transaction.conversionDetails?.convertedAmount || "weird"}`;
               break;
             case "TOPUP":
               amount = transaction.topUpDetails?.topUpAmount || 0;
-              desc = `Topped up SGD${amount}`;
+              desc = `Topped up SGD${amount} with ${transaction.topUpDetails?.topUpType==='GIFT_CARD' ? 'gift card' : 'credit card'}`;
               break;
             case "WITHDRAW":
               amount = transaction.withdrawDetails?.withdrawAmount || 0;
