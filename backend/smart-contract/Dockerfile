@@ -5,9 +5,17 @@ RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 
+# Copy package files
 COPY package.json package-lock.json ./
-RUN yarn install --frozen-lockfile --legacy-peer-deps
 
+# Install dependencies
+RUN npm ci --legacy-peer-deps
+
+# Copy the rest of your code
 COPY . .
 
-CMD ["yarn", "hardhat", "node"]
+# Compile Hardhat contracts
+RUN npx hardhat compile
+
+# Run Hardhat node
+CMD ["npx", "hardhat", "node"]
