@@ -1,14 +1,18 @@
 services:
   frontend:
-    build: ./frontnoend
-    ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_BACKEND_URL=http://app:8080
-    depends_on:
-      - app
-    networks:
-      - app-network
+      build:
+        context: ./frontnoend
+        dockerfile: Dockerfile
+        args:
+          - NEXT_PUBLIC_BACKEND_URL=http://app:8080
+      ports:
+        - "3000:3000"
+      environment:
+        - NEXT_PUBLIC_RUNTIME_BACKEND_URL=http://app:8080
+      depends_on:
+        - app
+      networks:
+        - app-network
 
   app:
     build:
