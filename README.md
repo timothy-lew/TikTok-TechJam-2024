@@ -90,6 +90,21 @@ All components are containerized using Docker for easy local setup.
      mongodb://root:secret@localhost:27017/?retryWrites=true&w=majority&appName=Cluster0
      ```
 
+5. **Log in information for our web-app**
+
+   **Buyer account:**
+
+   username: buyer, password: password
+
+   **Seller account:**
+
+   username: seller, password: password
+
+   **Buyer & Seller account:**
+
+   username: user, password: password
+     
+
 ## Deployment
 
 https://tiktok-techjam-pearl.vercel.app/
