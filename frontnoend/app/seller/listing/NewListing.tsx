@@ -117,7 +117,7 @@ const NewListing = ({ setCreateListing, accessToken }: NewListingProps) => {
       >
         <div className="relative bg-white rounded-lg shadow">
           <div className="text-center p-5">
-            Listing
+            <h2 className="text-xl font-bold">Create New Listing</h2>
             <NewListingForm />
           </div>
         </div>

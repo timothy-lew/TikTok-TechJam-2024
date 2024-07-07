@@ -29,6 +29,10 @@ const Page = () => {
     const [editDescription, setEditDescription] = useState<"edit" | "saving" | "saved">("saved");
 
     const saveNameHandler = (name: string) => {
+        if (name == sellerDetails?.businessName) {
+            setEditName("saved");
+            return;
+        }
         const formData = {
             businessName: name,
             businessDescription: user?.sellerProfile?.businessDescription || undefined,
@@ -47,6 +51,10 @@ const Page = () => {
 
     const saveDescriptionHandler = (description: string) => {
         console.log("description", description)
+        if (description == sellerDetails?.businessDescription) {
+            setEditDescription("saved");
+            return;
+        }
         const formData = {
             businessName: user?.sellerProfile?.businessName || undefined,
             businessDescription: description,
