@@ -43,7 +43,7 @@ const UnavailableComponent = () => (
       <Dot />
       <Dot />
     </LoaderWrapper>
-    <p className="text-center">This page is not available at the moment<br/>check out our other pages!</p>
+    <p className="text-center">This page is not available for demo :(<br/>check out our other demo pages!</p>
 
     <div className="flex_center gap-4 ">
       <Link href="/" className="underline text-tiktok-red ">Home</Link>
