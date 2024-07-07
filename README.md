@@ -13,7 +13,7 @@ This project integrates multiple technologies for a comprehensive blockchain-ena
 
 All components are containerized using Docker for easy local setup.
 
-## Prerequisites
+## Pre-requisites
 
 ### 1. Docker Desktop
 - Download and install Docker Desktop from [Docker's official website](https://www.docker.com/products/docker-desktop/)
@@ -47,7 +47,11 @@ All components are containerized using Docker for easy local setup.
 #### 2.5 Troubleshooting
 - If you encounter a nonce error in MetaMask:
   1. Reset the nonce settings for all wallets ([Reset Nonce Guide](https://docs.metamask.io/wallet/how-to/run-devnet/#reset-your-local-nonce-calculation))
-  2. Restart Google Chrome to refresh MetaMask
+     
+     Perform the following for each imported wallet:
+     
+     MetaMask Plugin -> More options icon -> Settings -> Advanced -> Clear activity tab data
+  3. Restart Google Chrome to refresh MetaMask
 
 
 ## Getting Started
@@ -85,3 +89,16 @@ All components are containerized using Docker for easy local setup.
      ```
      mongodb://root:secret@localhost:27017/?retryWrites=true&w=majority&appName=Cluster0
      ```
+
+## Deployment
+
+https://tiktok-techjam-pearl.vercel.app/
+
+#### Instead of configuring local hardhat network (in 2.2), we will use the Sepolia Testnet.
+#### Sepolia Testnet
+
+- Follow the instructions on [Metamask Docs](https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/) to import the Sepolia testnet network with the following configuration:
+  - **Network Name:** Sepolia test network
+  - **RPC URL:** https://sepolia.infura.io/v3/
+  - **Chain ID:** 11155111
+  - **Currency Symbol:** SepoliaETH
