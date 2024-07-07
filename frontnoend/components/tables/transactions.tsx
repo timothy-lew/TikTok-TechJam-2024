@@ -123,6 +123,10 @@ export const columns: ColumnDef<Transaction>[] = [
             </Dialog>
             {isPurchase &&
               <DropdownMenuItem className="hover:bg-slate-200 cursor-pointer">
+                <Link href={`/shop/${transaction.purchaseDetails?.itemId}`}>View listing</Link> 
+              </DropdownMenuItem>}
+            {isPurchase &&
+              <DropdownMenuItem className="hover:bg-slate-200 cursor-pointer">
                 <Link href={`/shop/seller/${sellerId}`}>View seller shop</Link> 
               </DropdownMenuItem>}
             <DropdownMenuItem className="text-red-500 hover:bg-slate-200 cursor-pointer">Report unauthorised transaction</DropdownMenuItem>

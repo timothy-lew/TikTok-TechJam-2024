@@ -85,7 +85,7 @@ export function useFetchTransactions(
           const transactionType = transaction.transactionType;
           switch (transactionType) {
             case "PURCHASE":
-              amount = transaction.purchaseDetails ? transaction.purchaseDetails.purchaseAmount : 0;
+              amount = transaction.purchaseDetails?.purchaseType === "CASH" ? transaction.purchaseDetails.purchaseAmount : Math.floor(transaction.purchaseDetails?.purchaseAmount || 0);
               desc = `Purchased of ${
                 transaction.purchaseDetails?.purchaseAmount
               } ${
