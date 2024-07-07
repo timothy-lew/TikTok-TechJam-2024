@@ -59,6 +59,8 @@ const CurrencyExchangePage: React.FC = () => {
   
   }, [exchangeRate])
   
+  const [toUpdateCoins, setToUpdateCoins] = useState(0);
+  const [toUpdateCash, setToUpdateCash] = useState(0);
 
   // const TIKTOK_WALLET_ADDRESS : string = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; - i think this is old wallet
   const TIKTOK_WALLET_ADDRESS : string = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
@@ -107,10 +109,15 @@ const CurrencyExchangePage: React.FC = () => {
       conversionType,
     });
 
+    console.log("ConvertedResult:")
+    console.log(convertedResult);
+
 
     if (convertedResult.status === "success"){
 
       if (conversionType==="TOKTOKEN_TO_CASH"){
+        setToUpdateCoins(convertedResult.coinsConverted)
+        setToUpdateCash(convertedResult.cashConverted)
         settransactionID(convertedResult.transactionID);
         setIsAlertDialogOpen(true);
         setRemainingTime(givenTime);
@@ -125,10 +132,6 @@ const CurrencyExchangePage: React.FC = () => {
           };
         });
     
-        // toast({
-        //   title: "Success!",
-        //   description: "Your wallet has been updated",
-        // })
         handleOpen(`Success! Your wallet has been updated.`)
         setAmount(null);
         return;
@@ -170,12 +173,21 @@ const CurrencyExchangePage: React.FC = () => {
     }
     
     // Update wallet balance
+    // auth.setUserWallet((prev) => {
+    //   if (!prev) return null;
+    //   return {
+    //     ...prev,
+    //     cashBalance: prev.cashBalance + calculatedAmount!,
+    //     tokTokenBalance: prev.tokTokenBalance - Number(amount),
+    //   };
+    // });
+
     auth.setUserWallet((prev) => {
       if (!prev) return null;
       return {
         ...prev,
-        cashBalance: prev.cashBalance + calculatedAmount!,
-        tokTokenBalance: prev.tokTokenBalance - Number(amount),
+        cashBalance: prev.cashBalance + toUpdateCash,
+        tokTokenBalance: prev.tokTokenBalance + toUpdateCoins,
       };
     });
 
@@ -252,13 +264,11 @@ const CurrencyExchangePage: React.FC = () => {
 
   return (
     <section className="bg-background text-foreground flex flex-col w-full justify-start items-center gap-4 sm:gap-6 px-4 sm:px-6 py-6 sm:py-8">
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full border border-tiktok-red">
-        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl text-tiktok-red">
+
+      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-slate-300">
+        <h1 className="font-bold text-center text-2xl sm:text-3xl md:text-4xl text-tiktok-red mb-6">
           Currency Exchange
         </h1>
-      </div>
-
-      <div className="bg-card rounded-xl p-4 sm:p-6 shadow-md w-full max-w-2xl border border-tiktok-red">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <div className="mb-4 sm:mb-0">
             <h2 className="text-lg font-semibold mb-2">Your Balance</h2>
@@ -343,7 +353,6 @@ const CurrencyExchangePage: React.FC = () => {
             <button
               onClick={()=>{
                 handleExchange();
-                setAmount(null);
               }}
               disabled={!amount && !EXCHANGE_RATE}
               className="w-full bg-tiktok-red text-white py-3 rounded-md hover:bg-tiktok-red/90 transition duration-300 font-semibold disabled:bg-red-200"
@@ -355,7 +364,7 @@ const CurrencyExchangePage: React.FC = () => {
             <AlertDialogHeader>
               <AlertDialogTitle>Initiate your Transfer</AlertDialogTitle>
               <AlertDialogDescription>
-                <p>Please send {amount} Tok Tokens to this wallet address:</p>
+                <p>Please send {amount} Tok Coins to this wallet address:</p>
                 <WalletAddressBar wallet_address={TIKTOK_WALLET_ADDRESS}></WalletAddressBar>
                 <p>
                   Transactions can take a few seconds to be processed<br />Your patience is appreciated!
@@ -370,13 +379,6 @@ const CurrencyExchangePage: React.FC = () => {
               }} className="hover:bg-red-50 hover:text-black">
                 Cancel
               </AlertDialogCancel>
-              {/* <AlertDialogAction onClick={() => {
-                setIsAlertDialogOpen(false);
-                handleTransferConfirmation();
-                setRemainingTime(givenTime); // Reset timer
-              }} className="hover:bg-red-600">
-                Transferred
-              </AlertDialogAction> */}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

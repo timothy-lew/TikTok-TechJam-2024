@@ -30,15 +30,18 @@ import {
 
 
 import { useState } from "react"
+import TikTokLoader from "../shared/TiktokLoader"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  isLoading: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading
 }: DataTableProps<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -62,45 +65,74 @@ export function DataTable<TData, TValue>({
   const CLEAR_FILTER_VALUE = "CLEAR_FILTER";
   const [selectorFilter, setSelectorFilter] = useState<string>("");
 
+  const [monthFilter, setMonthFilter] = useState<string>("");
+  const monthOptions = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
 
   return (
     <div className="rounded-md border">
       <div className="flex_center gap-4 py-4">
-        {/* <Input
-          placeholder="Filter receiver..."
-          value={(table.getColumn("receiver")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("receiver")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        /> */}
+
         <Select
           onValueChange={(value) => {
             if (value === CLEAR_FILTER_VALUE) {
-              table.getColumn('status')?.setFilterValue("");
+              table.getColumn('transactionType')?.setFilterValue("");
               setSelectorFilter("")
             }
             else {
-              table.getColumn('status')?.setFilterValue(value);
+              table.getColumn('transactionType')?.setFilterValue(value);
               setSelectorFilter(value)
             }
           }}
-          value={selectorFilter} 
+          value={selectorFilter}
         >
-          <SelectTrigger >
+          <SelectTrigger className="border-slate-300 max-w-xs">
             <SelectValue placeholder="Filter Status"/>
           </SelectTrigger>
 
           <SelectContent>
-            {["pending", "processing", "success", "failed"].map((option, index) =>
-              <SelectItem className="hover:cursor-pointer" value={option} key={`${option}_${index}`}>{option}</SelectItem>
+            {["PURCHASE", "CONVERSION", "TOPUP", "WITHDRAW"].map((option, index) =>
+              <SelectItem className="hover:cursor-pointer hover:bg-slate-200 " value={option} key={`${option}_${index}`}>
+                <p className="capitalize">{option.toLowerCase()}</p>
+              </SelectItem>
             )}
 
-            <SelectItem value={CLEAR_FILTER_VALUE} className="text-red-500 hover:cursor-pointer">Clear Filter</SelectItem>
+            <SelectItem value={CLEAR_FILTER_VALUE} className="text-red-500 hover:cursor-pointer hover:bg-slate-100">Clear Filter</SelectItem>
 
           </SelectContent>
 
         </Select>
+
+        <Select
+          onValueChange={(value) => {
+            if (value === CLEAR_FILTER_VALUE) {
+              table.getColumn('transactionDate')?.setFilterValue("");
+              setMonthFilter("")
+            }
+            else {
+              table.getColumn('transactionDate')?.setFilterValue(value);
+              setMonthFilter(value)
+            }
+          }}
+          value={monthFilter}
+        >
+          <SelectTrigger className="border-slate-300 max-w-xs">
+            <SelectValue placeholder="Filter Month"/>
+          </SelectTrigger>
+
+          <SelectContent>
+            {monthOptions.map((month, index) =>
+              <SelectItem className="hover:cursor-pointer hover:bg-slate-200" value={month} key={`${month}_${index}`}>
+                {month}
+              </SelectItem>
+            )}
+
+            <SelectItem value={CLEAR_FILTER_VALUE} className="text-red-500 hover:cursor-pointer hover:bg-slate-100">Clear Filter</SelectItem>
+          </SelectContent>
+        </Select>
+
       </div>
       
       <Table>
@@ -123,7 +155,7 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {!isLoading && table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -136,13 +168,24 @@ export function DataTable<TData, TValue>({
                 ))}
               </TableRow>
             ))
-          ) : (
+          ) :
+              <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                <p>No Data</p>
+              </TableCell>
+            </TableRow>}
+            
+          {isLoading &&(
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                <div className="flex justify-center items-center h-full">
+                  <TikTokLoader />
+                </div>
               </TableCell>
             </TableRow>
-          )}
+          )
+          }
+            
         </TableBody>
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4">

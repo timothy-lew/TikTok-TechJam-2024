@@ -12,7 +12,7 @@ type EditListingProps = {
   setEditListing: (itemId: string | null) => void;
 };
 
-const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
+const EditListing2 = ({ itemId, setEditListing }: EditListingProps) => {
   const auth = useAuth();
   const [accessToken, setAccessToken] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
@@ -28,7 +28,6 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
 
   const fileChangeHandler = (e: any) => {
     setFile(e?.target?.files[0]);
-    console.log(e?.target?.files[0]);
   };
 
   const listing = useFetchListing({ itemId, accessToken }) as Listing;
@@ -60,7 +59,6 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
         <form
           onSubmit={(e: any) => {
             e.preventDefault();
-            console.log(e);
             const listingValue = {
               ...listing,
               name: (e.target as any).name.value,
@@ -70,7 +68,6 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
               quantity: (e.target as any).quantity.value,
               imageUrl: e.target[4]?.files[0] || listing.imageUrl,
             };
-            console.log(e);
             onSubmit(listingValue);
             setEditListing("edited");
           }}
@@ -213,10 +210,10 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
       }
 
       const result = await response.json();
-      console.log("Item updated successfully:", result);
+      // console.log("Item updated successfully:", result);
       // Handle success (e.g., close modal, refresh list)
     } catch (error) {
-      console.error("Error updating item:", error);
+      // console.error("Error updating item:", error);
       // Handle error (e.g., show error message to user)
     }
   };
@@ -264,4 +261,4 @@ const EditListing = ({ itemId, setEditListing }: EditListingProps) => {
   );
 };
 
-export default EditListing;
+export default EditListing2;

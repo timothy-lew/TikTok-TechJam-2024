@@ -19,6 +19,8 @@ const page = () => {
     const [accessToken, setAccessToken] = useState<string>("")
     const [toEdit, setToEdit] = useState<string|null|"edited">(null)
     const [isDelete, setIsDelete] = useState<"deleted"| "normal">("normal")
+    const userId = auth?.user?.sellerProfile?.id || ""
+    // const userId = auth?.user?.id || ""
 
     useEffect(() => {
         const fetchAccessToken = () => {
@@ -48,7 +50,7 @@ const page = () => {
     }, [createListing])
 
     useEffect(() => {
-        console.log(isDelete)
+        // console.log(isDelete)
         if (isDelete == "deleted") {
             setTimeout(() => {
                 setIsDelete("normal")
@@ -56,7 +58,7 @@ const page = () => {
         }
     }, [isDelete])
 
-    const listing = useFetchListings({userId: "66813c84f8bd211375579165", accessToken, toEdit, createListing, isDeleted: isDelete})
+    const listing = useFetchListings({userId: userId, accessToken, toEdit, createListing, isDeleted: isDelete})
 
     return (
     <div>

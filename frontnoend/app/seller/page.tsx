@@ -29,7 +29,7 @@ import { useAuth } from "@/hooks/auth-provider";
 import { columns } from "./transactionsSeller";
 import { DataTable } from "@/components/ui/data-table";
 import { useFetchTransactions } from "@/hooks/useFetchTransactions";
-import { Bar, BarChart, LabelList, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, LabelList, Legend, ResponsiveContainer, Text, XAxis, YAxis } from "recharts"
 
 
 
@@ -38,7 +38,7 @@ const page = () => {
     const auth = useAuth();
     const user = auth?.user || null;
 
-    const transactionData = useFetchTransactions(user?.sellerProfile?.id || "", "seller");
+    const {transactionData, loadingTransactionData} = useFetchTransactions(user?.sellerProfile?.id || "", "seller");
 
     var totalSales = 0
     for (let i = 0; i < transactionData.length; i++) {
@@ -62,22 +62,28 @@ const page = () => {
 
     const now = new Date();
 
-    // append clean data with dummy transection 10 days back and 5 monthes back
-    for (let i = 0; i <= 10; i++) {
+    const NUMBER_DAYS = 7;
+    const NUMBER_MONTHS = 5;
+    const NUMBER_YEARS = 2;
+
+    // append clean data with dummy transection NUMBER_DAYS days back
+    // append clean data with dummy transection NUMBER_MONTHS months back
+    // append clean data with dummy transection NUMBER_YEARS years back
+    for (let i = 0; i <= NUMBER_DAYS; i++) {
         cleanDataDate.push({
             amount: 0,
             transactionDate: new Date(new Date().setDate(new Date().getDate() - i))
         })
     }
 
-    for (let i = 0; i <= 5; i++) {
+    for (let i = 0; i <= NUMBER_MONTHS; i++) {
         cleanDataDate.push({
             amount: 0,
             transactionDate: new Date(new Date().setMonth(new Date().getMonth() - i))
         })
     }
 
-    for (let i = 0; i <= 1; i++) {
+    for (let i = 0; i <= NUMBER_YEARS; i++) {
         cleanDataDate.push({
             amount: 0,
             transactionDate: new Date(new Date().setFullYear(new Date().getFullYear() - i))
@@ -89,13 +95,13 @@ const page = () => {
     type groupByType = "day" | "month" | "year";
     const [groupBy, setGroupBy] = useState<groupByType>("day");
     // if day, show 10 days, if month, show 5 months, if year, show 1 year
-    const numberToShow = groupBy === "day" ? 10 : groupBy === "month" ? 5 : 2;
+    const numberToShow = groupBy === "day" ? NUMBER_DAYS : groupBy === "month" ? NUMBER_MONTHS : NUMBER_YEARS;
 
     cleanDataDate = cleanDataDate.sort((a, b) => {
         return a.transactionDate.getTime() - b.transactionDate.getTime();
     })
 
-    console.log(cleanDataDate);
+    // console.log(cleanDataDate);
 
     const data = Object.groupBy(cleanDataDate, (item) => {
         if (groupBy === "day") {
@@ -106,8 +112,6 @@ const page = () => {
             return item.transactionDate.getFullYear().toString();
         }
     })
-
-    console.log(JSON.stringify(data));
 
     var data2 = Object.entries(data).map(([key, value]) => {
         return {
@@ -128,8 +132,8 @@ const page = () => {
     return (
     <div>
 
-        <div className="flex flex-col justify-between items-center">
-          <div className="mb-6">
+        <div className="flex flex-col justify-between items-center mt-2">
+          <div className="mb-2">
             <div className="flex rounded-md overflow-hidden border border-tiktok-red">
               <button
                 onClick={() => setGroupBy("day")}
@@ -167,7 +171,7 @@ const page = () => {
           <ResponsiveContainer height={400}>
             <BarChart data={data2}
                 height={400}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                margin={{ top: 30, right: 30, left: 20, bottom: 20 }}
               >
                 <Bar
                   dataKey="total"
@@ -187,7 +191,6 @@ const page = () => {
                 </Bar>
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Legend />
               </BarChart>
           </ResponsiveContainer>
         </div>
@@ -227,8 +230,7 @@ const page = () => {
               <p className="text-2xl sm:text-3xl text-center font-semibold text-gray-800">-${outgoing.toFixed(2)}</p>
             </div> */}
           </div>
-
-          <DataTable columns={columns} data={transactionData} />
+          <DataTable columns={columns} data={transactionData} isLoading={loadingTransactionData}/>
         </div>
 
         
