@@ -145,7 +145,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, isOpen }) => {
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder="Username" {...field} />
+                        <Input placeholder="Username" {...field} className="border-slate-300" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -158,7 +158,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, isOpen }) => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="Password" {...field} />
+                        <Input type="password" placeholder="Password" className="border-slate-300" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
