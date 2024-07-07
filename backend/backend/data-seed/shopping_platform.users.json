@@ -1,31 +1,5 @@
 [{
   "_id": {
-    "$oid": "66813c7ef8bd21137557915f"
-  },
-  "username": "buyer",
-  "email": "buyer@gmail.com",
-  "firstName": "Jack",
-  "lastName": "Daniel",
-  "password": "$2a$10$jptJYCPJ0.BOMXLXN6sIcuOUMPAjTVnPuLZY/86L/H9TaiOTF2Bz6",
-  "roles": [
-    "ROLE_BUYER"
-  ],
-  "buyerProfile": {
-    "$ref": "buyer_profiles",
-    "$id": {
-      "$oid": "66813c7ef8bd211375579161"
-    }
-  },
-  "wallet": {
-    "$ref": "wallets",
-    "$id": {
-      "$oid": "66813c7ef8bd211375579160"
-    }
-  },
-  "_class": "com.example.backend.user.model.User"
-},
-{
-  "_id": {
     "$oid": "66813c81f8bd211375579162"
   },
   "username": "seller",
@@ -79,6 +53,84 @@
     "$ref": "wallets",
     "$id": {
       "$oid": "66813c84f8bd211375579166"
+    }
+  },
+  "_class": "com.example.backend.user.model.User"
+},
+{
+  "_id": {
+    "$oid": "66813c7ef8bd21137557915f"
+  },
+  "username": "buyer",
+  "email": "buyer@gmail.com",
+  "firstName": "Jack",
+  "lastName": "Daniel",
+  "password": "$2a$10$jptJYCPJ0.BOMXLXN6sIcuOUMPAjTVnPuLZY/86L/H9TaiOTF2Bz6",
+  "roles": [
+    "ROLE_BUYER"
+  ],
+  "buyerProfile": {
+    "$ref": "buyer_profiles",
+    "$id": {
+      "$oid": "66813c7ef8bd211375579161"
+    }
+  },
+  "wallet": {
+    "$ref": "wallets",
+    "$id": {
+      "$oid": "66813c7ef8bd211375579160"
+    }
+  },
+  "_class": "com.example.backend.user.model.User"
+},
+{
+  "_id": {
+    "$oid": "668a26e6cccca71deab2de16"
+  },
+  "username": "deployedbuyer",
+  "email": "deployedbuyer@gmail.com",
+  "firstName": "Whiskey",
+  "lastName": "Lee",
+  "password": "$2a$10$86AQvjpFwRgWg.dpN1CkOeEfbgSH92hIRJCzSx6udVRAxOVRFhDaG",
+  "roles": [
+    "ROLE_BUYER"
+  ],
+  "buyerProfile": {
+    "$ref": "buyer_profiles",
+    "$id": {
+      "$oid": "668a26e6cccca71deab2de18"
+    }
+  },
+  "wallet": {
+    "$ref": "wallets",
+    "$id": {
+      "$oid": "668a26e6cccca71deab2de17"
+    }
+  },
+  "_class": "com.example.backend.user.model.User"
+},
+{
+  "_id": {
+    "$oid": "668a2791cccca71deab2de19"
+  },
+  "username": "deployedseller",
+  "email": "deployedseller@gmail.com",
+  "firstName": "Gin",
+  "lastName": "Tan",
+  "password": "$2a$10$txndlr3pSbwkJQy8EI41KOBtzKTLS3Df5pfrcMD2OLrwFU8Hfoquu",
+  "roles": [
+    "ROLE_SELLER"
+  ],
+  "sellerProfile": {
+    "$ref": "seller_profiles",
+    "$id": {
+      "$oid": "668a2791cccca71deab2de1b"
+    }
+  },
+  "wallet": {
+    "$ref": "wallets",
+    "$id": {
+      "$oid": "668a2791cccca71deab2de1a"
     }
   },
   "_class": "com.example.backend.user.model.User"

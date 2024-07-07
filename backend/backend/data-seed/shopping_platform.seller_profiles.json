@@ -1,5 +1,14 @@
 [{
   "_id": {
+    "$oid": "66813c84f8bd211375579168"
+  },
+  "userId": "66813c84f8bd211375579165",
+  "businessName": "Summer Wears",
+  "businessDescription": "The name speaks for itself; we're your one stop destination for everything summer.",
+  "_class": "com.example.backend.user.model.SellerProfile"
+},
+{
+  "_id": {
     "$oid": "66813c81f8bd211375579164"
   },
   "userId": "66813c81f8bd211375579162",
@@ -9,10 +18,10 @@
 },
 {
   "_id": {
-    "$oid": "66813c84f8bd211375579168"
+    "$oid": "668a2791cccca71deab2de1b"
   },
-  "userId": "66813c84f8bd211375579165",
-  "businessName": "Summer Wears",
-  "businessDescription": "The name speaks for itself; we're your one stop destination for everything summer.",
+  "userId": "668a2791cccca71deab2de19",
+  "businessName": "Deployed Closet",
+  "businessDescription": "We got what you want right here!",
   "_class": "com.example.backend.user.model.SellerProfile"
 }]
