@@ -47,6 +47,14 @@ export const columns: ColumnDef<Transaction>[] = [
       const formattedDate = format(date, 'dd/MM/yy');
       return <div>{formattedDate}</div>;
     },
+    
+    filterFn: (row, columnId, filterValue) => {
+      if (filterValue === "") return true; 
+      const dateString: string = row.getValue(columnId);
+      const date = parseISO(dateString);
+      const month = format(date, 'MMMM');
+      return month.toLowerCase() === filterValue.toLowerCase();
+    },
   },
   {
     accessorKey: "amount",

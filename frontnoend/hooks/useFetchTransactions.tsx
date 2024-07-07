@@ -85,13 +85,13 @@ export function useFetchTransactions(
           const transactionType = transaction.transactionType;
           switch (transactionType) {
             case "PURCHASE":
-              amount = transaction.purchaseDetails?.purchaseAmount || 0;
+              amount = transaction.purchaseDetails ? transaction.purchaseDetails.purchaseAmount : 0;
               desc = `Purchased of ${
                 transaction.purchaseDetails?.purchaseAmount
               } ${
                 transaction.purchaseDetails?.purchaseType === "CASH"
-                  ? "cash"
-                  : "tokcoins"
+                  ? "SGD"
+                  : "Tok Coins"
               } from ${transaction.purchaseDetails?.sellerBusinessName}`;
               break;
             case "CONVERSION":
@@ -100,9 +100,9 @@ export function useFetchTransactions(
                 transaction.ConversionDetails?.conversionType ===
                 "CASH_TO_TOKTOKEN"
               )
-                desc = `Converted SGD${transaction.ConversionDetails?.cashBalance} to ${transaction.ConversionDetails?.coinBalance} tokcoins`;
+                desc = `Converted SGD${transaction.ConversionDetails?.cashBalance} to ${transaction.ConversionDetails?.coinBalance} Tok Coins`;
               else
-                desc = `Converted ${transaction.ConversionDetails?.coinBalance} tokcoins to SGD${transaction.ConversionDetails?.cashBalance}`;
+                desc = `Converted ${transaction.ConversionDetails?.coinBalance} Tok Coins to SGD${transaction.ConversionDetails?.cashBalance}`;
               break;
             case "TOPUP":
               amount = transaction.topUpDetails?.topUpAmount || 0;

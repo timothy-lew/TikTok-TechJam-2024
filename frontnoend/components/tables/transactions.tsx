@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 import {
   Dialog,
   DialogClose,
@@ -20,7 +21,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
+import PurchaseTransactionView from "../shared/PurchaseTransactionView";
 import { type Transaction } from '@/hooks/useFetchTransactions';
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -85,10 +87,12 @@ export const columns: ColumnDef<Transaction>[] = [
 
       const isPurchase = transaction.transactionType === "PURCHASE";
 
+      const sellerId = transaction.purchaseDetails?.sellerProfileId;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-tiktok-red/80 rounded-full">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -102,20 +106,26 @@ export const columns: ColumnDef<Transaction>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <Dialog>
-              <DialogTrigger className="hover:bg-accent hover:text-white w-full relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+              <DialogTrigger className=" hover:text-black hover:bg-slate-200 w-full relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                 View transaction details
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Edit profile</DialogTitle>
+                  <DialogTitle>Transaction Details</DialogTitle>
                   <DialogDescription>
-                    {transaction.desc}
+                    <div className="w-full flex_col_center gap-2">
+                      {!isPurchase && <p>{transaction.desc}</p>}
+                      {isPurchase && <PurchaseTransactionView itemId={transaction.purchaseDetails?.itemId} transaction={transaction}/>}
+                    </div>
                   </DialogDescription>
                 </DialogHeader>
               </DialogContent>
             </Dialog>
-            {isPurchase && <DropdownMenuItem>View seller shop</DropdownMenuItem>}
-            <DropdownMenuItem className="text-red-500 hover:bg-slate-200 ">Report unauthorised transaction</DropdownMenuItem>
+            {isPurchase &&
+              <DropdownMenuItem className="hover:bg-slate-200 cursor-pointer">
+                <Link href={`/shop/seller/${sellerId}`}>View seller shop</Link> 
+              </DropdownMenuItem>}
+            <DropdownMenuItem className="text-red-500 hover:bg-slate-200 cursor-pointer">Report unauthorised transaction</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
