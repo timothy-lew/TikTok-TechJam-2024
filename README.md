@@ -1,6 +1,32 @@
 # TikTok-TechJam-2024
 
+## Table of Contents
+
+  * [Contributors](#contributors)
+  * [Project Overview](#project-overview)
+  * [Pre-requisites](#pre-requisites)
+  * [Getting Started](#getting-started)
+  * [Deployment](#deployment)
+
+## Contributors
+- @Alexlaaa (Alex) Backend and MongoDB Development
+- @Greg-Lim (Greg) Frontend Development
+- @LimJiaEarn (Jia Earn) Frontend Development
+- @jpl12345 (John) Frontend Development
+- @timothy-lew (Timothy) Smart Contract Development
+
 ## Project Overview
+
+This repository hosts the source code for our project entry, **Tok Coin: Empowering Financial Inclusion, in the 2024 TikTok TechJam**.
+
+Introducing Tok Coin, a cryptocurrency intended to be accessible to all, offering a decentralized and secure gateway for the ‘unbanked’ to the world of digital payments. 
+
+Our innovative solution provides a means for users to exchange fiat money to cryptocurrency through physical gift cards purchasable with cash at local convenience stores. These gift cards are then activated seamlessly on the TikTok platform.  Subsequently, they can use the balance in their accounts to buy Tok Coin. This approach leverages TikTok's platform and an easy-to-understand method of acquiring digital currency, making it accessible to a broader audience.
+
+Tok Coin offers significant advantages over traditional cash, including facilitating international payments without conversion fees, providing transparent and secure transactions, and offering greater stability to reduce currency risk. This is particularly beneficial for regions with a large proportion of ‘unbanked’ individuals, such as Africa and the Middle East, where wild currency fluctuations are common.
+
+We have developed a proof-of-concept that demonstrates the entire process of purchasing a gift card, converting it to Tok Coins, and exchanging it back to cash. Additionally, our demonstration includes how Tok Coin can be used for transactions in an online store, showcasing the experience from both the buyer's and seller's perspectives.
+
 
 This project integrates multiple technologies for a comprehensive blockchain-enabled application:
 
