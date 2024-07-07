@@ -37,6 +37,8 @@ This project integrates multiple technologies for a comprehensive blockchain-ena
 - **Server Configuration**: Nginx
 - **Containerization**: Docker
 
+![TechJamSystem_Diagram](images/TechJamSystem_Diagram.png)
+
 All components are containerized using Docker for easy local setup.
 
 ## Pre-requisites
