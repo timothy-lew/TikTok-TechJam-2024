@@ -77,7 +77,7 @@ const WalletPage: React.FC = () => {
   const user = auth?.user || null;
   const [hideDetails, setHideDetails] = useState<boolean>(true);
   const [freezeCard, setFreezeCard] = useState<boolean>(false);
-  const [walletBalance, setWalletBalance] = useState({ cashBalance: 0, tokTokenBalance: 0 });
+  const [walletBalance, setWalletBalance] = useState({ cashBalance: -99, tokTokenBalance: -99 });
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
 
 
@@ -175,12 +175,12 @@ const WalletPage: React.FC = () => {
                 
                 <div className="flex_center gap-2">
                   <Image src="/icons/cash.svg" alt="$" height={40} width={40} className="-rotate-6"/>
-                  <p className="text-slate-800 text-xl md:text-2xl">${walletBalance.cashBalance.toFixed(2)} <span className="text-lg">SGD</span></p>
+                  {walletBalance.cashBalance === -99 ? <p className="text-slate-800 text-xl md:text-2xl">$ Loading...</p> : <p className="text-slate-800 text-xl md:text-2xl">${walletBalance.cashBalance.toFixed(2)} <span className="text-lg">SGD</span></p>}
                 </div>
                 
                 <div className="flex_center gap-2">
                   <TokCoins />
-                  <p className="text-slate-800 text-xl md:text-2xl">{walletBalance.tokTokenBalance} <span className="text-lg">Tok Coins</span></p>
+                  {walletBalance.tokTokenBalance === -99 ? <p className="text-slate-800 text-xl md:text-2xl"> Loading... <span className="text-lg">Tok Coins</span></p>: <p className="text-slate-800 text-xl md:text-2xl">{walletBalance.tokTokenBalance} <span className="text-lg">Tok Coins</span></p>}
                 </div>
               </div>
             </div>

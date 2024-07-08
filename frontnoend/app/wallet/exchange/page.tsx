@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { WalletAddressBar } from "@/components/shop/WalletAddressBar";
 import TransactionAlert from "@/components/shared/TransactionAlert";
+import { getBackendUrl } from "@/lib/utils";
 
 const CurrencyExchangePage: React.FC = () => {
   const auth = useAuth();
@@ -39,6 +40,57 @@ const CurrencyExchangePage: React.FC = () => {
 
   const [EXCHANGE_RATE, setExchangeRateNow] = useState<null | number>(null);
   
+  const [walletBalance, setWalletBalance] = useState({ cashBalance: -99, tokTokenBalance: -99 });
+  const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
+  const [transactionSuccess, setTransactionSuccess] = useState(false);
+  
+
+  useEffect(() => {
+    const getAccessToken = async () => {
+      const token = await auth?.obtainAccessToken();
+      if (token) {
+        setAccessToken(token);
+      } else {
+        console.error('Failed to retrieve access token');
+      }
+    };
+  
+    getAccessToken();
+  }, [auth, user]);
+  
+
+  useEffect(() => {
+    const fetchWalletBalance = async () => {
+      if (!accessToken) {
+        console.error('Access token is not available');
+        return;
+      }
+  
+      try {
+        const response = await fetch(`${getBackendUrl()}/api/wallet/${user?.id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Failed to fetch wallet balance: ${response.status} ${response.statusText}`);
+        }
+  
+        const data = await response.json();
+        console.log("Wallet balance Cash: " + data.cashBalance + ", Tok Coin: " + data.tokTokenBalance);
+        setWalletBalance({
+          cashBalance: data.cashBalance,
+          tokTokenBalance: data.tokTokenBalance,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    fetchWalletBalance();
+  }, [accessToken, user, transactionSuccess]);
+
   // Functions related to TransactionAlert
   const [isOpen, setIsOpen] = useState(false);
   const [alertContent, setAlertContent] = useState('');
@@ -96,6 +148,7 @@ const CurrencyExchangePage: React.FC = () => {
   const handleExchange = async () => {
     const userId = auth?.user?.id || null;
     const accessToken = await auth?.obtainAccessToken();
+    setTransactionSuccess(false);
 
     if (!auth?.userWallet || !userId || !accessToken) {
       return;
@@ -129,6 +182,7 @@ const CurrencyExchangePage: React.FC = () => {
         });
     
         handleOpen(`Success! Your wallet has been updated.`)
+        setTransactionSuccess(true)
         setAmount(null);
         return;
       }
@@ -186,7 +240,7 @@ const CurrencyExchangePage: React.FC = () => {
         tokTokenBalance: prev.tokTokenBalance + toUpdateCoins,
       };
     });
-
+    setTransactionSuccess(true)
     handleOpen("Success! Your wallet has been updated.")
   };
 
@@ -268,8 +322,9 @@ const CurrencyExchangePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <div className="mb-4 sm:mb-0">
             <h2 className="text-lg font-semibold mb-2">Your Balance</h2>
-            <p className="text-muted-foreground">Fiat: ${walletData?.cashBalance}</p>
-            <p className="text-muted-foreground">Tok Coins: {walletData?.tokTokenBalance}</p>
+            {walletBalance.cashBalance === - 99 ? <p className="text-muted-foreground">Fiat: Loading...</p>: <p className="text-muted-foreground">Fiat: ${walletBalance.cashBalance}</p>}
+            {walletBalance.tokTokenBalance === -99 ? <p className="text-muted-foreground">Tok Coins: Loading...</p>: <p className="text-muted-foreground">Tok Coins: {walletBalance.tokTokenBalance}</p>}
+
           </div>
           <div>
             <h2 className="text-lg font-semibold mb-2">Exchange Rate</h2>
