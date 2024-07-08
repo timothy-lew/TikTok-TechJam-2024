@@ -267,11 +267,27 @@ export default function ProductDetailsPage({ params }: PageProps) {
       return (await statusResponse.text()).trim() === "true";
     };
 
+    const refetchWallet = async () => {
+      console.log("Refetching wallet data...")
+      const walletResponse = await fetch(
+        `${getBackendUrl()}/api/wallet/${auth?.user?.id}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      const walletData = await walletResponse.json();
+      console.log("Wallet data:", walletData);
+      auth?.setUserWallet(walletData);
+      console.log("Updated wallet data:", walletData);
+    }
+
     while (Date.now() - startTime < timeout) {
       if (await checkTransactionStatus()) {
         setAlertDialogContent(
           "Purchase successful! Redirecting to Shop..."
         );
+        refetchWallet();
         setTimeout(() => {
           setIsAlertDialogOpen(false);
           router.push("/shop");
