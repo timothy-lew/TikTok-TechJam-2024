@@ -4,8 +4,10 @@ import com.example.backend.common.validation.CommonValidationAndGetService;
 import com.example.backend.contract.dto.SendCryptoDTO;
 import com.example.backend.contract.service.ContractService;
 import com.example.backend.transaction.model.Transaction;
+import com.example.backend.wallet.dto.WalletResponseDTO;
 import com.example.backend.wallet.exception.InsufficientWalletCashBalance;
 import com.example.backend.wallet.exception.InsufficientWalletTokenBalance;
+import com.example.backend.wallet.mapper.WalletMapper;
 import com.example.backend.wallet.model.Wallet;
 import com.example.backend.wallet.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.math.BigDecimal;
 public class WalletService {
 
     private final WalletRepository walletRepository;
+    private final WalletMapper walletMapper;
     private final ContractService contractService;
     private final CommonValidationAndGetService commonValidationAndGetService;
 
@@ -30,10 +33,14 @@ public class WalletService {
         wallet.setCashBalance(BigDecimal.ZERO);
         return walletRepository.save(wallet);
     }
-    
+
     public void deleteWallet(String userId) {
         Wallet wallet = commonValidationAndGetService.validateAndGetWalletByUserId(userId);
         walletRepository.delete(wallet);
+    }
+
+    public WalletResponseDTO getWallet(String userId) {
+        return walletMapper.fromWallettoWalletResponseDTO(commonValidationAndGetService.validateAndGetWalletByUserId(userId));
     }
 
     // Handles deduction of buyer's and addition of seller's balance.
