@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/auth-provider";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,6 +18,7 @@ import {
 } from "@/hooks/useFetchTiktokCard";
 import { Progress } from "@/components/ui/progress";
 import { TokCoin, TokCoins } from '@/components/shared/TokCoin';
+import { getBackendUrl } from "@/lib/utils";
 
 type WalletActionProps = {
   icon: string;
@@ -76,12 +77,62 @@ const WalletPage: React.FC = () => {
   const user = auth?.user || null;
   const [hideDetails, setHideDetails] = useState<boolean>(true);
   const [freezeCard, setFreezeCard] = useState<boolean>(false);
+  const [walletBalance, setWalletBalance] = useState({ cashBalance: 0, tokTokenBalance: 0 });
+  const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
+
 
   const {transactionData, loadingTransactionData} = useFetchTransactions(user?.buyerProfile?.id || "", "buyer");
 
   const tiktokCardDetails = useFetchTiktokCard(user?.id || "");
   
   const { toast } = useToast()
+  useEffect(() => {
+    const getAccessToken = async () => {
+      const token = await auth?.obtainAccessToken();
+      if (token) {
+        setAccessToken(token);
+      } else {
+        console.error('Failed to retrieve access token');
+      }
+    };
+  
+    getAccessToken();
+  }, [auth, user]);
+  
+
+  useEffect(() => {
+    const fetchWalletBalance = async () => {
+      if (!accessToken) {
+        console.error('Access token is not available');
+        return;
+      }
+  
+      try {
+        const response = await fetch(`${getBackendUrl()}/api/wallet/${user?.id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Failed to fetch wallet balance: ${response.status} ${response.statusText}`);
+        }
+  
+        const data = await response.json();
+        console.log("Wallet balance Cash: " + data.cashBalance + ", Tok Coin: " + data.tokTokenBalance);
+        setWalletBalance({
+          cashBalance: data.cashBalance,
+          tokTokenBalance: data.tokTokenBalance,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    fetchWalletBalance();
+  }, [accessToken, user]);
+  
+
   const walletData = auth?.userWallet;
 
   const blueCardSpending : number = 1000;
@@ -124,12 +175,12 @@ const WalletPage: React.FC = () => {
                 
                 <div className="flex_center gap-2">
                   <Image src="/icons/cash.svg" alt="$" height={40} width={40} className="-rotate-6"/>
-                  <p className="text-slate-800 text-xl md:text-2xl">${walletData?.cashBalance.toFixed(2)} <span className="text-lg">SGD</span></p>
+                  <p className="text-slate-800 text-xl md:text-2xl">${walletBalance.cashBalance.toFixed(2)} <span className="text-lg">SGD</span></p>
                 </div>
                 
                 <div className="flex_center gap-2">
                   <TokCoins />
-                  <p className="text-slate-800 text-xl md:text-2xl">{walletData?.tokTokenBalance} <span className="text-lg">Tok Coins</span></p>
+                  <p className="text-slate-800 text-xl md:text-2xl">{walletBalance.tokTokenBalance} <span className="text-lg">Tok Coins</span></p>
                 </div>
               </div>
             </div>
