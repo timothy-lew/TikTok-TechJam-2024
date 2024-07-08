@@ -128,6 +128,21 @@ export default function ProductDetailsPage({ params }: PageProps) {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const refetchWallet = async () => {
+    console.log("Refetching wallet data...")
+    const walletResponse = await fetch(
+      `${getBackendUrl()}/api/wallet/${auth?.user?.id}`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    const walletData = await walletResponse.json();
+    console.log("Wallet data:", walletData);
+    auth?.setUserWallet(walletData);
+    console.log("Updated wallet data:", walletData);
+  }
+
   const confirmPurchaseTiktokCoin = async () => {
     if (!buyerInfo || !product || !sellerId) {
       console.error("Missing required information for purchase");
@@ -199,8 +214,10 @@ export default function ProductDetailsPage({ params }: PageProps) {
       setCashAlertDialogContent(
         "Purchase successful! Redirecting to Shop..."
       );
+      refetchWallet();
       setTimeout(() => {
         setIsCashDialogOpen(false);
+        
         router.push("/shop");
       }, 3000);
     } catch (error) {
@@ -272,6 +289,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
         setAlertDialogContent(
           "Purchase successful! Redirecting to Shop..."
         );
+        refetchWallet();
         setTimeout(() => {
           setIsAlertDialogOpen(false);
           router.push("/shop");
